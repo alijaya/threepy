@@ -1,14 +1,14 @@
 from __future__ import division
 import math
 
-class Vector4( x, y, z, w ):
+class Vector4( object ):
 
     def __init__( self, x = 0, y = 0, z = 0, w = 1 ):
 
         self.x = x
         self.y = y
         self.z = z
-        self.w = 1
+        self.w = w
 
         self.isVector4 = True
 
@@ -85,7 +85,7 @@ class Vector4( x, y, z, w ):
 
         return self
     
-    def add( self, v, w ):
+    def add( self, v ):
 
         self.x += v.x
         self.y += v.y
@@ -122,7 +122,7 @@ class Vector4( x, y, z, w ):
         return self
 
     
-    def sub( self, v, w ):
+    def sub( self, v ):
 
         self.x -= v.x
         self.y -= v.y
@@ -240,7 +240,7 @@ class Vector4( x, y, z, w ):
             if  ( abs( m12 + m21 ) < epsilon2 ) and \
                 ( abs( m13 + m31 ) < epsilon2 ) and \
                 ( abs( m23 + m32 ) < epsilon2 ) and \
-                ( abs( m11 + m22 + m33 - 3 ) < epsilon2 :
+                ( abs( m11 + m22 + m33 - 3 ) < epsilon2 ):
 
                 # self singularity is identity matrix so angle = 0
 
@@ -347,14 +347,14 @@ class Vector4( x, y, z, w ):
 
         return self
     
-    def clamp( self, min, max ):
+    def clamp( self, mn, mx ):
 
         # assumes min < max, componentwise
 
-        self.x = max( min.x, min( max.x, self.x ) )
-        self.y = max( min.y, min( max.y, self.y ) )
-        self.z = max( min.z, min( max.z, self.z ) )
-        self.w = max( min.w, min( max.w, self.w ) )
+        self.x = max( mn.x, min( mx.x, self.x ) )
+        self.y = max( mn.y, min( mx.y, self.y ) )
+        self.z = max( mn.z, min( mx.z, self.z ) )
+        self.w = max( mn.w, min( mx.w, self.w ) )
 
         return self
     
