@@ -1,4 +1,5 @@
 import json
+import logging
 
 import EventDispatcher
 
@@ -11,7 +12,7 @@ class Object3D( EventDispatcher ):
 
     def __init__( self, **kwargs ):
 
-        self.id = object3DId ++
+        self.id = object3DId += 1
 
         self.uuid = _Math.generateUUID()
 

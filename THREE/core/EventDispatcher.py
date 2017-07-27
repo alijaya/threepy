@@ -1,9 +1,10 @@
-class EventDispatcher:
+class EventDispatcher( object ):
 
     def __init__( self ):
-        pass
+        
+        self._listeners = None
 
-    def addEventListner( self, type, listener ):
+    def addEventListener( self, type, listener ):
 
         if self._listeners is None: self._listeners = {}
 
@@ -21,7 +22,7 @@ class EventDispatcher:
 
         if self._listeners is None: return False
 
-        listeners = this._listeners
+        listeners = self._listeners
 
         return type in listeners and listener in listeners[ type ]
 
@@ -39,14 +40,14 @@ class EventDispatcher:
 
         if self._listeners is None: return
 
-        listeners = this._listeners
+        listeners = self._listeners
 
-        if event.type in listeners:
+        if event[ "type" ] in listeners:
 
-            event[ "target" ] = this
+            event[ "target" ] = self
 
-            array = list( listenerArray )
+            array = list( listeners[ event[ "type" ] ] )
 
             for item in array:
 
-                item( self, event )∂
+                item( event )
