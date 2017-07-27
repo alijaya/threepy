@@ -19,11 +19,6 @@ class Vector2( object ):
 
         self.x = value
     
-    @width.deleter
-    def width( self ):
-
-        del self.x
-    
     @property
     def height( self ):
 
@@ -34,11 +29,6 @@ class Vector2( object ):
 
         self.y = value
     
-    @height.deleter
-    def height( self ):
-
-        del self.y
-
     def set( self, x, y ):
 
         self.x = x
