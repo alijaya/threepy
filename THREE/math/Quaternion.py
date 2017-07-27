@@ -15,11 +15,13 @@ class Quaternion( object ):
 
         self.onChangeCallback = lambda : None
 
-    def slerp( self, qa, qb, qm, t ):
+    @staticmethod
+    def slerp( qa, qb, qm, t ):
 
         return qm.copy( qa ).slerp( qb, t )
 
-    def slerpFlat( self, dst, dstOffset, src0, srcOffset0, src1, srcOffset1, t ):
+    @staticmethod
+    def slerpFlat( dst, dstOffset, src0, srcOffset0, src1, srcOffset1, t ):
 
         # fuzz-free, array-based Quaternion SLERP operation
 
@@ -35,9 +37,9 @@ class Quaternion( object ):
 
         if w0 != w1 or x0 != x1 or y0 != y1 or z0 != z1:
 
-            s = 1 - t,
+            s = 1 - t
 
-            cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1,
+            cos = x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1
 
             dir = 1 if cos >= 0 else - 1
             sqrSin = 1 - cos * cos

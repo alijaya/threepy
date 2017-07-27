@@ -23,6 +23,61 @@ def qSub ( a, b ):
 
 	return result
 
+def doSlerpObject( aArr, bArr, t ):
+
+    a = THREE.Quaternion().fromArray( aArr )
+    b = THREE.Quaternion().fromArray( bArr )
+    c = THREE.Quaternion().fromArray( aArr )
+
+    c.slerp( b, t )
+
+    def equals( x, y, z, w, maxError = sys.float_info.epsilon ):
+
+        return 	abs( x - c.x ) <= maxError and \
+                abs( y - c.y ) <= maxError and \
+                abs( z - c.z ) <= maxError and \
+                abs( w - c.w ) <= maxError
+
+    return {
+
+        "equals": equals,
+
+        "length": c.length(),
+
+        "dotA": c.dot( a ),
+        "dotB": c.dot( b )
+
+    }
+
+def doSlerpArray( a, b, t ):
+
+    result = [ 0, 0, 0, 0 ]
+
+    THREE.Quaternion.slerpFlat( result, 0, a, 0, b, 0, t )
+
+    def arrDot( a, b ):
+
+        return 	a[ 0 ] * b[ 0 ] + a[ 1 ] * b[ 1 ] + \
+                a[ 2 ] * b[ 2 ] + a[ 3 ] * b[ 3 ]
+
+    def equals( x, y, z, w, maxError = sys.float_info.epsilon ):
+
+        return 	abs( x - result[ 0 ] ) <= maxError and \
+                abs( y - result[ 1 ] ) <= maxError and \
+                abs( z - result[ 2 ] ) <= maxError and \
+                abs( w - result[ 3 ] ) <= maxError
+
+    return {
+
+        "equals": equals,
+
+        "length": math.sqrt( arrDot( result, result ) ),
+
+        "dotA": arrDot( result, a ),
+        "dotB": arrDot( result, b )
+
+    }
+
 class TestQuaternion( unittest.TestCase ):
 
     def test_constructor( self ):
@@ -203,123 +258,62 @@ class TestQuaternion( unittest.TestCase ):
         self.assertTrue( a.equals( b ) )
         self.assertTrue( b.equals( a ) )
 
+    def slerpTestSkeleton( self, doSlerp, maxError ):
 
-    # def doSlerpObject( self, aArr, bArr, t ):
+        a = [
+            0.6753410084407496,
+            0.4087830051091744,
+            0.32856700410659473,
+            0.5185120064806223
+        ]
 
-    #     a = THREE.Quaternion().fromArray( aArr )
-    #     b = THREE.Quaternion().fromArray( bArr )
-    #     c = THREE.Quaternion().fromArray( aArr )
+        b = [
+            0.6602792107657797,
+            0.43647413932562285,
+            0.35119011210236006,
+            0.5001871596632682
+        ]
 
-    #     c.slerp( b, t )
+        def isNormal( result ):
 
-    #     return {
+            normError = abs( 1 - result[ "length" ] )
+            return normError <= maxError
 
-    #         equals: def equals( x, y, z, w, maxError = sys.float_info.epsilon ):
+        result = doSlerp( a, b, 0 )
+        self.assertTrue( result[ "equals" ](
+                a[ 0 ], a[ 1 ], a[ 2 ], a[ 3 ], 0 ) ) # Exactly A @ t = 0
 
-    #             return 	abs( x - c.x ) <= maxError and
-    #                     abs( y - c.y ) <= maxError and
-    #                     abs( z - c.z ) <= maxError and
-    #                     abs( w - c.w ) <= maxError
+        result = doSlerp( a, b, 1 )
+        self.assertTrue( result[ "equals" ](
+                b[ 0 ], b[ 1 ], b[ 2 ], b[ 3 ], 0 ) ) # Exactly B @ t = 1
 
-    #         length: c.length(),
+        result = doSlerp( a, b, 0.5 )
+        self.assertTrue( abs( result[ "dotA" ] - result[ "dotB" ] ) <= sys.float_info.epsilon ) # Symmetry at 0.5
+        self.assertTrue( isNormal( result ) ) # Approximately normal (at 0.5)
 
-    #         dotA: c.dot( a ),
-    #         dotB: c.dot( b )
+        result = doSlerp( a, b, 0.25 )
+        self.assertTrue( result[ "dotA" ] > result[ "dotB" ] ) # Interpolating at 0.25
+        self.assertTrue( isNormal( result ) ) # Approximately normal (at 0.25)
 
-    #     }
+        result = doSlerp( a, b, 0.75 )
+        self.assertTrue( result[ "dotA" ] < result[ "dotB" ] ) # Interpolating at 0.75
+        self.assertTrue( isNormal( result ) ) # Approximately normal (at 0.75)
 
-    # def doSlerpArray( self, a, b, t ):
+        D = math.sqrt( 0.5 )
 
-    #     result = [ 0, 0, 0, 0 ]
+        result = doSlerp( [ 1, 0, 0, 0 ], [ 0, 0, 1, 0 ], 0.5 )
+        self.assertTrue( result[ "equals" ]( D, 0, D, 0 ) ) # X/Z diagonal from axes
+        self.assertTrue( isNormal( result ) ) # Approximately normal (X/Z diagonal)
 
-    #     THREE.Quaternion.slerpFlat( result, 0, a, 0, b, 0, t )
+        result = doSlerp( [ 0, D, 0, D ], [ 0, -D, 0, D ], 0.5 )
+        self.assertTrue( result[ "equals" ]( 0, 0, 0, 1 ) ) # W-Unit from diagonals
+        self.assertTrue( isNormal( result ) ) # Approximately normal (W-Unit)
 
-    #     def arrDot( a, b ):
+    def test_slerp( self ):
 
-    #         return 	a[ 0 ] * b[ 0 ] + a[ 1 ] * b[ 1 ] +
-    #                 a[ 2 ] * b[ 2 ] + a[ 3 ] * b[ 3 ]
-
-    #     return {
-
-    #         equals: function( x, y, z, w, maxError = sys.float_info.epsilon ) {
-
-    #             if ( maxError === undefined ) maxError = Number.EPSILON
-
-    #             return 	abs( x - result[ 0 ] ) <= maxError and
-    #                     abs( y - result[ 1 ] ) <= maxError and
-    #                     abs( z - result[ 2 ] ) <= maxError and
-    #                     abs( w - result[ 3 ] ) <= maxError
-
-    #         },
-
-    #         length: math.sqrt( arrDot( result, result ) ),
-
-    #         dotA: arrDot( result, a ),
-    #         dotB: arrDot( result, b )
-
-    #     }
-
-    # def slerpTestSkeleton( self, doSlerp, maxError ):
-
-    #     a, b, result
-
-    #     a = [
-    #         0.6753410084407496,
-    #         0.4087830051091744,
-    #         0.32856700410659473,
-    #         0.5185120064806223
-    #     ]
-
-    #     b = [
-    #         0.6602792107657797,
-    #         0.43647413932562285,
-    #         0.35119011210236006,
-    #         0.5001871596632682
-    #     ]
-
-    #     maxNormError = 0
-
-    #     def isNormal( result ):
-
-    #         normError = abs( 1 - result.length )
-    #         maxNormError = math.max( maxNormError, normError )
-    #         return normError <= maxError
-
-    #     result = doSlerp( a, b, 0 )
-    #     self.assertTrue( result.equals(
-    #             a[ 0 ], a[ 1 ], a[ 2 ], a[ 3 ], 0 ) ) # Exactly A @ t = 0
-
-    #     result = doSlerp( a, b, 1 )
-    #     self.assertTrue( result.equals(
-    #             b[ 0 ], b[ 1 ], b[ 2 ], b[ 3 ], 0 ) ) # Exactly B @ t = 1
-
-    #     result = doSlerp( a, b, 0.5 )
-    #     self.assertTrue( abs( result.dotA - result.dotB ) <= Number.EPSILON ) # Symmetry at 0.5
-    #     self.assertTrue( isNormal( result ) ) # Approximately normal (at 0.5)
-
-    #     result = doSlerp( a, b, 0.25 )
-    #     self.assertTrue( result.dotA > result.dotB ) # Interpolating at 0.25
-    #     self.assertTrue( isNormal( result ) ) # Approximately normal (at 0.25)
-
-    #     result = doSlerp( a, b, 0.75 )
-    #     self.assertTrue( result.dotA < result.dotB ) # Interpolating at 0.75
-    #     self.assertTrue( isNormal( result ) ) # Approximately normal (at 0.75)
-
-    #     D = math.SQRT1_2
-
-    #     result = doSlerp( [ 1, 0, 0, 0 ], [ 0, 0, 1, 0 ], 0.5 )
-    #     self.assertTrue( result.equals( D, 0, D, 0 ) ) # X/Z diagonal from axes
-    #     self.assertTrue( isNormal( result ) ) # Approximately normal (X/Z diagonal)
-
-    #     result = doSlerp( [ 0, D, 0, D ], [ 0, -D, 0, D ], 0.5 )
-    #     self.assertTrue( result.equals( 0, 0, 0, 1 ) ) # W-Unit from diagonals
-    #     self.assertTrue( isNormal( result ) ) # Approximately normal (W-Unit)
-
-    # def test_slerp( self ):
-
-    #     slerpTestSkeleton( doSlerpObject, sys.float_info.epsilon )
+        self.slerpTestSkeleton( doSlerpObject, sys.float_info.epsilon )
 
 
-    # def test_slerpFlat( self ):
+    def test_slerpFlat( self ):
 
-    #     slerpTestSkeleton( doSlerpArray, sys.float_info.epsilon )
+        self.slerpTestSkeleton( doSlerpArray, sys.float_info.epsilon )
