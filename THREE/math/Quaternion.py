@@ -143,7 +143,7 @@ class Quaternion( object ):
 
         return self
 
-    def setFromEuler( self, euler, update ):
+    def setFromEuler( self, euler, update = False ):
 
         if not ( euler is not None and euler.isEuler ):
 
@@ -211,7 +211,7 @@ class Quaternion( object ):
             self._z = c1 * c2 * s3 + s1 * s2 * c3
             self._w = c1 * c2 * c3 + s1 * s2 * s3
 
-        if update != false: self.onChangeCallback()
+        if update != False: self.onChangeCallback()
 
         return self
 
@@ -473,7 +473,7 @@ class Quaternion( object ):
 
     def equals( self, quaternion ):
 
-        return quaternion._x == self._x and quaternion._y == self._y and quaternion._z == self._z and quaternion._w == self._w
+        return ( quaternion._x == self._x ) and ( quaternion._y == self._y ) and ( quaternion._z == self._z ) and ( quaternion._w == self._w )
 
     def fromArray( self, array, offset = 0 ):
 

@@ -616,7 +616,7 @@ class Matrix4( object ):
 
         return self
     
-    def getInverse( self, m, throwOnDegenerate ):
+    def getInverse( self, m, throwOnDegenerate = False ):
 
         # based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
         te = self.elements

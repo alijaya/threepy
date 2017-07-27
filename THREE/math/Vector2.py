@@ -289,7 +289,7 @@ class Vector2( object ):
 
     def equals( self, v ):
 
-        return v.x == self.x and v.y == self.y
+        return ( v.x == self.x ) and ( v.y == self.y )
 
     def fromArray( self, array, offset = 0 ):
 

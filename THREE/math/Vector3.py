@@ -508,7 +508,7 @@ class Vector3( object ):
 
     def equals( self, v ):
 
-        return v.x == self.x and v.y == self.y and v.z == self.z
+        return ( v.x == self.x ) and ( v.y == self.y ) and ( v.z == self.z )
 
     def fromArray( self, array, offset = 0 ):
 
