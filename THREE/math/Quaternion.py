@@ -1,9 +1,10 @@
+from __future__ import division
 import math
 import sys
 
 from Vector3 import *
 
-class Quaternion( x, y, z, w ):
+class Quaternion( object ):
 
     def __init__( self, x = 0, y = 0, z = 0, w = 1 ):
 
@@ -14,9 +15,9 @@ class Quaternion( x, y, z, w ):
 
         self.onChangeCallback = lambda : None
 
-	def slerp( self, qa, qb, qm, t ):
+    def slerp( self, qa, qb, qm, t ):
 
-		return qm.copy( qa ).slerp( qb, t )
+        return qm.copy( qa ).slerp( qb, t )
 
     def slerpFlat( self, dst, dstOffset, src0, srcOffset0, src1, srcOffset1, t ):
 
@@ -116,395 +117,388 @@ class Quaternion( x, y, z, w ):
         self._w = value
         self.onChangeCallback()
 
-	def set( self, x, y, z, w ):
+    def set( self, x, y, z, w ):
 
-		self._x = x
-		self._y = y
-		self._z = z
-		self._w = w
+        self._x = x
+        self._y = y
+        self._z = z
+        self._w = w
 
-		self.onChangeCallback()
+        self.onChangeCallback()
 
-		return self
+        return self
 
     def clone( self ):
 
-		return new self.constructor( self._x, self._y, self._z, self._w )
+        return Quaternion( self._x, self._y, self._z, self._w )
 
     def copy( self, quaternion ):
 
-		self._x = quaternion.x
-		self._y = quaternion.y
-		self._z = quaternion.z
-		self._w = quaternion.w
+        self._x = quaternion.x
+        self._y = quaternion.y
+        self._z = quaternion.z
+        self._w = quaternion.w
 
-		self.onChangeCallback()
+        self.onChangeCallback()
 
-		return self
+        return self
 
     def setFromEuler( self, euler, update ):
 
-		if not ( euler is not None and euler.isEuler ):
+        if not ( euler is not None and euler.isEuler ):
 
-			raise ValueError( "THREE.Quaternion: .setFromEuler() now expects an Euler rotation rather than a Vector3 and order." )
+            raise ValueError( "THREE.Quaternion: .setFromEuler() now expects an Euler rotation rather than a Vector3 and order." )
 
-		 x = euler._x
-         y = euler._y
-         z = euler._z
-         order = euler.order
+        x = euler._x
+        y = euler._y
+        z = euler._z
+        order = euler.order
 
-		# http://www.mathworks.com/matlabcentral/fileexchange/
-		#   20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
-		#   content/SpinCalc.m
+        # http://www.mathworks.com/matlabcentral/fileexchange/
+        #   20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
+        #   content/SpinCalc.m
 
-		 cos = math.cos
-		 sin = math.sin
+        cos = math.cos
+        sin = math.sin
 
-		 c1 = cos( x / 2. )
-		 c2 = cos( y / 2. )
-		 c3 = cos( z / 2. )
+        c1 = cos( x / 2. )
+        c2 = cos( y / 2. )
+        c3 = cos( z / 2. )
 
-		 s1 = sin( x / 2. )
-		 s2 = sin( y / 2. )
-		 s3 = sin( z / 2. )
+        s1 = sin( x / 2. )
+        s2 = sin( y / 2. )
+        s3 = sin( z / 2. )
 
-		if order == "XYZ":
+        if order == "XYZ":
 
-			self._x = s1 * c2 * c3 + c1 * s2 * s3
-			self._y = c1 * s2 * c3 - s1 * c2 * s3
-			self._z = c1 * c2 * s3 + s1 * s2 * c3
-			self._w = c1 * c2 * c3 - s1 * s2 * s3
+            self._x = s1 * c2 * c3 + c1 * s2 * s3
+            self._y = c1 * s2 * c3 - s1 * c2 * s3
+            self._z = c1 * c2 * s3 + s1 * s2 * c3
+            self._w = c1 * c2 * c3 - s1 * s2 * s3
 
-		elif order == "YXZ":
+        elif order == "YXZ":
 
-			self._x = s1 * c2 * c3 + c1 * s2 * s3
-			self._y = c1 * s2 * c3 - s1 * c2 * s3
-			self._z = c1 * c2 * s3 - s1 * s2 * c3
-			self._w = c1 * c2 * c3 + s1 * s2 * s3
+            self._x = s1 * c2 * c3 + c1 * s2 * s3
+            self._y = c1 * s2 * c3 - s1 * c2 * s3
+            self._z = c1 * c2 * s3 - s1 * s2 * c3
+            self._w = c1 * c2 * c3 + s1 * s2 * s3
 
-		elif order == "ZXY":
+        elif order == "ZXY":
 
-			self._x = s1 * c2 * c3 - c1 * s2 * s3
-			self._y = c1 * s2 * c3 + s1 * c2 * s3
-			self._z = c1 * c2 * s3 + s1 * s2 * c3
-			self._w = c1 * c2 * c3 - s1 * s2 * s3
+            self._x = s1 * c2 * c3 - c1 * s2 * s3
+            self._y = c1 * s2 * c3 + s1 * c2 * s3
+            self._z = c1 * c2 * s3 + s1 * s2 * c3
+            self._w = c1 * c2 * c3 - s1 * s2 * s3
 
-		elif order == "ZYX":
+        elif order == "ZYX":
 
-			self._x = s1 * c2 * c3 - c1 * s2 * s3
-			self._y = c1 * s2 * c3 + s1 * c2 * s3
-			self._z = c1 * c2 * s3 - s1 * s2 * c3
-			self._w = c1 * c2 * c3 + s1 * s2 * s3
+            self._x = s1 * c2 * c3 - c1 * s2 * s3
+            self._y = c1 * s2 * c3 + s1 * c2 * s3
+            self._z = c1 * c2 * s3 - s1 * s2 * c3
+            self._w = c1 * c2 * c3 + s1 * s2 * s3
 
-		elif order == "YZX":
+        elif order == "YZX":
 
-			self._x = s1 * c2 * c3 + c1 * s2 * s3
-			self._y = c1 * s2 * c3 + s1 * c2 * s3
-			self._z = c1 * c2 * s3 - s1 * s2 * c3
-			self._w = c1 * c2 * c3 - s1 * s2 * s3
+            self._x = s1 * c2 * c3 + c1 * s2 * s3
+            self._y = c1 * s2 * c3 + s1 * c2 * s3
+            self._z = c1 * c2 * s3 - s1 * s2 * c3
+            self._w = c1 * c2 * c3 - s1 * s2 * s3
 
-		elif order == "XZY":
+        elif order == "XZY":
 
-			self._x = s1 * c2 * c3 - c1 * s2 * s3
-			self._y = c1 * s2 * c3 - s1 * c2 * s3
-			self._z = c1 * c2 * s3 + s1 * s2 * c3
-			self._w = c1 * c2 * c3 + s1 * s2 * s3
+            self._x = s1 * c2 * c3 - c1 * s2 * s3
+            self._y = c1 * s2 * c3 - s1 * c2 * s3
+            self._z = c1 * c2 * s3 + s1 * s2 * c3
+            self._w = c1 * c2 * c3 + s1 * s2 * s3
 
-		if update != false: self.onChangeCallback()
+        if update != false: self.onChangeCallback()
 
-		return self
+        return self
 
-		def setFromAxisAngle( self, axis, angle ):
+    def setFromAxisAngle( self, axis, angle ):
 
-		# http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
+        # http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
 
-		# assumes axis is normalized
+        # assumes axis is normalized
 
-		 halfAngle = angle / 2, s = math.sin( halfAngle )
+        halfAngle = angle / 2
+        s = math.sin( halfAngle )
 
-		self._x = axis.x * s
-		self._y = axis.y * s
-		self._z = axis.z * s
-		self._w = math.cos( halfAngle )
+        self._x = axis.x * s
+        self._y = axis.y * s
+        self._z = axis.z * s
+        self._w = math.cos( halfAngle )
 
-		self.onChangeCallback()
+        self.onChangeCallback()
 
-		return self
+        return self
 
-		def setFromRotationMatrix( self, m ):
+    def setFromRotationMatrix( self, m ):
 
-		# http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+        # http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 
-		# assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+        # assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
-		 te = m.elements,
+        te = m.elements
 
-			m11 = te[ 0 ], m12 = te[ 4 ], m13 = te[ 8 ],
-			m21 = te[ 1 ], m22 = te[ 5 ], m23 = te[ 9 ],
-			m31 = te[ 2 ], m32 = te[ 6 ], m33 = te[ 10 ],
+        m11 = te[ 0 ]
+        m12 = te[ 4 ]
+        m13 = te[ 8 ]
 
-			trace = m11 + m22 + m33,
-			s
+        m21 = te[ 1 ]
+        m22 = te[ 5 ]
+        m23 = te[ 9 ]
 
-		if trace > 0:
+        m31 = te[ 2 ]
+        m32 = te[ 6 ]
+        m33 = te[ 10 ]
 
-			s = 0.5 / math.sqrt( trace + 1.0 )
+        trace = m11 + m22 + m33
+        s = None
 
-			self._w = 0.25 / s
-			self._x = ( m32 - m23 ) * s
-			self._y = ( m13 - m31 ) * s
-			self._z = ( m21 - m12 ) * s
+        if trace > 0:
 
-		elif m11 > m22 && m11 > m33:
+            s = 0.5 / math.sqrt( trace + 1.0 )
 
-			s = 2.0 * math.sqrt( 1.0 + m11 - m22 - m33 )
+            self._w = 0.25 / s
+            self._x = ( m32 - m23 ) * s
+            self._y = ( m13 - m31 ) * s
+            self._z = ( m21 - m12 ) * s
 
-			self._w = ( m32 - m23 ) / s
-			self._x = 0.25 * s
-			self._y = ( m12 + m21 ) / s
-			self._z = ( m13 + m31 ) / s
+        elif m11 > m22 and m11 > m33:
 
-		elif m22 > m33:
+            s = 2.0 * math.sqrt( 1.0 + m11 - m22 - m33 )
 
-			s = 2.0 * math.sqrt( 1.0 + m22 - m11 - m33 )
+            self._w = ( m32 - m23 ) / s
+            self._x = 0.25 * s
+            self._y = ( m12 + m21 ) / s
+            self._z = ( m13 + m31 ) / s
 
-			self._w = ( m13 - m31 ) / s
-			self._x = ( m12 + m21 ) / s
-			self._y = 0.25 * s
-			self._z = ( m23 + m32 ) / s
+        elif m22 > m33:
 
-		else:
+            s = 2.0 * math.sqrt( 1.0 + m22 - m11 - m33 )
 
-			s = 2.0 * math.sqrt( 1.0 + m33 - m11 - m22 )
+            self._w = ( m13 - m31 ) / s
+            self._x = ( m12 + m21 ) / s
+            self._y = 0.25 * s
+            self._z = ( m23 + m32 ) / s
 
-			self._w = ( m21 - m12 ) / s
-			self._x = ( m13 + m31 ) / s
-			self._y = ( m23 + m32 ) / s
-			self._z = 0.25 * s
+        else:
 
-		}
+            s = 2.0 * math.sqrt( 1.0 + m33 - m11 - m22 )
 
-		self.onChangeCallback()
+            self._w = ( m21 - m12 ) / s
+            self._x = ( m13 + m31 ) / s
+            self._y = ( m23 + m32 ) / s
+            self._z = 0.25 * s
 
-		return self
+        self.onChangeCallback()
 
-		def setFromUnitVectors( self,):
+        return self
 
-		# assumes direction vectors vFrom and vTo are normalized
+    def setFromUnitVectors( self, vFrom, vTo ):
 
-		 v1 = new Vector3()
-		 r
+        # assumes direction vectors vFrom and vTo are normalized
 
-		 EPS = 0.000001
+        v1 = Vector3()
+        r = None
 
-		return function setFromUnitVectors( vFrom, vTo:
+        EPS = 0.000001
 
-			if v1 == undefined ) v1 = new Vector3()
+        r = vFrom.dot( vTo ) + 1
 
-			r = vFrom.dot( vTo ) + 1
+        if r < EPS:
 
-			if r < EPS:
+            r = 0
 
-				r = 0
+            if abs( vFrom.x ) > abs( vFrom.z ):
 
-				if abs( vFrom.x ) > abs( vFrom.z ):
+                v1.set( - vFrom.y, vFrom.x, 0 )
 
-					v1.set( - vFrom.y, vFrom.x, 0 )
+            else:
 
-				else:
+                v1.set( 0, - vFrom.z, vFrom.y )
 
-					v1.set( 0, - vFrom.z, vFrom.y )
+        else:
 
-				}
+            v1.crossVectors( vFrom, vTo )
 
-			else:
+        self._x = v1.x
+        self._y = v1.y
+        self._z = v1.z
+        self._w = r
 
-				v1.crossVectors( vFrom, vTo )
+        return self.normalize()
 
-			}
+    def inverse( self ):
 
-			self._x = v1.x
-			self._y = v1.y
-			self._z = v1.z
-			self._w = r
+        return self.conjugate().normalize()
 
-			return self.normalize()
+    def conjugate( self ):
 
-		}
+        self._x *= - 1
+        self._y *= - 1
+        self._z *= - 1
 
-	}(),
+        self.onChangeCallback()
 
-	def inverse( self,):
+        return self
 
-		return self.conjugate().normalize()
+    def dot( self, v ):
 
-		def conjugate( self,):
+        return self._x * v._x + self._y * v._y + self._z * v._z + self._w * v._w
 
-		self._x *= - 1
-		self._y *= - 1
-		self._z *= - 1
+    def lengthSq( self ):
 
-		self.onChangeCallback()
+        return self._x * self._x + self._y * self._y + self._z * self._z + self._w * self._w
 
-		return self
+    def length( self ):
 
-		def dot( self, v ):
+        return math.sqrt( self._x * self._x + self._y * self._y + self._z * self._z + self._w * self._w )
 
-		return self._x * v._x + self._y * v._y + self._z * v._z + self._w * v._w
+    def normalize( self ):
 
-		def lengthSq( self,):
+        l = self.length()
 
-		return self._x * self._x + self._y * self._y + self._z * self._z + self._w * self._w
+        if l == 0:
 
-		def length( self,):
+            self._x = 0
+            self._y = 0
+            self._z = 0
+            self._w = 1
 
-		return math.sqrt( self._x * self._x + self._y * self._y + self._z * self._z + self._w * self._w )
+        else:
 
-		def normalize( self,):
+            l = 1. / l
 
-		 l = self.length()
+            self._x = self._x * l
+            self._y = self._y * l
+            self._z = self._z * l
+            self._w = self._w * l
 
-		if l == 0:
+        self.onChangeCallback()
 
-			self._x = 0
-			self._y = 0
-			self._z = 0
-			self._w = 1
-
-		else:
-
-			l = 1 / l
-
-			self._x = self._x * l
-			self._y = self._y * l
-			self._z = self._z * l
-			self._w = self._w * l
-
-		}
-
-		self.onChangeCallback()
-
-		return self
+        return self
 
     def multiply( self, q ):
 
-		return self.multiplyQuaternions( self, q )
+        return self.multiplyQuaternions( self, q )
 
     def premultiply( self, q ):
 
-		return self.multiplyQuaternions( q, self )
+        return self.multiplyQuaternions( q, self )
 
     def multiplyQuaternions( self, a, b ):
 
-		# from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
+        # from http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/code/index.htm
 
-		qax = a._x
+        qax = a._x
         qay = a._y
         qaz = a._z
         qaw = a._w
         
-		qbx = b._x
+        qbx = b._x
         qby = b._y
         qbz = b._z
         qbw = b._w
 
-		self._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby
-		self._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz
-		self._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx
-		self._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz
+        self._x = qax * qbw + qaw * qbx + qay * qbz - qaz * qby
+        self._y = qay * qbw + qaw * qby + qaz * qbx - qax * qbz
+        self._z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx
+        self._w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz
 
-		self.onChangeCallback()
+        self.onChangeCallback()
 
-		return self
+        return self
 
     def slerp( self, qb, t ):
 
-		if t == 0: return self
-		if t == 1: return self.copy( qb )
+        if t == 0: return self
+        if t == 1: return self.copy( qb )
 
-		 x = self._x
-         y = self._y
-         z = self._z
-         w = self._w
+        x = self._x
+        y = self._y
+        z = self._z
+        w = self._w
 
-		# http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
+        # http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
 
-		 cosHalfTheta = w * qb._w + x * qb._x + y * qb._y + z * qb._z
+        cosHalfTheta = w * qb._w + x * qb._x + y * qb._y + z * qb._z
 
-		if cosHalfTheta < 0:
+        if cosHalfTheta < 0:
 
-			self._w = - qb._w
-			self._x = - qb._x
-			self._y = - qb._y
-			self._z = - qb._z
+            self._w = - qb._w
+            self._x = - qb._x
+            self._y = - qb._y
+            self._z = - qb._z
 
-			cosHalfTheta = - cosHalfTheta
+            cosHalfTheta = - cosHalfTheta
 
-		else:
+        else:
 
-			self.copy( qb )
+            self.copy( qb )
 
-		if cosHalfTheta >= 1.0:
+        if cosHalfTheta >= 1.0:
 
-			self._w = w
-			self._x = x
-			self._y = y
-			self._z = z
+            self._w = w
+            self._x = x
+            self._y = y
+            self._z = z
 
-			return self
+            return self
 
-		 sinHalfTheta = math.sqrt( 1.0 - cosHalfTheta * cosHalfTheta )
+        sinHalfTheta = math.sqrt( 1.0 - cosHalfTheta * cosHalfTheta )
 
-		if abs( sinHalfTheta ) < 0.001:
+        if abs( sinHalfTheta ) < 0.001:
 
-			self._w = 0.5 * ( w + self._w )
-			self._x = 0.5 * ( x + self._x )
-			self._y = 0.5 * ( y + self._y )
-			self._z = 0.5 * ( z + self._z )
+            self._w = 0.5 * ( w + self._w )
+            self._x = 0.5 * ( x + self._x )
+            self._y = 0.5 * ( y + self._y )
+            self._z = 0.5 * ( z + self._z )
 
-			return self
+            return self
 
-		halfTheta = math.atan2( sinHalfTheta, cosHalfTheta )
-		ratioA = math.sin( ( 1 - t ) * halfTheta ) / sinHalfTheta
-		ratioB = math.sin( t * halfTheta ) / sinHalfTheta
+        halfTheta = math.atan2( sinHalfTheta, cosHalfTheta )
+        ratioA = math.sin( ( 1 - t ) * halfTheta ) / sinHalfTheta
+        ratioB = math.sin( t * halfTheta ) / sinHalfTheta
 
-		self._w = ( w * ratioA + self._w * ratioB )
-		self._x = ( x * ratioA + self._x * ratioB )
-		self._y = ( y * ratioA + self._y * ratioB )
-		self._z = ( z * ratioA + self._z * ratioB )
+        self._w = ( w * ratioA + self._w * ratioB )
+        self._x = ( x * ratioA + self._x * ratioB )
+        self._y = ( y * ratioA + self._y * ratioB )
+        self._z = ( z * ratioA + self._z * ratioB )
 
-		self.onChangeCallback()
+        self.onChangeCallback()
 
-		return self
+        return self
 
     def equals( self, quaternion ):
 
-		return quaternion._x == self._x and quaternion._y == self._y and quaternion._z == self._z && quaternion._w == self._w
+        return quaternion._x == self._x and quaternion._y == self._y and quaternion._z == self._z and quaternion._w == self._w
 
     def fromArray( self, array, offset = 0 ):
 
-		self._x = array[ offset ]
-		self._y = array[ offset + 1 ]
-		self._z = array[ offset + 2 ]
-		self._w = array[ offset + 3 ]
+        self._x = array[ offset ]
+        self._y = array[ offset + 1 ]
+        self._z = array[ offset + 2 ]
+        self._w = array[ offset + 3 ]
 
-		self.onChangeCallback()
+        self.onChangeCallback()
 
-		return self
+        return self
 
     def toArray( self, array = None, offset = 0 ):
 
-		if array is None: array = []
+        if array is None: array = []
 
-		array[ offset ] = self._x
-		array[ offset + 1 ] = self._y
-		array[ offset + 2 ] = self._z
-		array[ offset + 3 ] = self._w
+        array[ offset ] = self._x
+        array[ offset + 1 ] = self._y
+        array[ offset + 2 ] = self._z
+        array[ offset + 3 ] = self._w
 
-		return array
+        return array
 
     def onChange( self, callback ):
 
-		self.onChangeCallback = callback
+        self.onChangeCallback = callback
 
-		return self
+        return self

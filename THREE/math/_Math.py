@@ -1,8 +1,9 @@
+from __future__ import division
 import math
 import random
 
-DEG2RAD: math.pi / 180
-RAD2DEG: 180 / math.pi
+DEG2RAD = math.pi / 180
+RAD2DEG = 180 / math.pi
 
 def generateUUID():
 
@@ -109,12 +110,12 @@ def nearestPowerOfTwo( value ):
 
 def nextPowerOfTwo( value ):
 
-    value --
+    value -= 1
     value |= value >> 1
     value |= value >> 2
     value |= value >> 4
     value |= value >> 8
     value |= value >> 16
-    value ++
+    value += 1
 
     return value

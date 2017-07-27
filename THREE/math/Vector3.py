@@ -1,3 +1,4 @@
+from __future__ import division
 import math
 
 import _Math
@@ -10,7 +11,7 @@ class Vector3( object ):
 
         self.x = x
         self.y = y
-        self.z = 0
+        self.z = z
 
         self.isVector3 = True
     

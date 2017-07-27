@@ -1,3 +1,4 @@
+from __future__ import division
 import math
 import logging
 
@@ -204,7 +205,10 @@ class Matrix4( object ):
 
         elif euler.order == "ZXY":
 
-            ce = c * e, cf = c * f, de = d * e, df = d * f
+            ce = c * e
+            cf = c * f
+            de = d * e
+            df = d * f
 
             te[ 0 ] = ce - df * b
             te[ 4 ] = - a * f
@@ -375,9 +379,17 @@ class Matrix4( object ):
         x.normalize()
         y.crossVectors( z, x )
 
-        te[ 0 ] = x.x te[ 4 ] = y.x te[ 8 ] = z.x
-        te[ 1 ] = x.y te[ 5 ] = y.y te[ 9 ] = z.y
-        te[ 2 ] = x.z te[ 6 ] = y.z te[ 10 ] = z.z
+        te[ 0 ] = x.x
+        te[ 4 ] = y.x
+        te[ 8 ] = z.x
+
+        te[ 1 ] = x.y
+        te[ 5 ] = y.y
+        te[ 9 ] = z.y
+
+        te[ 2 ] = x.z
+        te[ 6 ] = y.z
+        te[ 10 ] = z.z
 
         return self
 
@@ -682,10 +694,21 @@ class Matrix4( object ):
         y = v.y
         z = v.z
 
-        te[ 0 ] *= x te[ 4 ] *= y te[ 8 ] *= z
-        te[ 1 ] *= x te[ 5 ] *= y te[ 9 ] *= z
-        te[ 2 ] *= x te[ 6 ] *= y te[ 10 ] *= z
-        te[ 3 ] *= x te[ 7 ] *= y te[ 11 ] *= z
+        te[ 0 ] *= x
+        te[ 4 ] *= y
+        te[ 8 ] *= z
+
+        te[ 1 ] *= x
+        te[ 5 ] *= y
+        te[ 9 ] *= z
+
+        te[ 2 ] *= x
+        te[ 6 ] *= y
+        te[ 10 ] *= z
+
+        te[ 3 ] *= x
+        te[ 7 ] *= y
+        te[ 11 ] *= z
 
         return self
     
@@ -746,7 +769,8 @@ class Matrix4( object ):
     
     def makeRotationZ( self, theta ):
 
-        c = math.cos( theta ), s = math.sin( theta )
+        c = math.cos( theta )
+        s = math.sin( theta )
 
         self.set(
 
@@ -766,8 +790,13 @@ class Matrix4( object ):
         c = math.cos( angle )
         s = math.sin( angle )
         t = 1 - c
-        x = axis.x, y = axis.y, z = axis.z
-        tx = t * x, ty = t * y
+        
+        x = axis.x
+        y = axis.y
+        z = axis.z
+
+        tx = t * x
+        ty = t * y
 
         self.set(
 
@@ -778,7 +807,7 @@ class Matrix4( object ):
 
         )
 
-         return self
+        return self
     
     def makeScale( self, x, y, z ):
 
