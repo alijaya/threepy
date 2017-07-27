@@ -1,5 +1,7 @@
 import json
 
+import EventDispatcher
+
 object3DId = 0
 
 class Object3D( EventDispatcher ):
