@@ -5,3 +5,4 @@ from math.Vector4 import *
 from math.Quaternion import *
 from math.Euler import *
 from core.EventDispatcher import *
+from core.Object3D import *

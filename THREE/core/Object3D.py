@@ -1,18 +1,24 @@
 import json
 import logging
 
-import EventDispatcher
-
-object3DId = 0
+from EventDispatcher import *
+from ..math.Vector3 import *
+from ..math.Euler import *
+from ..math import _Math
 
 class Object3D( EventDispatcher ):
 
     DefaultUp = Vector3( 0, 1, 0 )
     DefaultMatrixAutoUpdate = True
 
-    def __init__( self, **kwargs ):
+    Object3DId = 0
 
-        self.id = object3DId += 1
+    def __init__( self ):
+
+        super( Object3D, self ).__init__()
+
+        self.id = Object3D.Object3DId
+        Object3D.Object3DId += 1
 
         self.uuid = _Math.generateUUID()
 
@@ -24,7 +30,7 @@ class Object3D( EventDispatcher ):
 
         self.up = Object3D.DefaultUp.clone()
 
-        self.position = Vector3D()
+        self.position = Vector3()
         self.rotation = Euler()
         self.quaternion = Quaternion()
         self.scale = Vector3( 1, 1, 1 )
@@ -62,8 +68,8 @@ class Object3D( EventDispatcher ):
 
         self.isObject3D = True
 
-        self.onBeforeRender = None # TODO
-        self.onAfterRender = None # TODO
+        self.onBeforeRender = lambda: None
+        self.onAfterRender = lambda: None
 
     def applyMatrix( self, matrix ):
 
@@ -99,7 +105,7 @@ class Object3D( EventDispatcher ):
 
         self.quaternion.copy( q )
 
-    def rotateOnAxis( self, axis, angle ): # TODO
+    def rotateOnAxis( self, axis, angle ):
 
         q1 = Quaternion()
 
@@ -109,25 +115,25 @@ class Object3D( EventDispatcher ):
 
         return self
 
-    def rotateX( self, angle ): # TODO
+    def rotateX( self, angle ):
 
         v1 = Vector3( 1, 0, 0 )
 
         return self.rotateOnAxis( v1, angle )
 
-    def rotateY( self, angle ): # TODO
+    def rotateY( self, angle ):
 
         v1 = Vector3( 0, 1, 0 )
 
         return self.rotateOnAxis( v1, angle )
 
-    def rotateZ( self, angle ): # TODO
+    def rotateZ( self, angle ):
         
         v1 = Vector3( 0, 0, 1 )
 
         return self.rotateOnAxis( v1, angle )
 
-    def translateOnAxis( self, axis, distance ): # TODO
+    def translateOnAxis( self, axis, distance ):
 
         v1 = Vector3()
 
@@ -137,19 +143,19 @@ class Object3D( EventDispatcher ):
 
         return self
 
-    def translateX( self, distance ): # TODO
+    def translateX( self, distance ):
 
         v1 = Vector3( 1, 0, 0 )
 
         return self.translateOnAxis( v1, distance )
 
-    def translateY( self, distance ): # TODO
+    def translateY( self, distance ):
 
         v1 = Vector3( 0, 1, 0 )
 
         return self.translateOnAxis( v1, distance )
 
-    def translateZ( self, distance ): # TODO
+    def translateZ( self, distance ):
 
         v1 = Vector3( 0, 0, 1 )
 

@@ -1,0 +1,8 @@
+QUnit.test\( "(.*)".*
+def test_$1( self ):
+
+(assert\..*\(.*), "(.*)" \)
+$1 ) # $2
+
+assert.numEqual
+self.assertAlmostEqual
