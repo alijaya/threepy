@@ -2,8 +2,6 @@ from __future__ import division
 import math
 import sys
 
-from Vector3 import *
-
 class Quaternion( object ):
 
     def __init__( self, x = 0, y = 0, z = 0, w = 1 ):
@@ -302,7 +300,7 @@ class Quaternion( object ):
 
         # assumes direction vectors vFrom and vTo are normalized
 
-        v1 = Vector3()
+        v1 = THREE.Vector3()
         r = None
 
         EPS = 0.000001

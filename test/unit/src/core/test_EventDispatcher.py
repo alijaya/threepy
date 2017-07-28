@@ -1,12 +1,12 @@
 import unittest
 
-import THREE
+from THREE import EventDispatcher
 
 class TestEventDispatcher( unittest.TestCase ):
 
 	def test_addEventListener( self ):
 
-		eventDispatcher = THREE.EventDispatcher()
+		eventDispatcher = EventDispatcher()
 
 		listener = {}
 		eventDispatcher.addEventListener( "anyType", listener )
@@ -21,7 +21,7 @@ class TestEventDispatcher( unittest.TestCase ):
 
 	def test_hasEventListener( self ):
 
-		eventDispatcher = THREE.EventDispatcher()
+		eventDispatcher = EventDispatcher()
 
 		listener = {}
 		eventDispatcher.addEventListener( "anyType", listener )
@@ -31,7 +31,7 @@ class TestEventDispatcher( unittest.TestCase ):
 
 	def test_removeEventListener( self ):
 
-		eventDispatcher = THREE.EventDispatcher()
+		eventDispatcher = EventDispatcher()
 
 		listener = {}
 
@@ -52,7 +52,7 @@ class TestEventDispatcher( unittest.TestCase ):
 
 	def test_dispatchEvent( self ):
 
-		eventDispatcher = THREE.EventDispatcher()
+		eventDispatcher = EventDispatcher()
 
 
 		scope = { "callCount": 0 }

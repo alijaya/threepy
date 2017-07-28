@@ -2,8 +2,7 @@ from __future__ import division
 import math
 
 import _Math
-from Matrix4 import *
-from Quaternion import *
+import matrix4
 
 class Vector3( object ):
 

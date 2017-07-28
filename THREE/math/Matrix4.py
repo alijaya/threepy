@@ -2,7 +2,7 @@ from __future__ import division
 import math
 import logging
 
-from Vector3 import *
+import vector3
 
 class Matrix4( object ):
 
@@ -121,7 +121,7 @@ class Matrix4( object ):
     
     def extractRotation( self, m ):
 
-        v1 = Vector3()
+        v1 = vector3.Vector3()
 
         te = self.elements
         me = m.elements
@@ -344,9 +344,9 @@ class Matrix4( object ):
     
     def lookAt( self, eye, target, up ):
 
-        x = Vector3()
-        y = Vector3()
-        z = Vector3()
+        x = vector3.Vector3()
+        y = vector3.Vector3()
+        z = vector3.Vector3()
 
         te = self.elements
 
@@ -498,7 +498,7 @@ class Matrix4( object ):
     
     def applyToBufferAttribute( self, attribute ):
 
-        v1 = Vector3()
+        v1 = vector3.Vector3()
 
         for i in range( attribute.count ):
 
@@ -845,7 +845,7 @@ class Matrix4( object ):
     
     def decompose( self, position, quaternion, scale ):
 
-        vector = Vector3()
+        vector = vector3.Vector3()
         matrix = Matrix4()
 
         te = self.elements

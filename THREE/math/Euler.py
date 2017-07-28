@@ -1,7 +1,8 @@
-from Quaternion import *
-from Vector3 import *
-from Matrix4 import *
+from __future__ import division
+import math
+
 import _Math
+import matrix4
 
 class Euler( object ):
     
@@ -207,7 +208,7 @@ class Euler( object ):
     
     def setFromQuaternion( self, q, order, update = False ):
 
-        matrix = Matrix4()
+        matrix = matrix4.Matrix4()
 
         matrix.makeRotationFromQuaternion( q )
 

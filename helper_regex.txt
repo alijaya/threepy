@@ -6,3 +6,9 @@ $1 ) # $2
 
 assert.numEqual
 self.assertAlmostEqual
+
+(\S*): def \((.*)\):
+def $1( self,$2):
+
+self,\)
+self )

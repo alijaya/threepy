@@ -1,14 +1,19 @@
 import json
 import logging
 
-from EventDispatcher import *
-from ..math.Vector3 import *
-from ..math.Euler import *
 from ..math import _Math
+from ..math import vector3
+from ..math import euler
+from ..math import quaternion
+from ..math import matrix4
+from ..math import matrix3
 
-class Object3D( EventDispatcher ):
+import eventDispatcher
+import layers
 
-    DefaultUp = Vector3( 0, 1, 0 )
+class Object3D( eventDispatcher.EventDispatcher ):
+
+    DefaultUp = vector3.Vector3( 0, 1, 0 )
     DefaultMatrixAutoUpdate = True
 
     Object3DId = 0
@@ -30,10 +35,10 @@ class Object3D( EventDispatcher ):
 
         self.up = Object3D.DefaultUp.clone()
 
-        self.position = Vector3()
-        self.rotation = Euler()
-        self.quaternion = Quaternion()
-        self.scale = Vector3( 1, 1, 1 )
+        self.position = vector3.Vector3()
+        self.rotation = euler.Euler()
+        self.quaternion = quaternion.Quaternion()
+        self.scale = vector3.Vector3( 1, 1, 1 )
 
         def onRotationChange():
             
@@ -46,16 +51,16 @@ class Object3D( EventDispatcher ):
         self.rotation.onChange( onRotationChange )
         self.quaternion.onChange( onQuaternionChange )
 
-        self.modelViewMatrix = Matrix4()
-        self.normalMatrix = Matrix3()
+        self.modelViewMatrix = matrix4.Matrix4()
+        self.normalMatrix = matrix3.Matrix3()
 
-        self.matrix = Matrix4()
-        self.matrixWorld = Matrix4()
+        self.matrix = matrix4.Matrix4()
+        self.matrixWorld = matrix4.Matrix4()
 
         self.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate
         self.matrixWorldNeedsUpdate = False
 
-        self.layers = Layers()
+        self.layers = layers.Layers()
         self.visible = True
 
         self.castShadow = False
@@ -107,7 +112,7 @@ class Object3D( EventDispatcher ):
 
     def rotateOnAxis( self, axis, angle ):
 
-        q1 = Quaternion()
+        q1 = quaternion.Quaternion()
 
         q1.setFromAxisAngle( axis, angle )
 
@@ -117,25 +122,25 @@ class Object3D( EventDispatcher ):
 
     def rotateX( self, angle ):
 
-        v1 = Vector3( 1, 0, 0 )
+        v1 = vector3.Vector3( 1, 0, 0 )
 
         return self.rotateOnAxis( v1, angle )
 
     def rotateY( self, angle ):
 
-        v1 = Vector3( 0, 1, 0 )
+        v1 = vector3.Vector3( 0, 1, 0 )
 
         return self.rotateOnAxis( v1, angle )
 
     def rotateZ( self, angle ):
         
-        v1 = Vector3( 0, 0, 1 )
+        v1 = vector3.Vector3( 0, 0, 1 )
 
         return self.rotateOnAxis( v1, angle )
 
     def translateOnAxis( self, axis, distance ):
 
-        v1 = Vector3()
+        v1 = vector3.Vector3()
 
         v1.copy( axis ).applyQuaternion( self.quaternion )
 
@@ -145,19 +150,19 @@ class Object3D( EventDispatcher ):
 
     def translateX( self, distance ):
 
-        v1 = Vector3( 1, 0, 0 )
+        v1 = vector3.Vector3( 1, 0, 0 )
 
         return self.translateOnAxis( v1, distance )
 
     def translateY( self, distance ):
 
-        v1 = Vector3( 0, 1, 0 )
+        v1 = vector3.Vector3( 0, 1, 0 )
 
         return self.translateOnAxis( v1, distance )
 
     def translateZ( self, distance ):
 
-        v1 = Vector3( 0, 0, 1 )
+        v1 = vector3.Vector3( 0, 0, 1 )
 
         return self.translateOnAxis( v1, distance )
 
@@ -167,15 +172,15 @@ class Object3D( EventDispatcher ):
 
     def worldToLocal( self, vector ):
 
-        m1 = Matrix4()
+        m1 = matrix4.Matrix4()
 
         return vector.applyMatrix4( m1.getInverse( this.matrixWorld ) )
 
     def lookAt( self, vector ):
 
-        m1 = Matrix4()
+        m1 = matrix4.Matrix4()
 
-        if self.isCamera:
+        if hasattr( self, "isCamera" ):
 
             m1.lookAt( self.position, vector, self.up )
         
@@ -250,7 +255,7 @@ class Object3D( EventDispatcher ):
 
     def getWorldPosition( self, optionalTarget=None ):
 
-        result = optionalTarget or Vector3()
+        result = optionalTarget or vector3.Vector3()
 
         self.updateMatrixWorld( True )
 
@@ -258,10 +263,10 @@ class Object3D( EventDispatcher ):
 
     def getWorldQuaternion( self, optionalTarget=None ):
 
-        result = optionalTarget or Quaternion()
+        result = optionalTarget or quaternion.Quaternion()
 
-        position = Vector3()
-        scale = vector3()
+        position = vector3.Vector3()
+        scale = vector3.Vector3()
 
         self.updateMatrixWorld( True )
 
@@ -271,20 +276,20 @@ class Object3D( EventDispatcher ):
 
     def getWorldRotation( self, optionalTarget=None ):
 
-        result = optionalTarget or Euler()
+        result = optionalTarget or euler.Euler()
 
-        quaternion = Quaternion()
+        q = quaternion.Quaternion()
 
-        self.getWorldQuaternion( quaternion )
+        self.getWorldQuaternion( q )
 
-        return result.setFromQuaternion( quaternion, self.rotation.order, False )
+        return result.setFromQuaternion( q, self.rotation.order, False )
 
     def getWorldScale( self, optionalTarget ):
 
-        result = optionalTarget or Vector3()
+        result = optionalTarget or vector3.Vector3()
 
-        position = Vector3()
-        quaternion = Quaternion()
+        position = vector3.Vector3()
+        quaternion = quaternion.Quaternion()
 
         self.updateMatrixWorld( True )
 
@@ -294,9 +299,9 @@ class Object3D( EventDispatcher ):
 
     def getWorldDirection( self, optionalTarget ):
 
-        result = optionalTarget or Vector3()
+        result = optionalTarget or vector3.Vector3()
 
-        quaternion = Quaternion()
+        quaternion = quaternion.Quaternion()
 
         self.getWorldQuaternion( quaternion )
 
