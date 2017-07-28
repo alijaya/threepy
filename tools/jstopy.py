@@ -30,7 +30,7 @@ rules = [
     ( "Math.round", "round" ),
     ( "Math.max", "max" ),
     ( "Math.min", "min" ),
-    ( "Math", "math" )
+    ( "Math", "math" ),
     ( "\+\+", "+= 1" ),
     ( " = (.*) \? (.*) : ([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
     ( "if ?\( (.*) \)( {)?", "if \g<1>:" ),
