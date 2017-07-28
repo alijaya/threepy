@@ -3,6 +3,8 @@ import math
 
 import _Math
 import matrix4
+import vector3
+import quaternion
 
 class Euler( object ):
     
@@ -222,7 +224,7 @@ class Euler( object ):
 
         # WARNING: self discards revolution information -bhouston
 
-        q = Quaternion()
+        q = quaternion.Quaternion()
 
         q.setFromEuler( self )
 
@@ -262,7 +264,7 @@ class Euler( object ):
 
         else:
 
-            return Vector3( self._x, self._y, self._z )
+            return vector3.Vector3( self._x, self._y, self._z )
     
     def onChange( self, callback ):
 
