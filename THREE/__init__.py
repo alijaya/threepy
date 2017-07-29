@@ -1,4 +1,4 @@
-
+from THREE.cameras.camera import Camera
 from THREE.core.eventDispatcher import EventDispatcher
 from THREE.core.layers import Layers
 from THREE.core.object3D import Object3D

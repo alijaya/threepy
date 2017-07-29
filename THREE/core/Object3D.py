@@ -477,11 +477,11 @@ class Object3D( eventDispatcher.EventDispatcher ):
             
             return values
     
-    def clone( self, recursive=True ):
+    def clone( self, recursive = True ):
 
         return Object3D().copy( self, recursive )
 
-    def copy( self, source, recursive=True ):
+    def copy( self, source, recursive = True ):
 
         self.name = source.name
 
