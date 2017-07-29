@@ -1,5 +1,9 @@
-from THREE.math.vector3 import Vector3
+from __future__ import division
 
-v = Vector3( 1, 0, 0 )
+import THREE
 
-print( v.x )
+width = 800
+height = 600
+
+scene = THREE.Scene()
+camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )

@@ -7,6 +7,7 @@ from THREE.math.euler import Euler
 # from THREE.math.frustum import Frustum
 from THREE.math.matrix3 import Matrix3
 from THREE.math.matrix4 import Matrix4
+from THREE.scenes.scene import Scene
 from THREE.math.quaternion import Quaternion
 from THREE.math.vector2 import Vector2
 from THREE.math.vector3 import Vector3
