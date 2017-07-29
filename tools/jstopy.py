@@ -48,7 +48,10 @@ rulesTest = [
     ( "QUnit\.module\( \"(.*)\" \)", "class Test\g<1>( unittest.TestCase ):" ),
     ( "QUnit\.test\( \"(.*)\"[^\n]*", "def test_\g<1>( self ):\n" ),
     ( "(\S*) = function\((.*)\) {", "def \g<1>(\g<2>):\n" ),
-    ( "assert\.ok\( (.*), \"(.*)\" \)", "self.assertTrue( \g<1> ) # \g<2>" )
+    ( "assert\.ok\( (.*) == (.*), \"(.*)\" \)", "self.assertEqual( \g<1>, \g<2> ) # \g<3>" ),
+    ( "assert\.ok\( (.*) == (.*) \)", "self.assertEqual( \g<1>, \g<2> )" ),
+    ( "assert\.ok\( (.*), \"(.*)\" \)", "self.assertTrue( \g<1> ) # \g<2>" ),
+    ( "assert\.ok\( (.*) \)", "self.assertTrue( \g<1> )" )
 ]
 
 rulesClean = [
