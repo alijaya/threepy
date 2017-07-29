@@ -32,15 +32,18 @@ rules = [
     ( "Math.min", "min" ),
     ( "Math.PI", "math.pi" ),
     ( "Math", "math" ),
+    ( "_math", "_Math" ),
+    ( "\/\*\*", "\"\"\"" ),
+    ( "\*\/", "\"\"\"" ),
     ( "\+\+", "+= 1" ),
-    ( " = (.*) \? (.*) : ([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
-    ( "if ?\( (.*) \)( {)?", "if \g<1>:" ),
-    ( "for ?\( (.*) \)( {)?", "for \g<1>:" ),
+    ( " = (.*?) \? (.*?) : ([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
+    ( "if ?\( (.*?) \)( {)?", "if \g<1>:" ),
+    ( "for ?\( (.*?) \)( {)?", "for \g<1>:" ),
 ]
 
 rulesClass = [
     ( "[^\n]*\.prototype = ", "" ),
-    ( "Object\.assign\( [^\n]*\n", "" ),
+    ( "Object\.assign\( [^\n]*", "" ),
     ( "([\S]*): function \((.*)\) {", "def \g<1>( self,\g<2>):" ),
     ( "function (.*)\((.*)\) {", "def \g<1>( self,\g<2>):" ),
     ( "\( self,\)", "( self )" )
@@ -104,10 +107,18 @@ if not test:
 
         s = c[1]
         s = re.sub( "\.\.\/", ".", s )
-        s = re.sub( "^(\.*)", "\g<1>.", s)
+        s = re.sub( "\.\/", "", s )
+        s = re.sub( "^(\.+)", "\g<1>.", s)
         s = re.sub( "\/", ".", s )
-        s = re.sub( c[0], c[2], s )
-        importStatement += "from %s import %s\n" % ( s, c[0] )
+        s = re.sub( "\." + c[0], "", s )
+
+        if s == c[0]:
+
+            importStatement += "import %s\n" % c[2]
+        
+        else:
+
+            importStatement += "from %s import %s\n" % ( s, c[2] )
 
     pytext = importStatement + pytext
     
