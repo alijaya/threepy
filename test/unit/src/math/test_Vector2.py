@@ -2,7 +2,7 @@ from __future__ import division
 import unittest
 import math
 
-from THREE import Vector2
+import THREE
 
 from Constants import *
 
@@ -10,7 +10,7 @@ class TestVector2( unittest.TestCase ):
 
     def setUp( self ):
 
-        self.addTypeEqualityFunc( Vector2, self.assertVector2Equal )
+        self.addTypeEqualityFunc( THREE.Vector2, self.assertVector2Equal )
 
     def assertVector2Equal( self, first, second, msg = None ):
 
@@ -19,18 +19,18 @@ class TestVector2( unittest.TestCase ):
 
     def test_constructor( self ):
 
-        a = Vector2()
+        a = THREE.Vector2()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
 
-        a = Vector2( x, y )
+        a = THREE.Vector2( x, y )
         self.assertEqual( a.x, x )
         self.assertEqual( a.y, y )
 
     def test_copy( self ):
 
-        a = Vector2( x, y )
-        b = Vector2().copy( a )
+        a = THREE.Vector2( x, y )
+        b = THREE.Vector2().copy( a )
         self.assertEqual( b.x, x )
         self.assertEqual( b.y, y )
 
@@ -42,7 +42,7 @@ class TestVector2( unittest.TestCase ):
     
     def test_set( self ):
 
-        a = Vector2()
+        a = THREE.Vector2()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
 
@@ -52,7 +52,7 @@ class TestVector2( unittest.TestCase ):
     
     def test_setX_setY( self ):
 
-        a = Vector2()
+        a = THREE.Vector2()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
 
@@ -63,7 +63,7 @@ class TestVector2( unittest.TestCase ):
 
     def test_setComponent_getComponent( self ):
 
-        a = Vector2()
+        a = THREE.Vector2()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
 
@@ -74,34 +74,34 @@ class TestVector2( unittest.TestCase ):
 
     def test_add( self ):
 
-        a = Vector2( x, y )
-        b = Vector2( -x, -y )
+        a = THREE.Vector2( x, y )
+        b = THREE.Vector2( -x, -y )
 
         a.add( b )
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
 
-        c = Vector2().addVectors( b, b )
+        c = THREE.Vector2().addVectors( b, b )
         self.assertEqual( c.x, -2 * x )
         self.assertEqual( c.y, -2 * y )
 
     def test_sub( self ):
 
-        a = Vector2( x, y )
-        b = Vector2( -x, -y )
+        a = THREE.Vector2( x, y )
+        b = THREE.Vector2( -x, -y )
 
         a.sub( b )
         self.assertEqual( a.x, 2 * x )
         self.assertEqual( a.y, 2 * y )
 
-        c = Vector2().subVectors( a, a )
+        c = THREE.Vector2().subVectors( a, a )
         self.assertEqual( c.x, 0 )
         self.assertEqual( c.y, 0 )
     
     def test_multiply_divide( self ):
 
-        a = Vector2( x, y )
-        b = Vector2( -x, -y )
+        a = THREE.Vector2( x, y )
+        b = THREE.Vector2( -x, -y )
 
         a.multiplyScalar( -2 )
         self.assertEqual( a.x, x * -2 )
@@ -121,9 +121,9 @@ class TestVector2( unittest.TestCase ):
 
     def test_min_max_clamp( self ):
 
-        a = Vector2( x, y )
-        b = Vector2( -x, -y )
-        c = Vector2()
+        a = THREE.Vector2( x, y )
+        b = THREE.Vector2( -x, -y )
+        c = THREE.Vector2()
 
         c.copy( a ).min( b )
         self.assertEqual( c.x, -x )
@@ -145,37 +145,37 @@ class TestVector2( unittest.TestCase ):
 
     def test_rounding( self ):
 
-        self.assertEqual( Vector2( -0.1, 0.1 ).floor(), Vector2( -1, 0 ) )
-        self.assertEqual( Vector2( -0.5, 0.5 ).floor(), Vector2( -1, 0 ) )
-        self.assertEqual( Vector2( -0.9, 0.9 ).floor(), Vector2( -1, 0 ) )
+        self.assertEqual( THREE.Vector2( -0.1, 0.1 ).floor(), THREE.Vector2( -1, 0 ) )
+        self.assertEqual( THREE.Vector2( -0.5, 0.5 ).floor(), THREE.Vector2( -1, 0 ) )
+        self.assertEqual( THREE.Vector2( -0.9, 0.9 ).floor(), THREE.Vector2( -1, 0 ) )
 
-        self.assertEqual( Vector2( -0.1, 0.1 ).ceil(), Vector2( 0, 1 ) )
-        self.assertEqual( Vector2( -0.5, 0.5 ).ceil(), Vector2( 0, 1 ) )
-        self.assertEqual( Vector2( -0.9, 0.9 ).ceil(), Vector2( 0, 1 ) )
+        self.assertEqual( THREE.Vector2( -0.1, 0.1 ).ceil(), THREE.Vector2( 0, 1 ) )
+        self.assertEqual( THREE.Vector2( -0.5, 0.5 ).ceil(), THREE.Vector2( 0, 1 ) )
+        self.assertEqual( THREE.Vector2( -0.9, 0.9 ).ceil(), THREE.Vector2( 0, 1 ) )
 
-        self.assertEqual( Vector2( -0.1, 0.1 ).round(), Vector2( 0, 0 ) )
-        self.assertEqual( Vector2( -0.5, 0.5 ).round(), Vector2( -1, 1 ) ) # on JS, it's 0, 1, different rounding behaviour
-        self.assertEqual( Vector2( -0.9, 0.9 ).round(), Vector2( -1, 1 ) )
+        self.assertEqual( THREE.Vector2( -0.1, 0.1 ).round(), THREE.Vector2( 0, 0 ) )
+        self.assertEqual( THREE.Vector2( -0.5, 0.5 ).round(), THREE.Vector2( -1, 1 ) ) # on JS, it's 0, 1, different rounding behaviour
+        self.assertEqual( THREE.Vector2( -0.9, 0.9 ).round(), THREE.Vector2( -1, 1 ) )
 
-        self.assertEqual( Vector2( -0.1, 0.1 ).roundToZero(), Vector2( 0, 0 ) )
-        self.assertEqual( Vector2( -0.5, 0.5 ).roundToZero(), Vector2( 0, 0 ) )
-        self.assertEqual( Vector2( -0.9, 0.9 ).roundToZero(), Vector2( 0, 0 ) )
-        self.assertEqual( Vector2( -1.1, 1.1 ).roundToZero(), Vector2( -1, 1 ) )
-        self.assertEqual( Vector2( -1.5, 1.5 ).roundToZero(), Vector2( -1, 1 ) )
-        self.assertEqual( Vector2( -1.9, 1.9 ).roundToZero(), Vector2( -1, 1 ) )
+        self.assertEqual( THREE.Vector2( -0.1, 0.1 ).roundToZero(), THREE.Vector2( 0, 0 ) )
+        self.assertEqual( THREE.Vector2( -0.5, 0.5 ).roundToZero(), THREE.Vector2( 0, 0 ) )
+        self.assertEqual( THREE.Vector2( -0.9, 0.9 ).roundToZero(), THREE.Vector2( 0, 0 ) )
+        self.assertEqual( THREE.Vector2( -1.1, 1.1 ).roundToZero(), THREE.Vector2( -1, 1 ) )
+        self.assertEqual( THREE.Vector2( -1.5, 1.5 ).roundToZero(), THREE.Vector2( -1, 1 ) )
+        self.assertEqual( THREE.Vector2( -1.9, 1.9 ).roundToZero(), THREE.Vector2( -1, 1 ) )
     
     def test_negate( self ):
 
-        a = Vector2( x, y )
+        a = THREE.Vector2( x, y )
 
         a.negate()
         self.assertEqual( a.x, -x )
         self.assertEqual( a.y, -y )
 
     def test_dot( self ):
-        a = Vector2( x, y )
-        b = Vector2( -x, -y )
-        c = Vector2()
+        a = THREE.Vector2( x, y )
+        b = THREE.Vector2( -x, -y )
+        c = THREE.Vector2()
 
         result = a.dot( b )
         self.assertEqual( result, - x * x - y * y )
@@ -185,9 +185,9 @@ class TestVector2( unittest.TestCase ):
     
     def test_length_lengthSq( self ):
 
-        a = Vector2( x, 0 )
-        b = Vector2( 0, -y )
-        c = Vector2()
+        a = THREE.Vector2( x, 0 )
+        b = THREE.Vector2( 0, -y )
+        c = THREE.Vector2()
 
         self.assertEqual( a.length(), x )
         self.assertEqual( a.lengthSq(), x * x )
@@ -202,9 +202,9 @@ class TestVector2( unittest.TestCase ):
     
     def test_normalize( self ):
 
-        a = Vector2( x, 0 )
-        b = Vector2( 0, -y )
-        c = Vector2()
+        a = THREE.Vector2( x, 0 )
+        b = THREE.Vector2( 0, -y )
+        c = THREE.Vector2()
 
         a.normalize()
         self.assertEqual( a.length(), 1 )
@@ -216,9 +216,9 @@ class TestVector2( unittest.TestCase ):
 
     def test_distanceTo_distanceToSquared( self ):
 
-        a = Vector2( x, 0 )
-        b = Vector2( 0, -y )
-        c = Vector2()
+        a = THREE.Vector2( x, 0 )
+        b = THREE.Vector2( 0, -y )
+        c = THREE.Vector2()
 
         self.assertEqual( a.distanceTo( c ), x )
         self.assertEqual( a.distanceToSquared( c ), x * x )
@@ -228,21 +228,21 @@ class TestVector2( unittest.TestCase ):
 
     def test_setLength( self ):
 
-        a = Vector2( x, 0 )
+        a = THREE.Vector2( x, 0 )
 
         self.assertEqual( a.length(), x )
         a.setLength( y )
         self.assertEqual( a.length(), y )
 
-        a = Vector2( 0, 0 )
+        a = THREE.Vector2( 0, 0 )
         self.assertEqual( a.length(), 0 )
         a.setLength( y )
         self.assertEqual( a.length(), 0 ) # no effect
     
     def test_lerp_clone( self ):
 
-        a = Vector2( x, 0 )
-        b = Vector2( 0, -y )
+        a = THREE.Vector2( x, 0 )
+        b = THREE.Vector2( 0, -y )
 
         self.assertTrue( a.lerp( a, 0 ).equals( a.lerp( a, 0.5 ) ) )
         self.assertTrue( a.lerp( a, 0 ).equals( a.lerp( a, 1 ) ) )
@@ -256,8 +256,8 @@ class TestVector2( unittest.TestCase ):
 
     def test_equals( self ):
 
-        a = Vector2( x, 0 )
-        b = Vector2( 0, -y )
+        a = THREE.Vector2( x, 0 )
+        b = THREE.Vector2( 0, -y )
 
         self.assertNotEqual( a.x, b.x )
         self.assertNotEqual( a.y, b.y )

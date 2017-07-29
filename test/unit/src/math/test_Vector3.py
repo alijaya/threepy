@@ -2,7 +2,7 @@ from __future__ import division
 import unittest
 import math
 
-from THREE import Vector3
+import THREE
 
 from Constants import *
 
@@ -10,7 +10,7 @@ class TestVector3( unittest.TestCase ):
 
     def setUp( self ):
 
-        self.addTypeEqualityFunc( Vector3, self.assertVector3Equal )
+        self.addTypeEqualityFunc( THREE.Vector3, self.assertVector3Equal )
 
     def assertVector3Equal( self, first, second, msg = None ):
 
@@ -20,20 +20,20 @@ class TestVector3( unittest.TestCase ):
 
     def test_constructor( self ):
 
-        a = Vector3()
+        a = THREE.Vector3()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
 
-        a = Vector3( x, y, z )
+        a = THREE.Vector3( x, y, z )
         self.assertEqual( a.x, x )
         self.assertEqual( a.y, y )
         self.assertEqual( a.z, z )
 
     def test_copy( self ):
 
-        a = Vector3( x, y, z )
-        b = Vector3().copy( a )
+        a = THREE.Vector3( x, y, z )
+        b = THREE.Vector3().copy( a )
         self.assertEqual( b.x, x )
         self.assertEqual( b.y, y )
         self.assertEqual( b.z, z )
@@ -48,7 +48,7 @@ class TestVector3( unittest.TestCase ):
     
     def test_set( self ):
 
-        a = Vector3()
+        a = THREE.Vector3()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -60,7 +60,7 @@ class TestVector3( unittest.TestCase ):
     
     def test_setX_setY_setZ( self ):
 
-        a = Vector3()
+        a = THREE.Vector3()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -75,7 +75,7 @@ class TestVector3( unittest.TestCase ):
 
     def test_setComponent_getComponent( self ):
 
-        a = Vector3()
+        a = THREE.Vector3()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -89,38 +89,38 @@ class TestVector3( unittest.TestCase ):
 
     def test_add( self ):
 
-        a = Vector3( x, y, z )
-        b = Vector3( -x, -y, -z )
+        a = THREE.Vector3( x, y, z )
+        b = THREE.Vector3( -x, -y, -z )
 
         a.add( b )
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
 
-        c = Vector3().addVectors( b, b )
+        c = THREE.Vector3().addVectors( b, b )
         self.assertEqual( c.x, -2 * x )
         self.assertEqual( c.y, -2 * y )
         self.assertEqual( c.z, -2 * z )
 
     def test_sub( self ):
 
-        a = Vector3( x, y, z )
-        b = Vector3( -x, -y, -z )
+        a = THREE.Vector3( x, y, z )
+        b = THREE.Vector3( -x, -y, -z )
 
         a.sub( b )
         self.assertEqual( a.x, 2 * x )
         self.assertEqual( a.y, 2 * y )
         self.assertEqual( a.z, 2 * z )
 
-        c = Vector3().subVectors( a, a )
+        c = THREE.Vector3().subVectors( a, a )
         self.assertEqual( c.x, 0 )
         self.assertEqual( c.y, 0 )
         self.assertEqual( c.z, 0 )
     
     def test_multiply_divide( self ):
 
-        a = Vector3( x, y, z )
-        b = Vector3( -x, -y, -z )
+        a = THREE.Vector3( x, y, z )
+        b = THREE.Vector3( -x, -y, -z )
 
         a.multiplyScalar( -2 )
         self.assertEqual( a.x, x * -2 )
@@ -144,9 +144,9 @@ class TestVector3( unittest.TestCase ):
 
     def test_min_max_clamp( self ):
 
-        a = Vector3( x, y, z )
-        b = Vector3( -x, -y, -z )
-        c = Vector3()
+        a = THREE.Vector3( x, y, z )
+        b = THREE.Vector3( -x, -y, -z )
+        c = THREE.Vector3()
 
         c.copy( a ).min( b )
         self.assertEqual( c.x, -x )
@@ -166,7 +166,7 @@ class TestVector3( unittest.TestCase ):
 
     def test_negate( self ):
 
-        a = Vector3( x, y, z )
+        a = THREE.Vector3( x, y, z )
 
         a.negate()
         self.assertEqual( a.x, -x )
@@ -174,9 +174,9 @@ class TestVector3( unittest.TestCase ):
         self.assertEqual( a.z, -z )
 
     def test_dot( self ):
-        a = Vector3( x, y, z )
-        b = Vector3( -x, -y, -z )
-        c = Vector3()
+        a = THREE.Vector3( x, y, z )
+        b = THREE.Vector3( -x, -y, -z )
+        c = THREE.Vector3()
 
         result = a.dot( b )
         self.assertEqual( result, - x * x - y * y - z * z )
@@ -186,10 +186,10 @@ class TestVector3( unittest.TestCase ):
     
     def test_length_lengthSq( self ):
 
-        a = Vector3( x, 0, 0 )
-        b = Vector3( 0, -y, 0 )
-        c = Vector3( 0, 0, z)
-        d = Vector3()
+        a = THREE.Vector3( x, 0, 0 )
+        b = THREE.Vector3( 0, -y, 0 )
+        c = THREE.Vector3( 0, 0, z)
+        d = THREE.Vector3()
 
         self.assertEqual( a.length(), x )
         self.assertEqual( a.lengthSq(), x * x )
@@ -206,9 +206,9 @@ class TestVector3( unittest.TestCase ):
     
     def test_normalize( self ):
 
-        a = Vector3( x, 0, 0 )
-        b = Vector3( 0, -y, 0 )
-        c = Vector3( 0, 0, z)
+        a = THREE.Vector3( x, 0, 0 )
+        b = THREE.Vector3( 0, -y, 0 )
+        c = THREE.Vector3( 0, 0, z)
 
         a.normalize()
         self.assertEqual( a.length(), 1 )
@@ -224,10 +224,10 @@ class TestVector3( unittest.TestCase ):
 
     def test_distanceTo_distanceToSquared( self ):
 
-        a = Vector3( x, 0, 0 )
-        b = Vector3( 0, -y, 0 )
-        c = Vector3( 0, 0, z )
-        d = Vector3()
+        a = THREE.Vector3( x, 0, 0 )
+        b = THREE.Vector3( 0, -y, 0 )
+        c = THREE.Vector3( 0, 0, z )
+        d = THREE.Vector3()
 
         self.assertEqual( a.distanceTo( d ), x )
         self.assertEqual( a.distanceToSquared( d ), x * x )
@@ -240,79 +240,79 @@ class TestVector3( unittest.TestCase ):
 
     def test_setLength( self ):
 
-        a = Vector3( x, 0, 0 )
+        a = THREE.Vector3( x, 0, 0 )
 
         self.assertEqual( a.length(), x )
         a.setLength( y )
         self.assertEqual( a.length(), y )
 
-        a = Vector3( 0, 0, 0 )
+        a = THREE.Vector3( 0, 0, 0 )
         self.assertEqual( a.length(), 0 )
         a.setLength( y )
         self.assertEqual( a.length(), 0 ) # no effect
     
     def test_projectOnVector( self ):
 
-        a = Vector3( 1, 0, 0 )
-        b = Vector3()
-        normal = Vector3( 10, 0, 0 )
+        a = THREE.Vector3( 1, 0, 0 )
+        b = THREE.Vector3()
+        normal = THREE.Vector3( 10, 0, 0 )
 
-        self.assertEqual( b.copy( a ).projectOnVector( normal ), Vector3( 1, 0, 0 ) )
-        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( Vector3( 1, 0, 0 ) ) )
+        self.assertEqual( b.copy( a ).projectOnVector( normal ), THREE.Vector3( 1, 0, 0 ) )
+        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( THREE.Vector3( 1, 0, 0 ) ) )
 
         a.set( 0, 1, 0 )
-        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( Vector3( 0, 0, 0 ) ) )
+        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( THREE.Vector3( 0, 0, 0 ) ) )
 
         a.set( 0, 0, -1 )
-        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( Vector3( 0, 0, 0 ) ) )
+        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( THREE.Vector3( 0, 0, 0 ) ) )
 
         a.set( -1, 0, 0 )
-        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( Vector3( -1, 0, 0 ) ) )
+        self.assertTrue( b.copy( a ).projectOnVector( normal ).equals( THREE.Vector3( -1, 0, 0 ) ) )
 
     def test_projectOnPlane( self ):
 
-        a = Vector3( 1, 0, 0 )
-        b = Vector3()
-        normal = Vector3( 1, 0, 0 )
+        a = THREE.Vector3( 1, 0, 0 )
+        b = THREE.Vector3()
+        normal = THREE.Vector3( 1, 0, 0 )
 
-        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( Vector3( 0, 0, 0 ) ) )
+        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( THREE.Vector3( 0, 0, 0 ) ) )
 
         a.set( 0, 1, 0 )
-        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( Vector3( 0, 1, 0 ) ) )
+        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( THREE.Vector3( 0, 1, 0 ) ) )
 
         a.set( 0, 0, -1 )
-        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( Vector3( 0, 0, -1 ) ) )
+        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( THREE.Vector3( 0, 0, -1 ) ) )
 
         a.set( -1, 0, 0 )
-        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( Vector3( 0, 0, 0 ) ) )
+        self.assertTrue( b.copy( a ).projectOnPlane( normal ).equals( THREE.Vector3( 0, 0, 0 ) ) )
 
     def test_reflect( self ):
 
-        a = Vector3()
-        normal = Vector3( 0, 1, 0 )
-        b = Vector3()
+        a = THREE.Vector3()
+        normal = THREE.Vector3( 0, 1, 0 )
+        b = THREE.Vector3()
 
         a.set( 0, -1, 0 )
-        self.assertTrue( b.copy( a ).reflect( normal ).equals( Vector3( 0, 1, 0 ) ) )
+        self.assertTrue( b.copy( a ).reflect( normal ).equals( THREE.Vector3( 0, 1, 0 ) ) )
 
         a.set( 1, -1, 0 )
-        self.assertTrue( b.copy( a ).reflect( normal ).equals( Vector3( 1, 1, 0 ) ) )
+        self.assertTrue( b.copy( a ).reflect( normal ).equals( THREE.Vector3( 1, 1, 0 ) ) )
 
         a.set( 1, -1, 0 )
         normal.set( 0, -1, 0 )
-        self.assertTrue( b.copy( a ).reflect( normal ).equals( Vector3( 1, 1, 0 ) ) )
+        self.assertTrue( b.copy( a ).reflect( normal ).equals( THREE.Vector3( 1, 1, 0 ) ) )
 
     def test_angleTo( self ):
 
-        a = Vector3( 0, -0.18851655680720186, 0.9820700116639124 )
-        b = Vector3( 0, 0.18851655680720186, -0.9820700116639124 )
+        a = THREE.Vector3( 0, -0.18851655680720186, 0.9820700116639124 )
+        b = THREE.Vector3( 0, 0.18851655680720186, -0.9820700116639124 )
 
         self.assertEqual( a.angleTo( a ), 0 )
         self.assertEqual( a.angleTo( b ), math.pi )
 
-        x = Vector3( 1, 0, 0 )
-        y = Vector3( 0, 1, 0 )
-        z = Vector3( 0, 0, 1 )
+        x = THREE.Vector3( 1, 0, 0 )
+        y = THREE.Vector3( 0, 1, 0 )
+        z = THREE.Vector3( 0, 0, 1 )
 
         self.assertEqual( x.angleTo( y ), math.pi / 2 )
         self.assertEqual( x.angleTo( z ), math.pi / 2 )
@@ -320,8 +320,8 @@ class TestVector3( unittest.TestCase ):
 
     def test_lerp_clone( self ):
 
-        a = Vector3( x, 0, z )
-        b = Vector3( 0, -y, 0 )
+        a = THREE.Vector3( x, 0, z )
+        b = THREE.Vector3( 0, -y, 0 )
 
         self.assertTrue( a.lerp( a, 0 ).equals( a.lerp( a, 0.5 ) ) )
         self.assertTrue( a.lerp( a, 0 ).equals( a.lerp( a, 1 ) ) )
@@ -336,8 +336,8 @@ class TestVector3( unittest.TestCase ):
 
     def test_equals( self ):
 
-        a = Vector3( x, 0, z )
-        b = Vector3( 0, -y, 0 )
+        a = THREE.Vector3( x, 0, z )
+        b = THREE.Vector3( 0, -y, 0 )
 
         self.assertNotEqual( a.x, b.x )
         self.assertNotEqual( a.y, b.y )
@@ -357,7 +357,7 @@ class TestVector3( unittest.TestCase ):
     # TODO Vector4
     # def test_applyMatrix4( self ):
 
-    #     a = Vector3( x, y, z )
+    #     a = THREE.Vector3( x, y, z )
     #     b = Vector4( x, y, z, 1 )
 
     #     m = Matrix4().makeRotationX( math.pi )

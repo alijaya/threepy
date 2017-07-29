@@ -2,7 +2,7 @@ from __future__ import division
 import unittest
 import math
 
-from THREE import Vector4
+import THREE
 
 from Constants import *
 
@@ -10,7 +10,7 @@ class TestVector4( unittest.TestCase ):
 
     def setUp( self ):
 
-        self.addTypeEqualityFunc( Vector4, self.assertVector4Equal )
+        self.addTypeEqualityFunc( THREE.Vector4, self.assertVector4Equal )
 
     def assertVector4Equal( self, first, second, msg = None ):
 
@@ -21,13 +21,13 @@ class TestVector4( unittest.TestCase ):
 
     def test_constructor( self ):
 
-        a = Vector4()
+        a = THREE.Vector4()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
         self.assertEqual( a.w, 1 )
 
-        a = Vector4( x, y, z, w )
+        a = THREE.Vector4( x, y, z, w )
         self.assertEqual( a.x, x )
         self.assertEqual( a.y, y )
         self.assertEqual( a.z, z )
@@ -35,8 +35,8 @@ class TestVector4( unittest.TestCase ):
 
     def test_copy( self ):
 
-        a = Vector4( x, y, z, w )
-        b = Vector4().copy( a )
+        a = THREE.Vector4( x, y, z, w )
+        b = THREE.Vector4().copy( a )
         self.assertEqual( b.x, x )
         self.assertEqual( b.y, y )
         self.assertEqual( b.z, z )
@@ -54,7 +54,7 @@ class TestVector4( unittest.TestCase ):
     
     def test_set( self ):
 
-        a = Vector4()
+        a = THREE.Vector4()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -68,7 +68,7 @@ class TestVector4( unittest.TestCase ):
     
     def test_setX_setY_setZ_setW( self ):
 
-        a = Vector4()
+        a = THREE.Vector4()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -86,7 +86,7 @@ class TestVector4( unittest.TestCase ):
 
     def test_setComponent_getComponent( self ):
 
-        a = Vector4()
+        a = THREE.Vector4()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -103,8 +103,8 @@ class TestVector4( unittest.TestCase ):
 
     def test_add( self ):
 
-        a = Vector4( x, y, z, w )
-        b = Vector4( -x, -y, -z, -w )
+        a = THREE.Vector4( x, y, z, w )
+        b = THREE.Vector4( -x, -y, -z, -w )
 
         a.add( b )
         self.assertEqual( a.x, 0 )
@@ -112,7 +112,7 @@ class TestVector4( unittest.TestCase ):
         self.assertEqual( a.z, 0 )
         self.assertEqual( a.w, 0 )
 
-        c = Vector4().addVectors( b, b )
+        c = THREE.Vector4().addVectors( b, b )
         self.assertEqual( c.x, -2 * x )
         self.assertEqual( c.y, -2 * y )
         self.assertEqual( c.z, -2 * z )
@@ -120,8 +120,8 @@ class TestVector4( unittest.TestCase ):
 
     def test_sub( self ):
 
-        a = Vector4( x, y, z, w )
-        b = Vector4( -x, -y, -z, -w )
+        a = THREE.Vector4( x, y, z, w )
+        b = THREE.Vector4( -x, -y, -z, -w )
 
         a.sub( b )
         self.assertEqual( a.x, 2 * x )
@@ -129,7 +129,7 @@ class TestVector4( unittest.TestCase ):
         self.assertEqual( a.z, 2 * z )
         self.assertEqual( a.w, 2 * w )
 
-        c = Vector4().subVectors( a, a )
+        c = THREE.Vector4().subVectors( a, a )
         self.assertEqual( c.x, 0 )
         self.assertEqual( c.y, 0 )
         self.assertEqual( c.z, 0 )
@@ -137,8 +137,8 @@ class TestVector4( unittest.TestCase ):
     
     def test_multiply_divide( self ):
 
-        a = Vector4( x, y, z, w )
-        b = Vector4( -x, -y, -z, -w )
+        a = THREE.Vector4( x, y, z, w )
+        b = THREE.Vector4( -x, -y, -z, -w )
 
         a.multiplyScalar( -2 )
         self.assertEqual( a.x, x * -2 )
@@ -166,9 +166,9 @@ class TestVector4( unittest.TestCase ):
 
     def test_min_max_clamp( self ):
 
-        a = Vector4( x, y, z, w )
-        b = Vector4( -x, -y, -z, -w )
-        c = Vector4()
+        a = THREE.Vector4( x, y, z, w )
+        b = THREE.Vector4( -x, -y, -z, -w )
+        c = THREE.Vector4()
 
         c.copy( a ).min( b )
         self.assertEqual( c.x, -x )
@@ -191,7 +191,7 @@ class TestVector4( unittest.TestCase ):
 
     def test_negate( self ):
 
-        a = Vector4( x, y, z, w )
+        a = THREE.Vector4( x, y, z, w )
 
         a.negate()
         self.assertEqual( a.x, -x )
@@ -200,9 +200,9 @@ class TestVector4( unittest.TestCase ):
         self.assertEqual( a.w, -w )
 
     def test_dot( self ):
-        a = Vector4( x, y, z, w )
-        b = Vector4( -x, -y, -z, -w )
-        c = Vector4( 0, 0, 0, 0 )
+        a = THREE.Vector4( x, y, z, w )
+        b = THREE.Vector4( -x, -y, -z, -w )
+        c = THREE.Vector4( 0, 0, 0, 0 )
 
         result = a.dot( b )
         self.assertEqual( result, - x * x - y * y - z * z - w * w )
@@ -212,11 +212,11 @@ class TestVector4( unittest.TestCase ):
     
     def test_length_lengthSq( self ):
 
-        a = Vector4( x, 0, 0, 0 )
-        b = Vector4( 0, -y, 0, 0 )
-        c = Vector4( 0, 0, z, 0 )
-        d = Vector4( 0, 0, 0, w )
-        e = Vector4( 0, 0, 0, 0 )
+        a = THREE.Vector4( x, 0, 0, 0 )
+        b = THREE.Vector4( 0, -y, 0, 0 )
+        c = THREE.Vector4( 0, 0, z, 0 )
+        d = THREE.Vector4( 0, 0, 0, w )
+        e = THREE.Vector4( 0, 0, 0, 0 )
 
         self.assertEqual( a.length(), x )
         self.assertEqual( a.lengthSq(), x * x )
@@ -235,10 +235,10 @@ class TestVector4( unittest.TestCase ):
     
     def test_normalize( self ):
 
-        a = Vector4( x, 0, 0, 0 )
-        b = Vector4( 0, -y, 0, 0 )
-        c = Vector4( 0, 0, z, 0 )
-        d = Vector4( 0, 0, 0, -w )
+        a = THREE.Vector4( x, 0, 0, 0 )
+        b = THREE.Vector4( 0, -y, 0, 0 )
+        c = THREE.Vector4( 0, 0, z, 0 )
+        d = THREE.Vector4( 0, 0, 0, -w )
 
         a.normalize()
         self.assertEqual( a.length(), 1 )
@@ -258,11 +258,11 @@ class TestVector4( unittest.TestCase ):
 
     # def test_distanceTo_distanceToSquared( self ):
 
-    #     a = Vector4( x, 0, 0, 0 )
-    #     b = Vector4( 0, -y, 0, 0 )
-    #     c = Vector4( 0, 0, z, 0 )
-    #     d = Vector4( 0, 0, 0, -w )
-    #     e = Vector4()
+    #     a = THREE.Vector4( x, 0, 0, 0 )
+    #     b = THREE.Vector4( 0, -y, 0, 0 )
+    #     c = THREE.Vector4( 0, 0, z, 0 )
+    #     d = THREE.Vector4( 0, 0, 0, -w )
+    #     e = THREE.Vector4()
 
     #     self.assertEqual( a.distanceTo( e ), x )
     #     self.assertEqual( a.distanceToSquared( e ), x * x )
@@ -278,21 +278,21 @@ class TestVector4( unittest.TestCase ):
 
     def test_setLength( self ):
 
-        a = Vector4( x, 0, 0, 0 )
+        a = THREE.Vector4( x, 0, 0, 0 )
 
         self.assertEqual( a.length(), x )
         a.setLength( y )
         self.assertEqual( a.length(), y )
 
-        a = Vector4( 0, 0, 0, 0 )
+        a = THREE.Vector4( 0, 0, 0, 0 )
         self.assertEqual( a.length(), 0 )
         a.setLength( y )
         self.assertEqual( a.length(), 0 ) # no effect
     
     def test_lerp_clone( self ):
 
-        a = Vector4( x, 0, z, 0 )
-        b = Vector4( 0, -y, 0, -w )
+        a = THREE.Vector4( x, 0, z, 0 )
+        b = THREE.Vector4( 0, -y, 0, -w )
 
         self.assertTrue( a.lerp( a, 0 ).equals( a.lerp( a, 0.5 ) ) )
         self.assertTrue( a.lerp( a, 0 ).equals( a.lerp( a, 1 ) ) )
@@ -308,8 +308,8 @@ class TestVector4( unittest.TestCase ):
 
     def test_equals( self ):
 
-        a = Vector4( x, 0, z, 0 )
-        b = Vector4( 0, -y, 0, -w )
+        a = THREE.Vector4( x, 0, z, 0 )
+        b = THREE.Vector4( 0, -y, 0, -w )
 
         self.assertNotEqual( a.x, b.x )
         self.assertNotEqual( a.y, b.y )

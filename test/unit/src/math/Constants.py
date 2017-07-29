@@ -1,4 +1,4 @@
-from THREE import Vector2
+import THREE
 
 x = 2
 y = 3
@@ -8,9 +8,9 @@ w = 5
 negInf = float( "-inf" )
 posInf = float( "inf" )
 
-negInf2 = Vector2( negInf, negInf )
-posInf2 = Vector2( posInf, posInf )
+negInf2 = THREE.Vector2( negInf, negInf )
+posInf2 = THREE.Vector2( posInf, posInf )
 
-zero2 = Vector2()
-one2 = Vector2( 1, 1 )
-two2 = Vector2( 2, 2 )
+zero2 = THREE.Vector2()
+one2 = THREE.Vector2( 1, 1 )
+two2 = THREE.Vector2( 2, 2 )

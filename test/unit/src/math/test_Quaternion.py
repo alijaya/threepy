@@ -3,20 +3,17 @@ import unittest
 import math
 import sys
 
-from THREE import Euler
-from THREE import Matrix4
-from THREE import Quaternion
-from THREE import Vector3
+import THREE
 
 from Constants import *
 
 
 orders = [ 'XYZ', 'YXZ', 'ZXY', 'ZYX', 'YZX', 'XZY' ]
-eulerAngles = Euler( 0.1, -0.3, 0.25 )
+eulerAngles = THREE.Euler( 0.1, -0.3, 0.25 )
 
 def qSub ( a, b ):
 
-	result = Quaternion()
+	result = THREE.Quaternion()
 	result.copy( a )
 
 	result.x -= b.x
@@ -28,9 +25,9 @@ def qSub ( a, b ):
 
 def doSlerpObject( aArr, bArr, t ):
 
-    a = Quaternion().fromArray( aArr )
-    b = Quaternion().fromArray( bArr )
-    c = Quaternion().fromArray( aArr )
+    a = THREE.Quaternion().fromArray( aArr )
+    b = THREE.Quaternion().fromArray( bArr )
+    c = THREE.Quaternion().fromArray( aArr )
 
     c.slerp( b, t )
 
@@ -56,7 +53,7 @@ def doSlerpArray( a, b, t ):
 
     result = [ 0, 0, 0, 0 ]
 
-    Quaternion.slerpFlat( result, 0, a, 0, b, 0, t )
+    THREE.Quaternion.slerpFlat( result, 0, a, 0, b, 0, t )
 
     def arrDot( a, b ):
 
@@ -85,13 +82,13 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_constructor( self ):
 
-        a = Quaternion()
+        a = THREE.Quaternion()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
         self.assertEqual( a.w, 1 )
 
-        a = Quaternion( x, y, z, w )
+        a = THREE.Quaternion( x, y, z, w )
         self.assertEqual( a.x, x )
         self.assertEqual( a.y, y )
         self.assertEqual( a.z, z )
@@ -99,8 +96,8 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_copy( self ):
 
-        a = Quaternion( x, y, z, w )
-        b = Quaternion().copy( a )
+        a = THREE.Quaternion( x, y, z, w )
+        b = THREE.Quaternion().copy( a )
         self.assertEqual( b.x, x )
         self.assertEqual( b.y, y )
         self.assertEqual( b.z, z )
@@ -116,7 +113,7 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_set( self ):
 
-        a = Quaternion()
+        a = THREE.Quaternion()
         self.assertEqual( a.x, 0 )
         self.assertEqual( a.y, 0 )
         self.assertEqual( a.z, 0 )
@@ -133,18 +130,18 @@ class TestQuaternion( unittest.TestCase ):
         # TODO: find cases to validate.
         self.assertTrue( True )
 
-        zero = Quaternion()
+        zero = THREE.Quaternion()
 
-        a = Quaternion().setFromAxisAngle( Vector3( 1, 0, 0 ), 0 )
+        a = THREE.Quaternion().setFromAxisAngle( THREE.Vector3( 1, 0, 0 ), 0 )
         self.assertTrue( a.equals( zero ) )
-        a = Quaternion().setFromAxisAngle( Vector3( 0, 1, 0 ), 0 )
+        a = THREE.Quaternion().setFromAxisAngle( THREE.Vector3( 0, 1, 0 ), 0 )
         self.assertTrue( a.equals( zero ) )
-        a = Quaternion().setFromAxisAngle( Vector3( 0, 0, 1 ), 0 )
+        a = THREE.Quaternion().setFromAxisAngle( THREE.Vector3( 0, 0, 1 ), 0 )
         self.assertTrue( a.equals( zero ) )
 
-        b1 = Quaternion().setFromAxisAngle( Vector3( 1, 0, 0 ), math.pi )
+        b1 = THREE.Quaternion().setFromAxisAngle( THREE.Vector3( 1, 0, 0 ), math.pi )
         self.assertFalse( a.equals( b1 ) )
-        b2 = Quaternion().setFromAxisAngle( Vector3( 1, 0, 0 ), -math.pi )
+        b2 = THREE.Quaternion().setFromAxisAngle( THREE.Vector3( 1, 0, 0 ), -math.pi )
         self.assertFalse( a.equals( b2 ) )
 
         b1.multiply( b2 )
@@ -152,31 +149,31 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_setFromEuler_setFromQuaternion( self ):
 
-        angles = [ Vector3( 1, 0, 0 ), Vector3( 0, 1, 0 ), Vector3( 0, 0, 1 ) ]
+        angles = [ THREE.Vector3( 1, 0, 0 ), THREE.Vector3( 0, 1, 0 ), THREE.Vector3( 0, 0, 1 ) ]
 
-        # ensure euler conversion to/from Quaternion matches.
+        # ensure euler conversion to/from THREE.Quaternion matches.
         for order in orders:
             for angle in angles:
-                eulers2 = Euler().setFromQuaternion( Quaternion().setFromEuler( Euler( angle.x, angle.y, angle.z, order ) ), order )
-                newAngle = Vector3( eulers2.x, eulers2.y, eulers2.z )
+                eulers2 = THREE.Euler().setFromQuaternion( THREE.Quaternion().setFromEuler( THREE.Euler( angle.x, angle.y, angle.z, order ) ), order )
+                newAngle = THREE.Vector3( eulers2.x, eulers2.y, eulers2.z )
                 self.assertAlmostEqual( newAngle.distanceTo( angle ), 0 )
 
     def test_setFromEuler_setFromRotationMatrix( self ):
 
-        # ensure euler conversion for Quaternion matches that of Matrix4
+        # ensure euler conversion for THREE.Quaternion matches that of THREE.Matrix4
         for order in orders:
             orderAngles = eulerAngles.clone()
             orderAngles.order = order
-            q = Quaternion().setFromEuler( orderAngles )
-            m = Matrix4().makeRotationFromEuler( orderAngles )
-            q2 = Quaternion().setFromRotationMatrix( m )
+            q = THREE.Quaternion().setFromEuler( orderAngles )
+            m = THREE.Matrix4().makeRotationFromEuler( orderAngles )
+            q2 = THREE.Quaternion().setFromRotationMatrix( m )
 
             self.assertAlmostEqual( qSub( q, q2 ).length(), 0 )
 
     def test_normalize_length_lengthSq( self ):
 
-        a = Quaternion( x, y, z, w )
-        b = Quaternion( -x, -y, -z, -w )
+        a = THREE.Quaternion( x, y, z, w )
+        b = THREE.Quaternion( -x, -y, -z, -w )
 
         self.assertNotEqual( a.length(), 1)
         self.assertNotEqual( a.lengthSq(), 1)
@@ -193,7 +190,7 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_inverse_conjugate( self ):
 
-        a = Quaternion( x, y, z, w )
+        a = THREE.Quaternion( x, y, z, w )
 
         # TODO: add better validation here.
 
@@ -207,37 +204,37 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_multiplyQuaternions_multiply( self ):
 
-        angles = [ Euler( 1, 0, 0 ), Euler( 0, 1, 0 ), Euler( 0, 0, 1 ) ]
+        angles = [ THREE.Euler( 1, 0, 0 ), THREE.Euler( 0, 1, 0 ), THREE.Euler( 0, 0, 1 ) ]
 
-        q1 = Quaternion().setFromEuler( angles[0] )
-        q2 = Quaternion().setFromEuler( angles[1] )
-        q3 = Quaternion().setFromEuler( angles[2] )
+        q1 = THREE.Quaternion().setFromEuler( angles[0] )
+        q2 = THREE.Quaternion().setFromEuler( angles[1] )
+        q3 = THREE.Quaternion().setFromEuler( angles[2] )
 
-        q = Quaternion().multiplyQuaternions( q1, q2 ).multiply( q3 )
+        q = THREE.Quaternion().multiplyQuaternions( q1, q2 ).multiply( q3 )
 
-        m1 = Matrix4().makeRotationFromEuler( angles[0] )
-        m2 = Matrix4().makeRotationFromEuler( angles[1] )
-        m3 = Matrix4().makeRotationFromEuler( angles[2] )
+        m1 = THREE.Matrix4().makeRotationFromEuler( angles[0] )
+        m2 = THREE.Matrix4().makeRotationFromEuler( angles[1] )
+        m3 = THREE.Matrix4().makeRotationFromEuler( angles[2] )
 
-        m = Matrix4().multiplyMatrices( m1, m2 ).multiply( m3 )
+        m = THREE.Matrix4().multiplyMatrices( m1, m2 ).multiply( m3 )
 
-        qFromM = Quaternion().setFromRotationMatrix( m )
+        qFromM = THREE.Quaternion().setFromRotationMatrix( m )
 
         self.assertAlmostEqual( qSub( q, qFromM ).length(), 0 )
 
     def test_multiplyVector3( self ):
 
-        angles = [ Euler( 1, 0, 0 ), Euler( 0, 1, 0 ), Euler( 0, 0, 1 ) ]
+        angles = [ THREE.Euler( 1, 0, 0 ), THREE.Euler( 0, 1, 0 ), THREE.Euler( 0, 0, 1 ) ]
 
-        # ensure euler conversion for Quaternion matches that of Matrix4
+        # ensure euler conversion for THREE.Quaternion matches that of THREE.Matrix4
         for order in orders:
             for angle in angles:
                 orderAngle = angle.clone()
                 orderAngle.order = order
-                q = Quaternion().setFromEuler( orderAngle )
-                m = Matrix4().makeRotationFromEuler( orderAngle )
+                q = THREE.Quaternion().setFromEuler( orderAngle )
+                m = THREE.Matrix4().makeRotationFromEuler( orderAngle )
 
-                v0 = Vector3(1, 0, 0)
+                v0 = THREE.Vector3(1, 0, 0)
                 qv = v0.clone().applyQuaternion( q )
                 mv = v0.clone().applyMatrix4( m )
 
@@ -245,8 +242,8 @@ class TestQuaternion( unittest.TestCase ):
 
     def test_equals( self ):
 
-        a = Quaternion( x, y, z, w )
-        b = Quaternion( -x, -y, -z, -w )
+        a = THREE.Quaternion( x, y, z, w )
+        b = THREE.Quaternion( -x, -y, -z, -w )
 
         self.assertNotEqual( a.x, b.x )
         self.assertNotEqual( a.y, b.y )
