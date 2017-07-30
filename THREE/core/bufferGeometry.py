@@ -1,4 +1,7 @@
 from __future__ import division
+import math
+
+from array import array
 
 import logging
 
@@ -94,14 +97,14 @@ class BufferGeometry( object ):
 
     def applyMatrix( self, matrix ):
 
-        position = self.attributes.position
+        position = self.attributes.get( "position" )
 
         if position is not None:
 
             matrix.applyToBufferAttribute( position )
             position.needsUpdate = True
 
-        normal = self.attributes.normal
+        normal = self.attributes.get( "normal" )
 
         if normal is not None:
 
@@ -417,7 +420,7 @@ class BufferGeometry( object ):
 
             self.boundingBox = box3.Box3()
 
-        position = self.attributes.position
+        position = self.attributes.get( "position" )
 
         if position is not None:
 
@@ -440,7 +443,7 @@ class BufferGeometry( object ):
 
             self.boundingSphere = sphere.Sphere()
 
-        position = self.attributes.position
+        position = self.attributes.get( "position" )
 
         if position:
 
@@ -479,25 +482,25 @@ class BufferGeometry( object ):
         attributes = self.attributes
         groups = self.groups
 
-        if attributes.position:
+        if attributes.get( "position" ):
 
-            positions = attributes.position.array
+            positions = attributes[ "position" ].array
 
-            if attributes.normal is None:
+            if attributes.get( "normal" ) is None:
 
-                self.addAttribute( "normal", BufferAttribute( Float32Array( len( positions ) ), 3 ) )
+                self.addAttribute( "normal", BufferAttribute( array( "f", [0] * len( positions ) ), 3 ) )
 
             else:
 
                 # reset existing normals to zero
 
-                array = attributes.normal.array
+                arr = attributes[ "normal" ].array
 
                 for i in range( len( array ) ):
 
-                    array[ i ] = 0
+                    arr[ i ] = 0
 
-            normals = attributes.normal.array
+            normals = attributes[ "normal" ].array
 
             pA = vector3.Vector3()
             pB = vector3.Vector3()
@@ -574,7 +577,7 @@ class BufferGeometry( object ):
 
             self.normalizeNormals()
 
-            attributes.normal.needsUpdate = True
+            attributes[ "normal" ].needsUpdate = True
 
     def merge( self, geometry, offset = 0 ):
 
@@ -612,7 +615,7 @@ class BufferGeometry( object ):
 
         vector = vector3.Vector3()
 
-        normals = self.attributes.normal
+        normals = self.attributes[ "normal" ]
 
         for i in range( normals.count ):
 
@@ -829,8 +832,8 @@ class BufferGeometry( object ):
 
         # draw range
 
-        self.drawRange.start = source.drawRange.start
-        self.drawRange.count = source.drawRange.count
+        self.drawRange[ "start" ] = source.drawRange[ "start" ]
+        self.drawRange[ "count" ] = source.drawRange[ "count" ]
 
         return self
 
