@@ -7,7 +7,7 @@ RAD2DEG = 180 / math.pi
 
 def generateUUID():
 
-    chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split()
+    chars = list( "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" )
     uuid = [ "" ] * 36
     rnd = 0
     r = None
@@ -27,7 +27,7 @@ def generateUUID():
             if rnd <= 0x02: rnd = 0x2000000 + random.randint( 0, 0x1000000 - 1 )
             r = rnd & 0xf
             rnd = rnd >> 4
-            # uuid[ i ] = chars[ ( r & 0x3 ) | 0x8 if i == 19  else r ]    
+            uuid[ i ] = chars[ ( r & 0x3 ) | 0x8 if i == 19  else r ]
 
     return "".join( uuid )
 
