@@ -211,7 +211,7 @@ class Object3D( eventDispatcher.EventDispatcher ):
 
                     object.parent.remove( object )
                 
-                object.parent = this
+                object.parent = self
                 object.dispatchEvent( { type: "added" } )
 
                 self.children.append( object )
