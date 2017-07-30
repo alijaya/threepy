@@ -255,37 +255,40 @@ class Box3( object ):
         # We compute the minimum and maximum dot product values. If those values
         # are on the same side (back or front) of the plane, then there is no intersection.
 
+        min = None
+        max = None
+
         if plane.normal.x > 0:
 
-            mn = plane.normal.x * self.min.x
-            mx = plane.normal.x * self.max.x
+            min = plane.normal.x * self.min.x
+            max = plane.normal.x * self.max.x
 
         else:
 
-            mn = plane.normal.x * self.max.x
-            mx = plane.normal.x * self.min.x
+            min = plane.normal.x * self.max.x
+            max = plane.normal.x * self.min.x
 
         if plane.normal.y > 0:
 
-            mn += plane.normal.y * self.min.y
-            mx += plane.normal.y * self.max.y
+            min += plane.normal.y * self.min.y
+            max += plane.normal.y * self.max.y
 
         else:
 
-            mn += plane.normal.y * self.max.y
-            mx += plane.normal.y * self.min.y
+            min += plane.normal.y * self.max.y
+            max += plane.normal.y * self.min.y
 
         if plane.normal.z > 0:
 
-            mn += plane.normal.z * self.min.z
-            mx += plane.normal.z * self.max.z
+            min += plane.normal.z * self.min.z
+            max += plane.normal.z * self.max.z
 
         else:
 
-            mn += plane.normal.z * self.max.z
-            mx += plane.normal.z * self.min.z
+            min += plane.normal.z * self.max.z
+            max += plane.normal.z * self.min.z
 
-        return ( mn <= plane.constant and mx >= plane.constant )
+        return ( min <= plane.constant and max >= plane.constant )
 
     def clampPoint( self, point, optionalTarget = None ):
 
