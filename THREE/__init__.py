@@ -35,4 +35,6 @@ from THREE.math.vector2 import Vector2
 from THREE.math.vector3 import Vector3
 from THREE.math.vector4 import Vector4
 
+from THREE.objects.mesh import Mesh
+
 from THREE.scenes.scene import Scene
