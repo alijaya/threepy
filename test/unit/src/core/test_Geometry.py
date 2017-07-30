@@ -2,6 +2,8 @@ from __future__ import division
 import sys
 import math
 
+from array import array
+
 import unittest
 
 import THREE
@@ -79,37 +81,37 @@ class TestGeometry( unittest.TestCase ):
         self.assertTrue( v1.x < sys.float_info.epsilon and v1.y == -0.5 and v1.z == 0 ) # second vertex was rotated
         self.assertTrue( v2.x == 1 and v2.y < sys.float_info.epsilon and v2.z == 0 ) # third vertex was rotated
 
-    # def test_fromBufferGeometry( self ):
+    def test_fromBufferGeometry( self ):
 
-    #     bufferGeometry = THREE.BufferGeometry()
-    #     bufferGeometry.addAttribute("position", THREE.BufferAttribute(array( "f", [1, 2, 3, 4, 5, 6, 7, 8, 9] ), 3 ) )
-    #     bufferGeometry.addAttribute("color", THREE.BufferAttribute(array( "f", [0, 0, 0, 0.5, 0.5, 0.5, 1, 1, 1] ), 3 ) )
-    #     bufferGeometry.addAttribute("normal", THREE.BufferAttribute(array( "f", [0, 1, 0, 1, 0, 1, 1, 1, 0] ), 3 ) )
-    #     bufferGeometry.addAttribute("uv", THREE.BufferAttribute(array( "f", [0, 0, 0, 1, 1, 1] ), 2 ) )
-    #     bufferGeometry.addAttribute("uv2", THREE.BufferAttribute(array( "f", [0, 0, 0, 1, 1, 1] ), 2 ) )
+        bufferGeometry = THREE.BufferGeometry()
+        bufferGeometry.addAttribute("position", THREE.BufferAttribute(array( "f", [1, 2, 3, 4, 5, 6, 7, 8, 9] ), 3 ) )
+        bufferGeometry.addAttribute("color", THREE.BufferAttribute(array( "f", [0, 0, 0, 0.5, 0.5, 0.5, 1, 1, 1] ), 3 ) )
+        bufferGeometry.addAttribute("normal", THREE.BufferAttribute(array( "f", [0, 1, 0, 1, 0, 1, 1, 1, 0] ), 3 ) )
+        bufferGeometry.addAttribute("uv", THREE.BufferAttribute(array( "f", [0, 0, 0, 1, 1, 1] ), 2 ) )
+        bufferGeometry.addAttribute("uv2", THREE.BufferAttribute(array( "f", [0, 0, 0, 1, 1, 1] ), 2 ) )
 
-    #     geometry = THREE.Geometry().fromBufferGeometry( bufferGeometry )
+        geometry = THREE.Geometry().fromBufferGeometry( bufferGeometry )
 
-    #     colors = geometry.colors
-    #     self.assertTrue(
-    #         colors[0].r == 0 and colors[0].g == 0 and colors[0].b == 0 and \
-    #         colors[1].r == 0.5 and colors[1].g == 0.5 and colors[1].b == 0.5 and \
-    #         colors[2].r == 1 and colors[2].g == 1 and colors[2].b == 1
-    #         ) # colors were created well
+        colors = geometry.colors
+        self.assertTrue(
+            colors[0].r == 0 and colors[0].g == 0 and colors[0].b == 0 and \
+            colors[1].r == 0.5 and colors[1].g == 0.5 and colors[1].b == 0.5 and \
+            colors[2].r == 1 and colors[2].g == 1 and colors[2].b == 1
+            ) # colors were created well
 
-    #     vertices = geometry.vertices
-    #     self.assertTrue(
-    #         vertices[0].x == 1 and vertices[0].y == 2 and vertices[0].z == 3 and \
-    #         vertices[1].x == 4 and vertices[1].y == 5 and vertices[1].z == 6 and \
-    #         vertices[2].x == 7 and vertices[2].y == 8 and vertices[2].z == 9
-    #         ) # vertices were created well
+        vertices = geometry.vertices
+        self.assertTrue(
+            vertices[0].x == 1 and vertices[0].y == 2 and vertices[0].z == 3 and \
+            vertices[1].x == 4 and vertices[1].y == 5 and vertices[1].z == 6 and \
+            vertices[2].x == 7 and vertices[2].y == 8 and vertices[2].z == 9
+            ) # vertices were created well
 
-    #     vNormals = geometry.faces[0].vertexNormals
-    #     self.assertTrue(
-    #         vNormals[0].x == 0 and vNormals[0].y == 1 and vNormals[0].z == 0 and \
-    #         vNormals[1].x == 1 and vNormals[1].y == 0 and vNormals[1].z == 1 and \
-    #         vNormals[2].x == 1 and vNormals[2].y == 1 and vNormals[2].z == 0
-    #         ) # vertex normals were created well
+        vNormals = geometry.faces[0].vertexNormals
+        self.assertTrue(
+            vNormals[0].x == 0 and vNormals[0].y == 1 and vNormals[0].z == 0 and \
+            vNormals[1].x == 1 and vNormals[1].y == 0 and vNormals[1].z == 1 and \
+            vNormals[2].x == 1 and vNormals[2].y == 1 and vNormals[2].z == 0
+            ) # vertex normals were created well
 
     def test_normalize( self ):
 

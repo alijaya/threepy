@@ -175,13 +175,17 @@ class Geometry( eventDispatcher.EventDispatcher ):
         indices = geometry.index.array if geometry.index is not None else None
         attributes = geometry.attributes
 
-        positions = attributes.position.array
-        normals = attributes.normal.array if attributes.normal is not None else None
-        colors = attributes.color.array if attributes.color is not None else None
-        uvs = attributes.uv.array if attributes.uv is not None else None
-        uvs2 = attributes.uv2.array if attributes.uv2 is not None else None
+        positions = attributes[ "position" ].array
+        normals = attributes[ "normal" ].array if "normal" in attributes else None
+        colors = attributes[ "color" ].array if "color" in attributes else None
+        uvs = attributes[ "uv" ].array if "uv" in attributes else None
+        uvs2 = attributes[ "uv2" ].array if "uv2" in attributes else None
 
-        if uvs2 is not None: self.faceVertexUvs[ 1 ] = []
+        if uvs2 is not None:
+            
+            if 1 >= len( self.faceVertexUvs ): self.faceVertexUvs.append( [] )
+
+            self.faceVertexUvs[ 1 ] = []
 
         tempNormals = []
         tempUVs = []
@@ -191,47 +195,47 @@ class Geometry( eventDispatcher.EventDispatcher ):
         j = 0
         while i < len( positions ):
 
-            scope.vertices.push( vector3.Vector3( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] ) )
+            scope.vertices.append( vector3.Vector3( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] ) )
 
             if normals != None:
 
-                tempNormals.push( vector3.Vector3( normals[ i ], normals[ i + 1 ], normals[ i + 2 ] ) )
+                tempNormals.append( vector3.Vector3( normals[ i ], normals[ i + 1 ], normals[ i + 2 ] ) )
 
             if colors != None:
 
-                scope.colors.push( color.Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) )
+                scope.colors.append( color.Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) )
 
             if uvs != None:
 
-                tempUVs.push( vector2.Vector2( uvs[ j ], uvs[ j + 1 ] ) )
+                tempUVs.append( vector2.Vector2( uvs[ j ], uvs[ j + 1 ] ) )
 
             if uvs2 != None:
 
-                tempUVs2.push( vector2.Vector2( uvs2[ j ], uvs2[ j + 1 ] ) )
+                tempUVs2.append( vector2.Vector2( uvs2[ j ], uvs2[ j + 1 ] ) )
             
             i += 3
             j += 2
 
-        def addFace( a, b, c, materialIndex ):
+        def addFace( a, b, c, materialIndex = 0 ):
 
             vertexNormals = [ tempNormals[ a ].clone(), tempNormals[ b ].clone(), tempNormals[ c ].clone() ] if normals is not None else []
             vertexColors = [ scope.colors[ a ].clone(), scope.colors[ b ].clone(), scope.colors[ c ].clone() ] if colors is not None else []
 
             face = face3.Face3( a, b, c, vertexNormals, vertexColors, materialIndex )
 
-            scope.faces.push( face )
+            scope.faces.append( face )
 
             if uvs is not None:
 
-                scope.faceVertexUvs[ 0 ].push( [ tempUVs[ a ].clone(), tempUVs[ b ].clone(), tempUVs[ c ].clone() ] )
+                scope.faceVertexUvs[ 0 ].append( [ tempUVs[ a ].clone(), tempUVs[ b ].clone(), tempUVs[ c ].clone() ] )
 
             if uvs2 is not None:
 
-                scope.faceVertexUvs[ 1 ].push( [ tempUVs2[ a ].clone(), tempUVs2[ b ].clone(), tempUVs2[ c ].clone() ] )
+                scope.faceVertexUvs[ 1 ].append( [ tempUVs2[ a ].clone(), tempUVs2[ b ].clone(), tempUVs2[ c ].clone() ] )
 
         groups = geometry.groups
 
-        if groups.length > 0:
+        if len( groups ) > 0:
 
             for group in groups:
 
