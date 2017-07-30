@@ -1,6 +1,8 @@
 from THREE.cameras.camera import Camera
 from THREE.cameras.perspectiveCamera import PerspectiveCamera
 
+from THREE.constants import *
+
 from THREE.core.bufferAttribute import BufferAttribute
 from THREE.core.bufferGeometry import BufferGeometry
 from THREE.core.directGeometry import DirectGeometry
@@ -11,6 +13,8 @@ from THREE.core.layers import Layers
 from THREE.core.object3D import Object3D
 
 from THREE.geometries.Geometries import *
+
+from THREE.materials.Materials import *
 
 from THREE.math.box2 import Box2
 from THREE.math.box3 import Box3
