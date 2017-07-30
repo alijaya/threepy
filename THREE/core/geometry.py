@@ -171,8 +171,6 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
     def fromBufferGeometry( self, geometry ):
 
-        scope = self
-
         indices = geometry.index.array if geometry.index is not None else None
         attributes = geometry.attributes
 
@@ -196,7 +194,7 @@ class Geometry( eventDispatcher.EventDispatcher ):
         j = 0
         while i < len( positions ):
 
-            scope.vertices.append( vector3.Vector3( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] ) )
+            self.vertices.append( vector3.Vector3( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] ) )
 
             if normals != None:
 
@@ -204,7 +202,7 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
             if colors != None:
 
-                scope.colors.append( color.Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) )
+                self.colors.append( color.Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) )
 
             if uvs != None:
 
@@ -220,19 +218,19 @@ class Geometry( eventDispatcher.EventDispatcher ):
         def addFace( a, b, c, materialIndex = 0 ):
 
             vertexNormals = [ tempNormals[ a ].clone(), tempNormals[ b ].clone(), tempNormals[ c ].clone() ] if normals is not None else []
-            vertexColors = [ scope.colors[ a ].clone(), scope.colors[ b ].clone(), scope.colors[ c ].clone() ] if colors is not None else []
+            vertexColors = [ self.colors[ a ].clone(), self.colors[ b ].clone(), self.colors[ c ].clone() ] if colors is not None else []
 
             face = face3.Face3( a, b, c, vertexNormals, vertexColors, materialIndex )
 
-            scope.faces.append( face )
+            self.faces.append( face )
 
             if uvs is not None:
 
-                scope.faceVertexUvs[ 0 ].append( [ tempUVs[ a ].clone(), tempUVs[ b ].clone(), tempUVs[ c ].clone() ] )
+                self.faceVertexUvs[ 0 ].append( [ tempUVs[ a ].clone(), tempUVs[ b ].clone(), tempUVs[ c ].clone() ] )
 
             if uvs2 is not None:
 
-                scope.faceVertexUvs[ 1 ].append( [ tempUVs2[ a ].clone(), tempUVs2[ b ].clone(), tempUVs2[ c ].clone() ] )
+                self.faceVertexUvs[ 1 ].append( [ tempUVs2[ a ].clone(), tempUVs2[ b ].clone(), tempUVs2[ c ].clone() ] )
 
         groups = geometry.groups
 
