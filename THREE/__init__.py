@@ -10,6 +10,8 @@ from THREE.core.geometry import Geometry
 from THREE.core.layers import Layers
 from THREE.core.object3D import Object3D
 
+from THREE.geometries.Geometries import *
+
 from THREE.math.box2 import Box2
 from THREE.math.box3 import Box3
 from THREE.math.color import Color
