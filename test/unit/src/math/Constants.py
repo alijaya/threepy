@@ -14,3 +14,10 @@ posInf2 = THREE.Vector2( posInf, posInf )
 zero2 = THREE.Vector2()
 one2 = THREE.Vector2( 1, 1 )
 two2 = THREE.Vector2( 2, 2 )
+
+negInf3 = THREE.Vector3( negInf, negInf, negInf )
+posInf3 = THREE.Vector3( posInf, posInf, negInf )
+
+zero3 = THREE.Vector3()
+one3 = THREE.Vector3( 1, 1, 1 )
+two3 = THREE.Vector3( 2, 2, 2 )
