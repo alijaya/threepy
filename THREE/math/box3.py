@@ -136,12 +136,12 @@ class Box3( object ):
     def getCenter( self, optionalTarget = None ):
 
         result = optionalTarget or vector3.Vector3()
-        return self.isEmpty() ? result.set( 0, 0, 0 ) : result.addVectors( self.min, self.max ).multiplyScalar( 0.5 )
+        return result.set( 0, 0, 0 ) if self.isEmpty() else result.addVectors( self.min, self.max ).multiplyScalar( 0.5 )
 
     def getSize( self, optionalTarget = None ):
 
         result = optionalTarget or vector3.Vector3()
-        return self.isEmpty() ? result.set( 0, 0, 0 ) : result.subVectors( self.max, self.min )
+        return result.set( 0, 0, 0 ) if self.isEmpty() else result.subVectors( self.max, self.min )
 
     def expandByPoint( self, point ):
 
@@ -192,7 +192,7 @@ class Box3( object ):
 
                         scope.expandByPoint( v1 )
 
-                elif hasatter( geometry "isBufferGeometry" ):
+                elif hasattr( geometry, "isBufferGeometry" ):
 
                     attribute = geometry.attributes.position
 
@@ -262,7 +262,7 @@ class Box3( object ):
             min = plane.normal.x * self.min.x
             max = plane.normal.x * self.max.x
 
-        } else {
+        else:
 
             min = plane.normal.x * self.max.x
             max = plane.normal.x * self.min.x
@@ -272,7 +272,7 @@ class Box3( object ):
             min += plane.normal.y * self.min.y
             max += plane.normal.y * self.max.y
 
-        } else {
+        else:
 
             min += plane.normal.y * self.max.y
             max += plane.normal.y * self.min.y
@@ -282,7 +282,7 @@ class Box3( object ):
             min += plane.normal.z * self.min.z
             max += plane.normal.z * self.max.z
 
-        } else {
+        else:
 
             min += plane.normal.z * self.max.z
             max += plane.normal.z * self.min.z
@@ -330,7 +330,7 @@ class Box3( object ):
 
         return self
 
-    def applyMatrix4( self ):
+    def applyMatrix4( self, matrix ):
 
         points = [
             vector3.Vector3(),
@@ -343,24 +343,22 @@ class Box3( object ):
             vector3.Vector3()
         ]
 
-        return def applyMatrix4( self, matrix ):
+        # transform of empty box is an empty box.
+        if self.isEmpty(): return self
 
-            # transform of empty box is an empty box.
-            if self.isEmpty(): return self
+        # NOTE: I am using a binary pattern to specify all 2^3 combinations below
+        points[ 0 ].set( self.min.x, self.min.y, self.min.z ).applyMatrix4( matrix ) # 000
+        points[ 1 ].set( self.min.x, self.min.y, self.max.z ).applyMatrix4( matrix ) # 001
+        points[ 2 ].set( self.min.x, self.max.y, self.min.z ).applyMatrix4( matrix ) # 010
+        points[ 3 ].set( self.min.x, self.max.y, self.max.z ).applyMatrix4( matrix ) # 011
+        points[ 4 ].set( self.max.x, self.min.y, self.min.z ).applyMatrix4( matrix ) # 100
+        points[ 5 ].set( self.max.x, self.min.y, self.max.z ).applyMatrix4( matrix ) # 101
+        points[ 6 ].set( self.max.x, self.max.y, self.min.z ).applyMatrix4( matrix ) # 110
+        points[ 7 ].set( self.max.x, self.max.y, self.max.z ).applyMatrix4( matrix )    # 111
 
-            # NOTE: I am using a binary pattern to specify all 2^3 combinations below
-            points[ 0 ].set( self.min.x, self.min.y, self.min.z ).applyMatrix4( matrix ) # 000
-            points[ 1 ].set( self.min.x, self.min.y, self.max.z ).applyMatrix4( matrix ) # 001
-            points[ 2 ].set( self.min.x, self.max.y, self.min.z ).applyMatrix4( matrix ) # 010
-            points[ 3 ].set( self.min.x, self.max.y, self.max.z ).applyMatrix4( matrix ) # 011
-            points[ 4 ].set( self.max.x, self.min.y, self.min.z ).applyMatrix4( matrix ) # 100
-            points[ 5 ].set( self.max.x, self.min.y, self.max.z ).applyMatrix4( matrix ) # 101
-            points[ 6 ].set( self.max.x, self.max.y, self.min.z ).applyMatrix4( matrix ) # 110
-            points[ 7 ].set( self.max.x, self.max.y, self.max.z ).applyMatrix4( matrix )    # 111
+        self.setFromPoints( points )
 
-            self.setFromPoints( points )
-
-            return self
+        return self
 
     def translate( self, offset ):
 

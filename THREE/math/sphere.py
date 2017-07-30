@@ -32,13 +32,13 @@ class Sphere( object ):
 
             center.copy( optionalCenter )
 
-        } else {
+        else:
 
             box.setFromPoints( points ).getCenter( center )
 
         maxRadiusSq = 0
 
-        for i = 0, il = points.length i < il i += 1:
+        for i in range( len( points ) ):
 
             maxRadiusSq = max( maxRadiusSq, center.distanceToSquared( points[ i ] ) )
 
@@ -91,7 +91,7 @@ class Sphere( object ):
 
         result.copy( point )
 
-        if deltaLengthSq > ( self.radius * self.radius: ) {
+        if deltaLengthSq > ( self.radius * self.radius ):
 
             result.sub( self.center ).normalize()
             result.multiplyScalar( self.radius ).add( self.center )

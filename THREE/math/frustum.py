@@ -10,7 +10,7 @@ import plane
  * @author bhouston / http:#clara.io
  """
 
- class Frustum( object ):
+class Frustum( object ):
 
     def __init__( self, p0 = None, p1 = None, p2 = None, p3 = None, p4 = None, p5 = None ):
 
@@ -86,21 +86,18 @@ import plane
 
         return self
 
-    def intersectsObject( self ):
+    def intersectsObject( self, object ):
 
         sphere = sphere.Sphere()
 
-        return def intersectsObject( self, object ):
+        geometry = object.geometry
 
-            geometry = object.geometry
+        if geometry.boundingSphere == None:
+            geometry.computeBoundingSphere()
 
-            if geometry.boundingSphere == None:
-                geometry.computeBoundingSphere()
+        sphere.copy( geometry.boundingSphere ).applyMatrix4( object.matrixWorld )
 
-            sphere.copy( geometry.boundingSphere )
-                .applyMatrix4( object.matrixWorld )
-
-            return self.intersectsSphere( sphere )
+        return self.intersectsSphere( sphere )
 
     def intersectsSprite( self, sprite ):
 
@@ -161,7 +158,7 @@ import plane
 
         for i in range( 6 ):
 
-            if planes[ i ].distanceToPoint( point: < 0 ) {
+            if planes[ i ].distanceToPoint( point < 0 ):
 
                 return False
 

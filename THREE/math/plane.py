@@ -7,7 +7,7 @@ import vector3
  * @author bhouston / http:#clara.io
  """
 
- class Plane( object ):
+class Plane( object ):
 
     def __init__( self, normal = None, constant = 0 ):
 
@@ -105,7 +105,7 @@ import vector3
         if denominator == 0:
 
             # line is coplanar, return origin
-            if self.distanceToPoint( line.start: == 0 ) {
+            if self.distanceToPoint( line.start == 0 ):
 
                 return result.copy( line.start )
 
