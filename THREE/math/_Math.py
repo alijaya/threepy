@@ -38,7 +38,7 @@ def clamp( value, mn, mx ):
 # compute euclidian modulo of m % n
 # https://en.wikipedia.org/wiki/Modulo_operation
 
-def euclideanModule( n, m ):
+def euclideanModulo( n, m ):
 
     return ( ( n % m ) + m ) % m
 

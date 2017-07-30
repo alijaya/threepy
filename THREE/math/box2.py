@@ -64,12 +64,12 @@ class Box2( object ):
 
         return ( self.max.x < self.min.x ) or ( self.max.y < self.min.y )
 
-    def getCenter( self, optionalTarget ):
+    def getCenter( self, optionalTarget = None ):
 
         result = optionalTarget or vector2.Vector2()
         return result.set( 0, 0 ) if self.isEmpty() else result.addVectors( self.min, self.max ).multiplyScalar( 0.5 )
 
-    def getSize( self, optionalTarget ):
+    def getSize( self, optionalTarget = None ):
 
         result = optionalTarget or vector2.Vector2()
         return result.set( 0, 0 ) if self.isEmpty() else result.subVectors( self.max, self.min )
@@ -105,7 +105,7 @@ class Box2( object ):
         return  self.min.x <= box.min.x and box.max.x <= self.max.x and \
                 self.min.y <= box.min.y and box.max.y <= self.max.y
 
-    def getParameter( self, point, optionalTarget ):
+    def getParameter( self, point, optionalTarget = None ):
 
         # This can potentially have a divide by zero if the box
         # has a size dimension of 0.
@@ -124,7 +124,7 @@ class Box2( object ):
         return not ( box.max.x < self.min.x or box.min.x > self.max.x or \
                      box.max.y < self.min.y or box.min.y > self.max.y )
 
-    def clampPoint( self, point, optionalTarget ):
+    def clampPoint( self, point, optionalTarget = None ):
 
         result = optionalTarget or vector2.Vector2()
         return result.copy( point ).clamp( self.min, self.max )

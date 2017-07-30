@@ -1,4 +1,5 @@
 from __future__ import division
+import math
 
 import vector3
 import line3
@@ -17,7 +18,8 @@ class Triangle( object ):
         self.b = b or vector3.Vector3()
         self.c = c or vector3.Vector3()
 
-    def normal( self, a, b, c, optionalTarget = None ):
+    @staticmethod
+    def s_normal( a, b, c, optionalTarget = None ):
 
         v0 = vector3.Vector3()
 
@@ -36,7 +38,8 @@ class Triangle( object ):
 
     # static/instance method to calculate barycentric coordinates
     # based on: http:#www.blackpawn.com/texts/pointinpoly/default.html
-    def barycoordFromPoint( self, point, a, b, c, optionalTarget = None ):
+    @staticmethod
+    def s_barycoordFromPoint( point, a, b, c, optionalTarget = None ):
 
         v0 = vector3.Vector3()
         v1 = vector3.Vector3()
@@ -70,11 +73,12 @@ class Triangle( object ):
         # barycentric coordinates must always sum to 1
         return result.set( 1 - u - v, v, u )
 
-    def containsPoint( self, point, a, b, c ):
+    @staticmethod
+    def s_containsPoint( point, a, b, c ):
 
         v1 = vector3.Vector3()
 
-        result = Triangle.barycoordFromPoint( point, a, b, c, v1 )
+        result = Triangle.s_barycoordFromPoint( point, a, b, c, v1 )
 
         return ( result.x >= 0 ) and ( result.y >= 0 ) and ( ( result.x + result.y ) <= 1 )
 
@@ -123,7 +127,7 @@ class Triangle( object ):
 
     def normal( self, optionalTarget = None ):
 
-        return Triangle.normal( self.a, self.b, self.c, optionalTarget )
+        return Triangle.s_normal( self.a, self.b, self.c, optionalTarget )
 
     def plane( self, optionalTarget = None ):
 
@@ -133,15 +137,15 @@ class Triangle( object ):
 
     def barycoordFromPoint( self, point, optionalTarget = None ):
 
-        return Triangle.barycoordFromPoint( point, self.a, self.b, self.c, optionalTarget )
+        return Triangle.s_barycoordFromPoint( point, self.a, self.b, self.c, optionalTarget )
 
     def containsPoint( self, point ):
 
-        return Triangle.containsPoint( point, self.a, self.b, self.c )
+        return Triangle.s_containsPoint( point, self.a, self.b, self.c )
 
     def closestPointToPoint( self, point, optionalTarget = None ):
 
-        plane = plane.Plane()
+        p = plane.Plane()
         edgeList = [ line3.Line3(), line3.Line3(), line3.Line3() ]
         projectedPoint = vector3.Vector3()
         closestPoint = vector3.Vector3()
@@ -151,8 +155,8 @@ class Triangle( object ):
 
         # project the point onto the plane of the triangle
 
-        plane.setFromCoplanarPoints( self.a, self.b, self.c )
-        plane.projectPoint( point, projectedPoint )
+        p.setFromCoplanarPoints( self.a, self.b, self.c )
+        p.projectPoint( point, projectedPoint )
 
         # check if the projection lies within the triangle
 

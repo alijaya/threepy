@@ -1,4 +1,6 @@
 from __future__ import division
+import math
+import numbers
 
 import re
 import logging
@@ -37,20 +39,19 @@ ColorKeywords = { "aliceblue": 0xF0F8FF, "antiquewhite": 0xFAEBD7, "aqua": 0x00F
 
 class Color( object ):
 
-    def __init__( self, r, g, b ):
-
-        if g == None and b == None:
-
-            # r is THREE.Color, hex or string
-            return self.set( r )
-
-        return self.setRGB( r, g, b )
+    def __init__( self, r = None, g = None, b = None ):
 
         self.isColor = True
-
         self.r = 1
         self.g = 1
         self.b = 1
+
+        if g is None and b is None:
+
+            # r is THREE.Color, hex or string
+            self.set( r )
+
+        else: self.setRGB( r, g, b )
 
     def set( self, value ):
 
@@ -78,7 +79,7 @@ class Color( object ):
 
     def setHex( self, hex ):
 
-        hex = math.floor( hex )
+        hex = int( hex )
 
         self.r = ( hex >> 16 & 255 ) / 255
         self.g = ( hex >> 8 & 255 ) / 255
@@ -96,7 +97,7 @@ class Color( object ):
 
     def setHSL( self, h, s, l ):
 
-        def hue2rgb( self, p, q, t ):
+        def hue2rgb( p, q, t ):
 
             if t < 0: t += 1
             if t > 1: t -= 1
@@ -106,9 +107,9 @@ class Color( object ):
             return p
 
         # h,s,l ranges are in 0.0 - 1.0
-        h = _Math._Math.euclideanModulo( h, 1 )
-        s = _Math._Math.clamp( s, 0, 1 )
-        l = _Math._Math.clamp( l, 0, 1 )
+        h = _Math.euclideanModulo( h, 1 )
+        s = _Math.clamp( s, 0, 1 )
+        l = _Math.clamp( l, 0, 1 )
 
         if s == 0:
 
@@ -127,13 +128,13 @@ class Color( object ):
 
     def setStyle( self, style ):
 
-        def handleAlpha( self, string ):
+        def handleAlpha( string ):
 
             if string == None: return
 
-            if parseFloat( string ) < 1:
+            if float( string ) < 1:
 
-                console.warn( "THREE.Color: Alpha component of " + style + " will be ignored." )
+                logging.warning( "THREE.Color: Alpha component of " + style + " will be ignored." )
 
         m = re.match( "^((?:rgb|hsl)a?)\(\s*([^\)]*)\)" , style )
 
@@ -141,7 +142,6 @@ class Color( object ):
 
             # rgb / hsl
 
-            color
             name = m.group( 1 )
             components = m.group( 2 )
 
@@ -215,7 +215,7 @@ class Color( object ):
 
                 return self
 
-        if style and style.length > 0:
+        if style and len( style ) > 0:
 
             if style in ColorKeywords:
 
@@ -284,11 +284,11 @@ class Color( object ):
 
     def getHex( self ):
 
-        return ( self.r * 255 ) << 16 ^ ( self.g * 255 ) << 8 ^ ( self.b * 255 ) << 0
+        return int( self.r * 255 ) << 16 ^ int( self.g * 255 ) << 8 ^ int( self.b * 255 ) << 0
 
     def getHexString( self ):
 
-        return "%06X" % self.getHex()
+        return "%06x" % self.getHex()
 
     def getHSL( self, optionalTarget = None ):
 
@@ -323,15 +323,15 @@ class Color( object ):
 
             hue /= 6
 
-        hsl.h = hue
-        hsl.s = saturation
-        hsl.l = lightness
+        hsl[ "h" ] = hue
+        hsl[ "s" ] = saturation
+        hsl[ "l" ] = lightness
 
         return hsl
 
     def getStyle( self ):
 
-        return "rgb(" + ( ( self.r * 255 ) | 0 ) + "," + ( ( self.g * 255 ) | 0 ) + "," + ( ( self.b * 255 ) | 0 ) + ")"
+        return "rgb(%s,%s,%s)" % ( ( int( self.r * 255 ) | 0 ), ( int( self.g * 255 ) | 0 ), ( int( self.b * 255 ) | 0 ) )
 
     def offsetHSL( self, h, s, l ):
 

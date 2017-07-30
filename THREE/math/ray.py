@@ -1,4 +1,5 @@
 from __future__ import division
+import math
 
 import vector3
 
@@ -106,7 +107,10 @@ class Ray( object ):
         b1 = - diff.dot( segDir )
         c = diff.lengthSq()
         det = abs( 1 - a01 * a01 )
-        s0, s1, sqrDist, extDet
+        s0 = None
+        s1 = None
+        sqrDist = None
+        extDet = None
 
         if det > 0:
 
@@ -277,11 +281,16 @@ class Ray( object ):
 
     def intersectBox( self, box, optionalTarget = None ):
 
-        tmin, tmax, tymin, tymax, tzmin, tzmax
+        tmin = None
+        tmax = None
+        tymin = None
+        tymax = None
+        tzmin = None
+        tzmax = None
 
-        invdirx = 1 / self.direction.x
-        invdiry = 1 / self.direction.y
-        invdirz = 1 / self.direction.z
+        invdirx = 1 / self.direction.x if self.direction.x != 0 else float( "inf" )
+        invdiry = 1 / self.direction.y if self.direction.y != 0 else float( "inf" )
+        invdirz = 1 / self.direction.z if self.direction.z != 0 else float( "inf" )
 
         origin = self.origin
 
@@ -310,9 +319,9 @@ class Ray( object ):
         # These lines also handle the case where tmin or tmax is NaN
         # (result of 0 * float( "inf" )). x != x returns True if x is NaN
 
-        if tymin > tmin or tmin != tmin: tmin = tymin
+        if tymin > tmin or math.isnan( tmin ): tmin = tymin
 
-        if tymax < tmax or tmax != tmax: tmax = tymax
+        if tymax < tmax or math.isnan( tmax ): tmax = tymax
 
         if invdirz >= 0:
 
@@ -326,9 +335,9 @@ class Ray( object ):
 
         if ( tmin > tzmax ) or ( tzmin > tmax ): return None
 
-        if tzmin > tmin or tmin != tmin: tmin = tzmin
+        if tzmin > tmin or math.isnan( tmin ): tmin = tzmin
 
-        if tzmax < tmax or tmax != tmax: tmax = tzmax
+        if tzmax < tmax or math.isnan( tmax ): tmax = tzmax
 
         #return point closest to the ray (positive side)
 
