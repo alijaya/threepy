@@ -5,7 +5,7 @@ rules = [
     ( "\t", "    " ),
     ( "var ", "" ),
     ( "new ", "" ),
-    ( "delete ", "del" ),
+    ( "delete ", "del " ),
     ( ";", "" ),
     ( "import [^\n]*\n", "" ),
     ( "export [^\n]*\n", "" ),
@@ -42,16 +42,21 @@ rules = [
     ( "Number.EPSILON", "sys.float_info.epsilon" ),
     ( "(\S+)\.length", "len( \g<1> )" ),
     ( "\.push", ".append" ),
+    ( "console\.log", "logging.info" ),
+    ( "console\.warn", "logging.warning" ),
+    ( "console\.error", "logging.error" ),
+    ( "throw ", "raise " ),
     ( "\/\*\*", "\"\"\"" ),
     ( "\/\*", "\"\"\"" ),
     ( "\*\/", "\"\"\"" ),
-    ( "(\S+) ?:", "\"\g<1>\":" ),
     ( "\+\+", "+= 1" ),
+    ( "--", "-= 1" ),
+    ( " ?= ?(.*?) ?\? ?(.*?) ?: ?([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
+    ( "(\S+) ?:", "\"\g<1>\":" ),
     ( "if ?\( ?(.*) ?\)( {)?", "if \g<1>:" ),
     ( "} ?else if", "elif" ),
     ( "} ?else ?{", "else:" ),
     ( "for ?\( ?(.*) ?\)( {)?", "for \g<1>:" ),
-    ( " ?= ?(.*?) ?\? ?(.*?) ?: ?([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
 ]
 
 rulesClass = [
@@ -136,6 +141,11 @@ if not test:
             importStatement += "from %s import %s\n" % ( s, c[2] )
 
     pytext = importStatement + pytext
+
+    # OpenGL
+
+    pytext = re.sub( "gl\.([A-Z])", "GL.GL_\g<1>", pytext )
+    pytext = re.sub( "gl\.([a-z])", lambda pat: "GL.gl" + pat.group(1).upper(), pytext )
     
 else:
 
