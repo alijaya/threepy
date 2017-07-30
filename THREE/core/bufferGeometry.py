@@ -80,9 +80,9 @@ class BufferGeometry( object ):
 
         self.groups.append( {
 
-            start: start,
-            count: count,
-            materialIndex: materialIndex
+            "start": start,
+            "count": count,
+            "materialIndex": materialIndex
 
         } )
 

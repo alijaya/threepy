@@ -237,17 +237,17 @@ class Geometry( eventDispatcher.EventDispatcher ):
         groups = geometry.groups
 
         if len( groups ) > 0:
-
+            
             for group in groups:
 
-                start = group.start
-                count = group.count
+                start = group[ "start" ]
+                count = group[ "count" ]
 
                 for j in range( start, start + count, 3 ):
 
                     if indices != None:
 
-                        addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ], group.materialIndex )
+                        addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ], group[ "materialIndex" ] )
 
                     else:
 
@@ -662,18 +662,18 @@ class Geometry( eventDispatcher.EventDispatcher ):
         for i in range( len( self.vertices ) ):
 
             v = self.vertices[ i ]
-            key = "%s_%s_%s" % round( v.x * precision ), round( v.y * precision ), round( v.z * precision )
+            key = "%d_%d_%d" % ( round( v.x * precision ), round( v.y * precision ), round( v.z * precision ) )
 
-            if verticesMap[ key ] == None:
+            if not key in verticesMap:
 
                 verticesMap[ key ] = i
-                unique.push( self.vertices[ i ] )
-                changes[ i ] = len( unique ) - 1
+                unique.append( self.vertices[ i ] )
+                changes.append( len( unique ) - 1 )
 
             else:
 
                 #console.log("Duplicate vertex found. ", i, " could be using ", verticesMap[key])
-                changes[ i ] = changes[ verticesMap[ key ] ]
+                changes.append( changes[ verticesMap[ key ] ] )
 
         # if faces are completely degenerate after merging vertices, we
         # have to remove them from the geometry.
@@ -761,7 +761,7 @@ class Geometry( eventDispatcher.EventDispatcher ):
         data[ "type" ] = self.type
         if self.name != "": data[ "name" ] = self.name
 
-        if self.parameters is not None:
+        if hasattr( self, "parameters" ):
 
             parameters = self.parameters
 
