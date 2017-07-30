@@ -59,11 +59,11 @@ class Color( object ):
 
             self.copy( value )
 
-        elif isinstance( value, numbers.Number ):
+        elif isinstance( value, int ):
 
             self.setHex( value )
 
-        elif isinstance( value, str ):
+        elif isinstance( value, basestring ):
 
             self.setStyle( value )
 
