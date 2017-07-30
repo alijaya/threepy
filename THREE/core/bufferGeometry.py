@@ -30,7 +30,7 @@ class BufferGeometry( object ):
 
         self.isBufferGeometry = True
 
-        self.id = geometry.GeometryIdCount()
+        self.id = geometry.Geometry.getGeometryId()
         self.uuid = _Math.generateUUID()
 
         self.name = ""

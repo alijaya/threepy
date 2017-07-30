@@ -18,12 +18,18 @@ class Object3D( eventDispatcher.EventDispatcher ):
 
     Object3DId = 0
 
+    @staticmethod
+    def getObject3DId():
+
+        ret = Object3D.Object3DId
+        Object3D.Object3DId += 1
+        return ret
+
     def __init__( self ):
 
         super( Object3D, self ).__init__()
 
-        self.id = Object3D.Object3DId
-        Object3D.Object3DId += 1
+        self.id = Object3D.getObject3DId()
 
         self.uuid = _Math.generateUUID()
 

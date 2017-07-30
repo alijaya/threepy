@@ -23,21 +23,22 @@ from ..math import _Math
  * @author bhouston / http:#clara.io
  """
 
-count = 0
-def GeometryIdCount():
-    
-    global count
-    ret = count
-    count += 1
-    return ret
-
 class Geometry( eventDispatcher.EventDispatcher ):
+
+    GeometryId = 0
+
+    @staticmethod
+    def getGeometryId():
+
+        ret = Geometry.GeometryId
+        Geometry.GeometryId += 1
+        return ret
 
     def __init__( self ):
 
         self.isGeometry = True
 
-        self.id = GeometryIdCount()
+        self.id = Geometry.getGeometryId()
         self.uuid = _Math.generateUUID()
 
         self.name = ""
