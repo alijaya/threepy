@@ -111,7 +111,7 @@ class Box3( object ):
 
     def clone( self ):
 
-        return Box3.copy( self )
+        return Box3().copy( self )
 
     def copy( self, box ):
 
@@ -255,39 +255,37 @@ class Box3( object ):
         # We compute the minimum and maximum dot product values. If those values
         # are on the same side (back or front) of the plane, then there is no intersection.
 
-        min, max
-
         if plane.normal.x > 0:
 
-            min = plane.normal.x * self.min.x
-            max = plane.normal.x * self.max.x
+            mn = plane.normal.x * self.min.x
+            mx = plane.normal.x * self.max.x
 
         else:
 
-            min = plane.normal.x * self.max.x
-            max = plane.normal.x * self.min.x
+            mn = plane.normal.x * self.max.x
+            mx = plane.normal.x * self.min.x
 
         if plane.normal.y > 0:
 
-            min += plane.normal.y * self.min.y
-            max += plane.normal.y * self.max.y
+            mn += plane.normal.y * self.min.y
+            mx += plane.normal.y * self.max.y
 
         else:
 
-            min += plane.normal.y * self.max.y
-            max += plane.normal.y * self.min.y
+            mn += plane.normal.y * self.max.y
+            mx += plane.normal.y * self.min.y
 
         if plane.normal.z > 0:
 
-            min += plane.normal.z * self.min.z
-            max += plane.normal.z * self.max.z
+            mn += plane.normal.z * self.min.z
+            mx += plane.normal.z * self.max.z
 
         else:
 
-            min += plane.normal.z * self.max.z
-            max += plane.normal.z * self.min.z
+            mn += plane.normal.z * self.max.z
+            mx += plane.normal.z * self.min.z
 
-        return ( min <= plane.constant and max >= plane.constant )
+        return ( mn <= plane.constant and mx >= plane.constant )
 
     def clampPoint( self, point, optionalTarget = None ):
 
