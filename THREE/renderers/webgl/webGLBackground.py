@@ -29,7 +29,7 @@ class WebGLBackground( object ):
         self.planeMesh = None
         self.boxMesh = None
 
-    def render( self, renderList, scene, camera, forceClear ):
+    def render( self, renderList, scene, camera, forceClear = True ):
 
         background = scene.background
 
@@ -110,10 +110,10 @@ class WebGLBackground( object ):
 
         return self.clearColor
 
-    def setClearColor( self, color, alpha ):
+    def setClearColor( self, color, alpha = 1 ):
 
         self.clearColor.set( color )
-        self.clearAlpha = alpha if alpha is not None else 1
+        self.clearAlpha = alpha
         setClear( self.clearColor, self.clearAlpha )
 
     def getClearAlpha( self ):
