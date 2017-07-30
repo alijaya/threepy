@@ -2,6 +2,8 @@ from THREE.cameras.camera import Camera
 from THREE.cameras.perspectiveCamera import PerspectiveCamera
 
 from THREE.core.bufferAttribute import BufferAttribute
+from THREE.core.bufferGeometry import BufferGeometry
+from THREE.core.directGeometry import DirectGeometry
 from THREE.core.eventDispatcher import EventDispatcher
 from THREE.core.face3 import Face3
 from THREE.core.geometry import Geometry
