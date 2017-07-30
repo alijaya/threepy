@@ -71,11 +71,11 @@ class Line3( object ):
 
         if clampToLine:
 
-            t = _Math._Math.clamp( t, 0, 1 )
+            t = _Math.clamp( t, 0, 1 )
 
         return t
 
-    def closestPointToPoint( self, point, clampToLine, optionalTarget ):
+    def closestPointToPoint( self, point, clampToLine, optionalTarget = None ):
 
         t = self.closestPointToPointParameter( point, clampToLine )
 
