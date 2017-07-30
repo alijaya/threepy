@@ -19,7 +19,6 @@ class WebGLClipping( object ):
         localClippingEnabled = False
         renderingShadows = False
 
-        plane = plane.Plane()
         viewNormalMatrix = matrix3.Matrix3()
 
         uniform = { "value": None, "needsUpdate": False }
@@ -124,7 +123,7 @@ class WebGLClipping( object ):
                 i4 = dstOffset
                 while i < nPlanes :
 
-                    plane.copy( planes[ i ] ).applyMatrix4( viewMatrix, viewNormalMatrix )
+                    plane = planes[ i ].clone().applyMatrix4( viewMatrix, viewNormalMatrix )
 
                     plane.normal.toArray( dstArray, i4 )
                     dstArray[ i4 + 3 ] = plane.constant

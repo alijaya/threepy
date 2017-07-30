@@ -49,7 +49,7 @@ from ..math import vector4
 
 class WebGLRenderer( object ):
 
-    def __init__( self, parameters ):
+    def __init__( self, parameters = None ):
 
         logging.info( "THREE.WebGLRenderer", REVISION )
 
@@ -61,7 +61,7 @@ class WebGLRenderer( object ):
         # _depth = parameters.depth if parameters.depth is not None else True
         # _stencil = parameters.stencil if parameters.stencil is not None else True
         # _antialias = parameters.antialias if parameters.antialias is not None else False
-        self._premultipliedAlpha = self.parameters.premultipliedAlpha if self.parameters.premultipliedAlpha is not None else True
+        self._premultipliedAlpha = self.parameters.get( "premultipliedAlpha", True )
         # _preserveDrawingBuffer = parameters.preserveDrawingBuffer if parameters.preserveDrawingBuffer is not None else False
 
         self.lightsArray = []
@@ -138,8 +138,8 @@ class WebGLRenderer( object ):
 
         #
 
-        # self._width = _canvas.width
-        # self._height = _canvas.height
+        self._width = 800 # TODO dummy value
+        self._height = 600 # TODO dummy value
 
         self._pixelRatio = 1
 
@@ -216,9 +216,9 @@ class WebGLRenderer( object ):
         self.flareRenderer = None
         self.spriteRenderer = None
 
-        self.utils
+        self.utils = None
 
-        initGLContext()
+        self.initGLContext()
 
         # vr
 
@@ -232,7 +232,7 @@ class WebGLRenderer( object ):
 
         self.shadowMap = shadowMap
 
-    def initGLContext():
+    def initGLContext( self ):
 
         self.extensions = webGLExtensions.WebGLExtensions()
         self.extensions.get( "WEBGL_depth_texture" )

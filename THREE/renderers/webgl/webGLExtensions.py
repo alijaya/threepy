@@ -16,7 +16,7 @@ class WebGLExtensions( object ):
 
     def get( self, name ):
 
-        if name in self.extensions[ name ] :
+        if name in self.extensions :
 
             return self.extensions[ name ]
 

@@ -5,15 +5,15 @@ import logging
 from OpenGL import GL
 
 from ...constants import BackSide
-from ...cameras import orthographicCamera
+# from ...cameras import orthographicCamera
 from ...cameras import perspectiveCamera
-from ...geometries.BoxGeometry import boxBufferGeometry
-from ...geometries.PlaneGeometry import planeBufferGeometry
+from ...geometries import boxGeometry
+from ...geometries import boxGeometry
 from ...materials import meshBasicMaterial
-from ...materials import shaderMaterial
+# from ...materials import shaderMaterial
 from ...math import color
 from ...objects import mesh
-from ..shaders import shaderLib
+# from ..shaders import shaderLib
 """
  * @author mrdoob / "http":#mrdoob.com/
  """
