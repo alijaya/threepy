@@ -3,6 +3,8 @@ from THREE.cameras.perspectiveCamera import PerspectiveCamera
 
 from THREE.core.bufferAttribute import BufferAttribute
 from THREE.core.eventDispatcher import EventDispatcher
+from THREE.core.face3 import Face3
+from THREE.core.geometry import Geometry
 from THREE.core.layers import Layers
 from THREE.core.object3D import Object3D
 
