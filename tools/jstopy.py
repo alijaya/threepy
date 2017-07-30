@@ -47,10 +47,10 @@ rules = [
     ( "\*\/", "\"\"\"" ),
     ( "(\S+) ?:", "\"\g<1>\":" ),
     ( "\+\+", "+= 1" ),
-    ( "if ?\( (.*) \)( {)?", "if \g<1>:" ),
+    ( "if ?\( ?(.*) ?\)( {)?", "if \g<1>:" ),
     ( "} ?else if", "elif" ),
     ( "} ?else ?{", "else:" ),
-    ( "for ?\( (.*) \)( {)?", "for \g<1>:" ),
+    ( "for ?\( ?(.*) ?\)( {)?", "for \g<1>:" ),
     ( " = (.*?) \? (.*?) : ([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
 ]
 
@@ -64,14 +64,14 @@ rulesClass = [
 ]
 
 rulesTest = [
-    ( "QUnit\.module\( ?\"(.*)\" ?\)", "class Test\g<1>( unittest.TestCase ):" ),
-    ( "QUnit\.test\( ?\"(.*)\"[^\n]*", "def test_\g<1>( self ):\n" ),
+    ( "QUnit\.module ?\( ?\"(.*)\" ?\)", "class Test\g<1>( unittest.TestCase ):" ),
+    ( "QUnit\.test ?\( ?\"(.*)\"[^\n]*", "def test_\g<1>( self ):\n" ),
     ( "(\S*) = function ?\( ?(.*) ?\) {", "def \g<1>( \g<2> ):\n" ),
     ( "function (\S*) ?\( ?(.*) ?\) {", "def \g<1>( \g<2> ):\n" ),
-    ( "assert\.ok\( ?(.*) == (.*)", "self.assertEqual( \g<1>, \g<2>" ),
-    ( "assert\.ok\( ?(.*)", "self.assertTrue( \g<1>" ),
-    ( "assert.numEqual\( ?(.*), (.*)", "self.assertAlmostEqual( \g<1>, \g<2>" ),
-    ( ", \"(.*)\" \)", " ) # \g<1>" )
+    ( "assert\.ok ?\( ?(.*) == (.*)", "self.assertEqual( \g<1>, \g<2>" ),
+    ( "assert\.ok ?\( ?(.*)", "self.assertTrue( \g<1>" ),
+    ( "assert.numEqual ?\( ?(.*), (.*)", "self.assertAlmostEqual( \g<1>, \g<2>" ),
+    ( ", ?\"(.*)\" ?\)", " ) # \g<1>" )
 ]
 
 rulesClean = [
