@@ -27,6 +27,7 @@ rules = [
     ( "&&", "and" ),
     ( "this", "self" ),
     ( "Infinity", "float( \"inf\" )" ),
+    ( "Math\.pow", "pow" ),
     ( "Math\.abs", "abs" ),
     ( "Math\.round", "round" ),
     ( "Math\.max", "max" ),
@@ -37,18 +38,18 @@ rules = [
     ( "\/\*\*", "\"\"\"" ),
     ( "\*\/", "\"\"\"" ),
     ( "\+\+", "+= 1" ),
-    ( " = (.*?) \? (.*?) : ([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
     ( "if ?\( (.*) \)( {)?", "if \g<1>:" ),
     ( "} ?else if", "elif" ),
     ( "} ?else ?{", "else:" ),
     ( "for ?\( (.*) \)( {)?", "for \g<1>:" ),
+    ( " = (.*?) \? (.*?) : ([^\n]*)", " = \g<2> if \g<1> else \g<3>" ),
 ]
 
 rulesClass = [
     ( "[^\n]*\.prototype = ", "" ),
     ( "Object\.assign\( [^\n]*", "" ),
     ( "([\S]*): function \((.*)\) {", "def \g<1>( self,\g<2>):" ),
-    ( "function (.*)\((.*)\) {", "def \g<1>( self,\g<2>):" ),
+    ( "function ?(.*)\((.*)\) {", "def \g<1>( self,\g<2>):" ),
     ( "\( self,\)", "( self )" )
 ]
 
