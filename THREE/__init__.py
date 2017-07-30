@@ -6,6 +6,7 @@ from THREE.core.object3D import Object3D
 from THREE.math.box3 import Box3
 from THREE.math.euler import Euler
 from THREE.math.frustum import Frustum
+from THREE.math.line3 import Line3
 from THREE.math.matrix3 import Matrix3
 from THREE.math.matrix4 import Matrix4
 from THREE.math.plane import Plane
