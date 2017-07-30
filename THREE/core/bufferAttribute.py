@@ -15,7 +15,7 @@ from ..math import _Math
 
 class BufferAttribute( object ):
 
-    def __init__( self, array = None, itemSize = 1, normalized = False ):
+    def __init__( self, array, itemSize, normalized = False ):
 
         if isinstance( array, list ):
 

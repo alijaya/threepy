@@ -22,7 +22,7 @@ class TestBufferAttribute( unittest.TestCase ):
         attr.setDynamic( True )
         attr.needsUpdate = True
 
-        attrCopy = THREE.BufferAttribute().copy( attr )
+        attrCopy = THREE.BufferAttribute( None, None ).copy( attr )
 
         self.assertEqual( attr.count, attrCopy.count ) # count is equal
         self.assertEqual( attr.itemSize, attrCopy.itemSize ) # itemSize is equal
