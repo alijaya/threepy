@@ -48,7 +48,7 @@ rules = [
 rulesClass = [
     ( "[^\n]*\.prototype = ", "" ),
     ( "Object\.assign\( [^\n]*", "" ),
-    ( "([\S]*): function \((.*)\) {", "def \g<1>( self,\g<2>):" ),
+    ( "([\S]*): function ?\((.*)\) {", "def \g<1>( self,\g<2>):" ),
     ( "function ?(.*)\((.*)\) {", "def \g<1>( self,\g<2>):" ),
     ( "\( self,\)", "( self )" )
 ]
