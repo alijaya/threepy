@@ -158,7 +158,7 @@ class Frustum( object ):
 
         for i in range( 6 ):
 
-            if planes[ i ].distanceToPoint( point < 0 ):
+            if planes[ i ].distanceToPoint( point ) < 0:
 
                 return False
 
