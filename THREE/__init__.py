@@ -1,6 +1,7 @@
 from THREE.cameras.camera import Camera
 from THREE.cameras.perspectiveCamera import PerspectiveCamera
 
+from THREE.core.bufferAttribute import BufferAttribute
 from THREE.core.eventDispatcher import EventDispatcher
 from THREE.core.layers import Layers
 from THREE.core.object3D import Object3D
