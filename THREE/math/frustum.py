@@ -88,16 +88,16 @@ class Frustum( object ):
 
     def intersectsObject( self, object ):
 
-        sphere = sphere.Sphere()
+        sph = sphere.Sphere()
 
         geometry = object.geometry
 
         if geometry.boundingSphere == None:
             geometry.computeBoundingSphere()
 
-        sphere.copy( geometry.boundingSphere ).applyMatrix4( object.matrixWorld )
+        sph.copy( geometry.boundingSphere ).applyMatrix4( object.matrixWorld )
 
-        return self.intersectsSphere( sphere )
+        return self.intersectsSphere( sph )
 
     def intersectsSprite( self, sprite ):
 

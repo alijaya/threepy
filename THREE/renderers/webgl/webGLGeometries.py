@@ -59,11 +59,11 @@ class WebGLGeometries( object ):
 
     def get( self, object, geometry ):
 
-        buffergeometry = self.geometries[ geometry.id ]
+        buffergeometry = self.geometries.get( geometry.id )
 
         if buffergeometry : return buffergeometry
 
-        geometry.addEventListener( "dispose", onGeometryDispose )
+        geometry.addEventListener( "dispose", self.onGeometryDispose )
 
         if hasattr( geometry, "isBufferGeometry" ) :
 
@@ -71,7 +71,7 @@ class WebGLGeometries( object ):
 
         elif hasattr( geometry, "isGeometry" ) :
 
-            if geometry._bufferGeometry is None :
+            if not hasattr( geometry, "_bufferGeometry" ) :
 
                 geometry._bufferGeometry = bufferGeometry.BufferGeometry().setFromObject( object )
 
@@ -79,7 +79,7 @@ class WebGLGeometries( object ):
 
         self.geometries[ geometry.id ] = buffergeometry
 
-        self.infoMemory.geometries += 1
+        self.infoMemory[ "geometries" ] += 1
 
         return buffergeometry
 

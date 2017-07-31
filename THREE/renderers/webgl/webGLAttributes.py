@@ -1,5 +1,7 @@
 from __future__ import division
 
+import numpy as np
+
 import logging
 
 from OpenGL import GL
@@ -28,35 +30,35 @@ class WebGLAttributes( object ):
 
         type = GL.GL_FLOAT
 
-        if array.typecode == "f" :
+        if array.dtype == np.float32 :
 
             type = GL.GL_FLOAT
 
-        elif array.typecode == "d" :
+        elif array.dtype == np.float64 :
 
             logging.warning( "THREE.WebGLAttributes: Unsupported data buffer format: Float64Array." )
 
-        elif array.typecode == "H" :
+        elif array.dtype == np.uint16 :
 
             type = GL.GL_UNSIGNED_SHORT
 
-        elif array.typecode == "h" :
+        elif array.dtype == np.int16 :
 
             type = GL.GL_SHORT
 
-        elif array.typecode == "L" :
+        elif array.dtype == np.uint32 :
 
             type = GL.GL_UNSIGNED_INT
 
-        elif array.typecode == "l" :
+        elif array.dtype == np.int32 :
 
             type = GL.GL_INT
 
-        elif array.typecode == "b" :
+        elif array.dtype == np.int8 :
 
             type = GL.GL_BYTE
 
-        elif array.typecode == "B" :
+        elif array.dtype == np.uint8 :
 
             type = GL.GL_UNSIGNED_BYTE
 
@@ -119,14 +121,14 @@ class WebGLAttributes( object ):
 
         if hasattr( attribute, "isInterleavedBufferAttribute" ) : attribute = attribute.data
 
-        data = self.buffers[ attribute.uuid ]
+        data = self.buffers.get( attribute.uuid )
 
         if data is None :
 
-            self.buffers[ attribute.uuid ] = createBuffer( attribute, bufferType )
+            self.buffers[ attribute.uuid ] = self.createBuffer( attribute, bufferType )
 
         elif data.version < attribute.version :
 
-            updateBuffer( data.buffer, attribute, bufferType )
+            self.updateBuffer( data.buffer, attribute, bufferType )
 
             data.version = attribute.version

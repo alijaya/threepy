@@ -351,7 +351,7 @@ class Object3D( eventDispatcher.EventDispatcher ):
 
         self.matrixWorldNeedsUpdate = True
     
-    def updateMatrixWorld( self, force ):
+    def updateMatrixWorld( self, force = False ):
 
         if self.matrixAutoUpdate: self.updateMatrix()
 

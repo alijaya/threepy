@@ -23,3 +23,15 @@ cube = THREE.Mesh( geometry, material )
 scene.add( cube )
 
 camera.position.z = 5
+
+while True:
+    for event in pygame.event.get():
+
+        if event.type == pygame.QUIT:
+
+            pygame.quit()
+            quit()
+    
+    renderer.render( scene, camera )
+    pygame.display.flip()
+    pygame.time.wait( 10 )

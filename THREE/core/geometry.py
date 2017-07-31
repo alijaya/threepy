@@ -36,6 +36,8 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
     def __init__( self ):
 
+        super( Geometry, self ).__init__()
+
         self.isGeometry = True
 
         self.id = Geometry.getGeometryId()
@@ -196,19 +198,19 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
             self.vertices.append( vector3.Vector3( positions[ i ], positions[ i + 1 ], positions[ i + 2 ] ) )
 
-            if normals != None:
+            if normals is not None:
 
                 tempNormals.append( vector3.Vector3( normals[ i ], normals[ i + 1 ], normals[ i + 2 ] ) )
 
-            if colors != None:
+            if colors is not None:
 
                 self.colors.append( color.Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) )
 
-            if uvs != None:
+            if uvs is not None:
 
                 tempUVs.append( vector2.Vector2( uvs[ j ], uvs[ j + 1 ] ) )
 
-            if uvs2 != None:
+            if uvs2 is not None:
 
                 tempUVs2.append( vector2.Vector2( uvs2[ j ], uvs2[ j + 1 ] ) )
             
@@ -243,7 +245,7 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
                 for j in range( start, start + count, 3 ):
 
-                    if indices != None:
+                    if indices is not None:
 
                         addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ], group[ "materialIndex" ] )
 

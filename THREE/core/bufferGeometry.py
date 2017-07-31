@@ -342,33 +342,33 @@ class BufferGeometry( object ):
 
     def fromDirectGeometry( self, geometry ):
 
-        positions = Float32Array( len( geometry.vertices ) * 3 )
+        positions = np.zeros( len( geometry.vertices ) * 3, np.float32 )
         self.addAttribute( "position", BufferAttribute( positions, 3 ).copyVector3sArray( geometry.vertices ) )
 
         if len( geometry.normals ) > 0:
 
-            normals = Float32Array( len( geometry.normals ) * 3 )
+            normals = np.zeros( len( geometry.normals ) * 3, np.float32 )
             self.addAttribute( "normal", BufferAttribute( normals, 3 ).copyVector3sArray( geometry.normals ) )
 
         if len( geometry.colors ) > 0:
 
-            colors = Float32Array( len( geometry.colors ) * 3 )
+            colors = np.zeros( len( geometry.colors ) * 3, np.float32 )
             self.addAttribute( "color", BufferAttribute( colors, 3 ).copyColorsArray( geometry.colors ) )
 
         if len( geometry.uvs ) > 0:
 
-            uvs = Float32Array( len( geometry.uvs ) * 2 )
+            uvs = np.zeros( len( geometry.uvs ) * 2, np.float32 )
             self.addAttribute( "uv", BufferAttribute( uvs, 2 ).copyVector2sArray( geometry.uvs ) )
 
         if len( geometry.uvs2 ) > 0:
 
-            uvs2 = Float32Array( len( geometry.uvs2 ) * 2 )
+            uvs2 = np.zeros( len( geometry.uvs2 ) * 2, np.float32 )
             self.addAttribute( "uv2", BufferAttribute( uvs2, 2 ).copyVector2sArray( geometry.uvs2 ) )
 
         if len( geometry.indices ) > 0:
 
-            TypeArray = Uint32Array if max( geometry.indices ) > 65535 else Uint16Array
-            indices = TypeArray( len( geometry.indices ) * 3 )
+            TypeArray = np.uint32 if max( geometry.indices ) > 65535 else np.uint16
+            indices = np.zeros( len( geometry.indices ) * 3, TypeArray )
             self.setIndex( BufferAttribute( indices, 1 ).copyIndicesArray( geometry.indices ) )
 
         # groups

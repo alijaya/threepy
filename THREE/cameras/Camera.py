@@ -38,7 +38,7 @@ class Camera( object3D.Object3D ):
 
         return result.set( 0, 0, - 1 ).applyQuaternion( quaternion )
 
-    def updateMatrixWorld( self, force ):
+    def updateMatrixWorld( self, force = False ):
 
         super( Camera, self ).updateMatrixWorld( force )
 

@@ -17,15 +17,15 @@ from webgl import webGLFlareRenderer
 # from webgl import webGLShadowMap
 from webgl import webGLAttributes
 from webgl import webGLBackground
-# from webgl import webGLRenderLists
-# from webgl import webGLMorphtargets
+from webgl import webGLRenderLists
+from webgl import webGLMorphtargets
 # from webgl import webGLIndexedBufferRenderer
 # from webgl import webGLBufferRenderer
 from webgl import webGLGeometries
 # from webgl import webGLLights
-# from webgl import webGLObjects
+from webgl import webGLObjects
 # from webgl import webGLPrograms
-# from webgl import webGLTextures
+from webgl import webGLTextures
 from webgl import webGLProperties
 from webgl import webGLState
 from webgl import webGLCapabilities
@@ -222,15 +222,15 @@ class WebGLRenderer( object ):
 
         # vr
 
-        vr = webVRManager.WebVRManager( self )
+        # vr = webVRManager.WebVRManager( self )
 
-        self.vr = vr
+        # self.vr = vr
 
         # shadow map
 
-        shadowMap = webGLShadowMap.WebGLShadowMap( self, objects, capabilities.maxTextureSize )
+        # shadowMap = webGLShadowMap.WebGLShadowMap( self, objects, capabilities.maxTextureSize )
 
-        self.shadowMap = shadowMap
+        # self.shadowMap = shadowMap
 
     def initGLContext( self ):
 
@@ -247,35 +247,35 @@ class WebGLRenderer( object ):
 
             bufferGeometry.BufferGeometry.MaxIndex = 4294967296
 
-        self.utils = webGLUtils.WebGLUtils( self.extensions )
+        # self.utils = webGLUtils.WebGLUtils( self.extensions )
 
-        self.capabilities = webGLCapabilities.WebGLCapabilities( self.extensions, self.parameters )
+        # self.capabilities = webGLCapabilities.WebGLCapabilities( self.extensions, self.parameters )
 
-        self.state = webGLState.WebGLState( self.extensions, self.utils )
-        self.state.scissor( self._currentScissor.copy( self._scissor ).multiplyScalar( self._pixelRatio ) )
-        self.state.viewport( self._currentViewport.copy( self._viewport ).multiplyScalar( self._pixelRatio ) )
+        # self.state = webGLState.WebGLState( self.extensions, self.utils )
+        # self.state.scissor( self._currentScissor.copy( self._scissor ).multiplyScalar( self._pixelRatio ) )
+        # self.state.viewport( self._currentViewport.copy( self._viewport ).multiplyScalar( self._pixelRatio ) )
 
-        self.properties = webGLProperties.WebGLProperties()
-        self.textures = webGLTextures.WebGLTextures( self.extensions, self.state, self.properties, self.capabilities, self.utils, self._infoMemory )
+        # self.properties = webGLProperties.WebGLProperties()
+        # self.textures = webGLTextures.WebGLTextures( self.extensions, self.state, self.properties, self.capabilities, self.utils, self._infoMemory )
         self.attributes = webGLAttributes.WebGLAttributes()
         self.geometries = webGLGeometries.WebGLGeometries( self.attributes, self._infoMemory )
         self.objects = webGLObjects.WebGLObjects( self.geometries, self._infoRender )
-        self.morphtargets = webGLMorphtargets.WebGLMorphtargets()
-        self.programCache = webGLPrograms.WebGLPrograms( self, self.extensions, self.capabilities )
-        self.lights = webGLLights.WebGLLights()
+        # self.morphtargets = webGLMorphtargets.WebGLMorphtargets()
+        # self.programCache = webGLPrograms.WebGLPrograms( self, self.extensions, self.capabilities )
+        # self.lights = webGLLights.WebGLLights()
         self.renderLists = webGLRenderLists.WebGLRenderLists()
 
-        self.background = webGLBackground.WebGLBackground( self, self.state, self.geometries, self._premultipliedAlpha )
+        # self.background = webGLBackground.WebGLBackground( self, self.state, self.geometries, self._premultipliedAlpha )
 
-        self.bufferRenderer = webGLBufferRenderer.WebGLBufferRenderer( self.extensions, self._infoRender )
-        self.indexedBufferRenderer = webGLIndexedBufferRenderer.WebGLIndexedBufferRenderer( self.extensions, self._infoRender )
+        # self.bufferRenderer = webGLBufferRenderer.WebGLBufferRenderer( self.extensions, self._infoRender )
+        # self.indexedBufferRenderer = webGLIndexedBufferRenderer.WebGLIndexedBufferRenderer( self.extensions, self._infoRender )
 
-        self.flareRenderer = webGLFlareRenderer.WebGLFlareRenderer( self, self.state, self.extures, self.capabilities )
-        self.spriteRenderer = webGLSpriteRenderer.WebGLSpriteRenderer( self, self.state, self.textures, self.capabilities )
+        # self.flareRenderer = webGLFlareRenderer.WebGLFlareRenderer( self, self.state, self.extures, self.capabilities )
+        # self.spriteRenderer = webGLSpriteRenderer.WebGLSpriteRenderer( self, self.state, self.textures, self.capabilities )
 
-        self.info.programs = self.programCache.programs
+        # self.info.programs = self.programCache.programs
 
-        self.context = GL
+        # self.context = GL
 
     # API
 
@@ -566,7 +566,7 @@ class WebGLRenderer( object ):
 
         self.state.setMaterial( material )
 
-        program = setProgram( camera, fog, material, object )
+        program = self.setProgram( camera, fog, material, object )
         geometryProgram = geometry.id + "_" + program.id + "_" + ( material.wireframe == True )
 
         updateBuffers = False
@@ -819,11 +819,11 @@ class WebGLRenderer( object ):
 
                     for m in object.material :
 
-                        initMaterial( m, scene.fog, object )
+                        self.initMaterial( m, scene.fog, object )
 
                 else:
 
-                    initMaterial( object.material, scene.fog, object )
+                    self.initMaterial( object.material, scene.fog, object )
         
         scene.traverse( traverse2 )
 
@@ -862,9 +862,9 @@ class WebGLRenderer( object ):
 
         if camera.parent is None : camera.updateMatrixWorld()
 
-        if vr.enabled :
+        # if vr.enabled :
 
-            camera = vr.getCamera( camera )
+        #     camera = vr.getCamera( camera )
 
         self._projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse )
         self._frustum.setFromMatrix( self._projScreenMatrix )
@@ -952,9 +952,9 @@ class WebGLRenderer( object ):
 
         self.state.setPolygonOffset( False )
 
-        if self.vr.enabled :
+        # if self.vr.enabled :
 
-            self.vr.submitFrame()
+        #     self.vr.submitFrame()
 
         # GL.glFinish()
 
@@ -1054,7 +1054,7 @@ class WebGLRenderer( object ):
 
                         self._vector3.setFromMatrixPosition( object.matrixWorld ).applyMatrix4( self._projScreenMatrix )
 
-                    geometry = objects.update( object )
+                    geometry = self.objects.update( object )
                     material = object.material
 
                     if isinstance( material, list ) :
@@ -1067,17 +1067,17 @@ class WebGLRenderer( object ):
 
                             if groupMaterial and groupMaterial.visible :
 
-                                self.currentRenderList.append( object, geometry, groupMaterial, self._vector3.z, group )
+                                self.currentRenderList.push( object, geometry, groupMaterial, self._vector3.z, group )
 
                     elif material.visible :
 
-                        self.currentRenderList.append( object, geometry, material, self._vector3.z, None )
+                        self.currentRenderList.push( object, geometry, material, self._vector3.z, None )
 
         children = object.children
 
         for child in children:
 
-            projectObject( child, camera, sortObjects )
+            self.projectObject( child, camera, sortObjects )
 
     def renderObjects( self, renderList, scene, camera, overrideMaterial ):
 
@@ -1128,7 +1128,7 @@ class WebGLRenderer( object ):
 
             self.state.setMaterial( material )
 
-            program = setProgram( camera, scene.fog, material, object )
+            program = self.setProgram( camera, scene.fog, material, object )
 
             self._currentGeometryProgram = ""
 
@@ -1144,7 +1144,7 @@ class WebGLRenderer( object ):
 
         materialProperties = properties.get( material )
 
-        parameters = programCache.getParameters( material, self.lights.state, self.shadowsArray, fog, self._clipping.numPlanes, self._clipping.numIntersection, object )
+        parameters = self.programCache.getParameters( material, self.lights.state, self.shadowsArray, fog, self._clipping.numPlanes, self._clipping.numIntersection, object )
 
         code = self.programCache.getProgramCode( material, parameters )
 

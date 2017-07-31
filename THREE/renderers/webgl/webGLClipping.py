@@ -14,16 +14,15 @@ class WebGLClipping( object ):
 
     def __init__( self ):
 
-        globalState = None
-        numGlobalPlanes = 0
-        localClippingEnabled = False
-        renderingShadows = False
+        self.globalState = None
+        self.numGlobalPlanes = 0
+        self.localClippingEnabled = False
+        self.renderingShadows = False
 
-        viewNormalMatrix = matrix3.Matrix3()
+        self.viewNormalMatrix = matrix3.Matrix3()
 
-        uniform = { "value": None, "needsUpdate": False }
+        self.uniform = { "value": None, "needsUpdate": False }
 
-        self.uniform = uniform
         self.numPlanes = 0
         self.numIntersection = 0
 
@@ -32,36 +31,36 @@ class WebGLClipping( object ):
         enabled = \
             len( planes ) != 0 or \
             enableLocalClipping or \
-            numGlobalPlanes != 0 or \
-            localClippingEnabled
+            self.numGlobalPlanes != 0 or \
+            self.localClippingEnabled
             # enable state of previous frame - the clipping code has to
             # run another frame in order to reset the "state":
 
-        localClippingEnabled = enableLocalClipping
+        self.localClippingEnabled = enableLocalClipping
 
-        globalState = projectPlanes( planes, camera, 0 )
-        numGlobalPlanes = len( planes )
+        self.globalState = self.projectPlanes( planes, camera, 0 )
+        self.numGlobalPlanes = len( planes )
 
         return enabled
 
     def beginShadows( self ):
 
-        renderingShadows = True
+        self.renderingShadows = True
         projectPlanes( None )
 
     def endShadows( self ):
 
-        renderingShadows = False
+        self.renderingShadows = False
         resetGlobalState()
 
     def setState( self, planes, clipIntersection, clipShadows, camera, cache, fromCache ):
 
-        if not localClippingEnabled or \
+        if not self.localClippingEnabled or \
                 planes is None or len( planes ) == 0 or \
-                renderingShadows and not clipShadows :
+                self.renderingShadows and not clipShadows :
             # there"s no local clipping
 
-            if renderingShadows :
+            if self.renderingShadows :
                 # there"s no global clipping
 
                 projectPlanes( None )
@@ -72,18 +71,18 @@ class WebGLClipping( object ):
 
         else:
 
-            nGlobal = 0 if renderingShadows else numGlobalPlanes
+            nGlobal = 0 if self.renderingShadows else self.numGlobalPlanes
             lGlobal = nGlobal * 4
 
             dstArray = cache.clippingState or None
 
-            uniform.value = dstArray # ensure unique state
+            self.uniform.value = dstArray # ensure unique state
 
             dstArray = projectPlanes( planes, camera, lGlobal, fromCache )
 
             for i in range( lGlobal ):
 
-                dstArray[ i ] = globalState[ i ]
+                dstArray[ i ] = self.globalState[ i ]
 
             cache.clippingState = dstArray
             self.numIntersection = self.numPlanes if clipIntersection else 0
@@ -91,29 +90,29 @@ class WebGLClipping( object ):
 
     def resetGlobalState( self ):
 
-        if uniform.value != globalState :
+        if self.uniform.value != self.globalState :
 
-            uniform.value = globalState
-            uniform.needsUpdate = numGlobalPlanes > 0
+            self.uniform.value = self.globalState
+            self.uniform.needsUpdate = self.numGlobalPlanes > 0
 
-        self.numPlanes = numGlobalPlanes
+        self.numPlanes = self.numGlobalPlanes
         self.numIntersection = 0
 
-    def projectPlanes( self, planes, camera, dstOffset, skipTransform ):
+    def projectPlanes( self, planes, camera, dstOffset, skipTransform = False ):
 
         nPlanes = len( planes ) if planes is not None else 0
         dstArray = None
 
         if nPlanes != 0 :
 
-            dstArray = uniform.value
+            dstArray = self.uniform.value
 
             if skipTransform != True or dstArray is None :
 
                 flatSize = dstOffset + nPlanes * 4
                 viewMatrix = camera.matrixWorldInverse
 
-                viewNormalMatrix.getNormalMatrix( viewMatrix )
+                self.viewNormalMatrix.getNormalMatrix( viewMatrix )
 
                 if dstArray is None or len( dstArray ) < flatSize :
 
@@ -123,7 +122,7 @@ class WebGLClipping( object ):
                 i4 = dstOffset
                 while i < nPlanes :
 
-                    plane = planes[ i ].clone().applyMatrix4( viewMatrix, viewNormalMatrix )
+                    plane = planes[ i ].clone().applyMatrix4( viewMatrix, self.viewNormalMatrix )
 
                     plane.normal.toArray( dstArray, i4 )
                     dstArray[ i4 + 3 ] = plane.constant
@@ -131,8 +130,8 @@ class WebGLClipping( object ):
                     i += 1
                     i4 += 4
 
-            uniform.value = dstArray
-            uniform.needsUpdate = True
+            self.uniform.value = dstArray
+            self.uniform.needsUpdate = True
 
         self.numPlanes = nPlanes
 
