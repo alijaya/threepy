@@ -2,7 +2,7 @@ from __future__ import division
 import sys
 import math
 
-from array import array
+import numpy as np
 
 import unittest
 
@@ -84,11 +84,11 @@ class TestGeometry( unittest.TestCase ):
     def test_fromBufferGeometry( self ):
 
         bufferGeometry = THREE.BufferGeometry()
-        bufferGeometry.addAttribute("position", THREE.BufferAttribute(array( "f", [1, 2, 3, 4, 5, 6, 7, 8, 9] ), 3 ) )
-        bufferGeometry.addAttribute("color", THREE.BufferAttribute(array( "f", [0, 0, 0, 0.5, 0.5, 0.5, 1, 1, 1] ), 3 ) )
-        bufferGeometry.addAttribute("normal", THREE.BufferAttribute(array( "f", [0, 1, 0, 1, 0, 1, 1, 1, 0] ), 3 ) )
-        bufferGeometry.addAttribute("uv", THREE.BufferAttribute(array( "f", [0, 0, 0, 1, 1, 1] ), 2 ) )
-        bufferGeometry.addAttribute("uv2", THREE.BufferAttribute(array( "f", [0, 0, 0, 1, 1, 1] ), 2 ) )
+        bufferGeometry.addAttribute("position", THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6, 7, 8, 9], np.float32 ), 3 ) )
+        bufferGeometry.addAttribute("color", THREE.BufferAttribute( np.array( [0, 0, 0, 0.5, 0.5, 0.5, 1, 1, 1], np.float32 ), 3 ) )
+        bufferGeometry.addAttribute("normal", THREE.BufferAttribute( np.array( [0, 1, 0, 1, 0, 1, 1, 1, 0], np.float32 ), 3 ) )
+        bufferGeometry.addAttribute("uv", THREE.BufferAttribute( np.array( [0, 0, 0, 1, 1, 1], np.float32 ), 2 ) )
+        bufferGeometry.addAttribute("uv2", THREE.BufferAttribute( np.array( [0, 0, 0, 1, 1, 1], np.float32 ), 2 ) )
 
         geometry = THREE.Geometry().fromBufferGeometry( bufferGeometry )
 

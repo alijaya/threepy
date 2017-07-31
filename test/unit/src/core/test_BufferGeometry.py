@@ -2,7 +2,7 @@ from __future__ import division
 import math
 
 import sys
-from array import array
+import numpy as np
 
 import unittest
 
@@ -23,7 +23,7 @@ class TestBufferGeometry( unittest.TestCase ):
 
         self.assertFalse( attributeName in geometry.attributes ) # no attribute defined
 
-        geometry.addAttribute( attributeName, THREE.BufferAttribute( array( "f", [1, 2, 3] ), 1 ) )
+        geometry.addAttribute( attributeName, THREE.BufferAttribute( np.array( [1, 2, 3], np.float32 ), 1 ) )
 
         self.assertTrue( attributeName in geometry.attributes ) # attribute is defined
 
@@ -34,7 +34,7 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_applyMatrix( self ):
 
         geometry = THREE.BufferGeometry()
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", [0]*6 ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.zeros( 6, np.float32 ), 3 ) )
 
         matrix = THREE.Matrix4().set(
             1, 0, 0, 1.5,
@@ -53,7 +53,7 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_rotateX_Y_Z( self ):
 
         geometry = THREE.BufferGeometry()
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 5, 6] ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6], np.float32 ), 3 ) )
 
         pos = geometry.attributes[ "position" ].array
 
@@ -78,7 +78,7 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_translate( self ):
 
         geometry = THREE.BufferGeometry()
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 5, 6] ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6], np.float32 ), 3 ) )
 
         pos = geometry.attributes[ "position" ].array
 
@@ -90,7 +90,7 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_scale( self ):
 
         geometry = THREE.BufferGeometry()
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", [-1, -1, -1, 2, 2, 2] ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( [-1, -1, -1, 2, 2, 2], np.float32 ), 3 ) )
 
         pos = geometry.attributes[ "position" ].array
 
@@ -102,11 +102,11 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_center( self ):
 
         geometry = THREE.BufferGeometry()
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", [
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( [
             -1, -1, -1,
             1, 1, 1,
             4, 4, 4
-        ] ), 3 ) )
+        ], np.float32 ), 3 ) )
 
         geometry.center()
 
@@ -203,7 +203,7 @@ class TestBufferGeometry( unittest.TestCase ):
 
         geometry = THREE.BufferGeometry()
 
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", vertices ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( vertices, np.float32 ), 3 ) )
         geometry.computeBoundingBox()
 
         return geometry.boundingBox
@@ -212,7 +212,7 @@ class TestBufferGeometry( unittest.TestCase ):
 
         geometry = THREE.BufferGeometry()
 
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", vertices ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( vertices, np.float32 ), 3 ) )
         geometry.computeBoundingSphere()
 
         return geometry.boundingSphere
@@ -264,7 +264,7 @@ class TestBufferGeometry( unittest.TestCase ):
 
         geometry = THREE.BufferGeometry()
 
-        geometry.addAttribute( "position", THREE.BufferAttribute( array( "f", vertices ), 3 ) )
+        geometry.addAttribute( "position", THREE.BufferAttribute( np.array( vertices, np.float32 ), 3 ) )
 
         geometry.computeVertexNormals()
 
@@ -275,10 +275,10 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_merge( self ):
 
         geometry1 = THREE.BufferGeometry()
-        geometry1.addAttribute( "attrName", THREE.BufferAttribute( array( "f", [1, 2, 3, 0, 0, 0] ), 3 ) )
+        geometry1.addAttribute( "attrName", THREE.BufferAttribute( np.array( [1, 2, 3, 0, 0, 0], np.float32 ), 3 ) )
 
         geometry2 = THREE.BufferGeometry()
-        geometry2.addAttribute( "attrName", THREE.BufferAttribute( array( "f", [4, 5, 6] ), 3 ) )
+        geometry2.addAttribute( "attrName", THREE.BufferAttribute( np.array( [4, 5, 6], np.float32 ), 3 ) )
 
         attr = geometry1.attributes[ "attrName" ].array
 
@@ -294,8 +294,8 @@ class TestBufferGeometry( unittest.TestCase ):
     def test_copy( self ):
 
         geometry = THREE.BufferGeometry()
-        geometry.addAttribute( "attrName", THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 5, 6] ), 3 ) )
-        geometry.addAttribute( "attrName2", THREE.BufferAttribute( array( "f", [0, 1, 3, 5, 6] ), 1 ) )
+        geometry.addAttribute( "attrName", THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6], np.float32 ), 3 ) )
+        geometry.addAttribute( "attrName2", THREE.BufferAttribute( np.array( [0, 1, 3, 5, 6], np.float32 ), 1 ) )
 
         copy = THREE.BufferGeometry().copy(geometry)
 

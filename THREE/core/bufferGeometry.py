@@ -1,7 +1,7 @@
 from __future__ import division
 import math
 
-from array import array
+import numpy as np
 
 import logging
 
@@ -488,7 +488,7 @@ class BufferGeometry( object ):
 
             if attributes.get( "normal" ) is None:
 
-                self.addAttribute( "normal", BufferAttribute( array( "f", [0] * len( positions ) ), 3 ) )
+                self.addAttribute( "normal", BufferAttribute( np.zeros( len( positions ), np.float32 ), 3 ) )
 
             else:
 

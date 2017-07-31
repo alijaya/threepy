@@ -1,6 +1,7 @@
 from __future__ import division
 import math
-from array import array
+
+import numpy as np
 
 import unittest
 
@@ -14,11 +15,11 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_count( self ):
 
-        self.assertEqual( THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 5, 6] ), 3 ).count, 2 ) # count is equal to the number of chunks
+        self.assertEqual( THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6], np.float32 ), 3 ).count, 2 ) # count is equal to the number of chunks
 
     def test_copy( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 5, 6] ), 3 )
+        attr = THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6], np.float32 ), 3 )
         attr.setDynamic( True )
         attr.needsUpdate = True
 
@@ -27,14 +28,14 @@ class TestBufferAttribute( unittest.TestCase ):
         self.assertEqual( attr.count, attrCopy.count ) # count is equal
         self.assertEqual( attr.itemSize, attrCopy.itemSize ) # itemSize is equal
         self.assertEqual( attr.dynamic, attrCopy.dynamic ) # dynamic is equal
-        self.assertEqual( len( attr.array ), len( attrCopy.array ) ) # array length is equal
+        self.assertEqual( attr.array.size, attrCopy.array.size ) # array length is equal
         self.assertEqual( attr.version, 1 ) # version is not copied which is good
         self.assertEqual( attrCopy.version, 0 ) # version is not copied which is good
 
     def test_copyAt( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 5, 6, 7, 8, 9] ), 3 )
-        attr2 = THREE.BufferAttribute( array( "f", [0]*9), 3 )
+        attr = THREE.BufferAttribute( np.array( [1, 2, 3, 4, 5, 6, 7, 8, 9], np.float32 ), 3 )
+        attr2 = THREE.BufferAttribute( np.zeros( 9, np.float32 ), 3 )
 
         attr2.copyAt( 1, attr, 2 )
         attr2.copyAt( 0, attr, 1 )
@@ -49,7 +50,7 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_copyColorsArray( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [0]*6), 3 )
+        attr = THREE.BufferAttribute( np.zeros( 6, np.float32 ), 3 )
 
         attr.copyColorsArray( [
             THREE.Color( 0, 0.5, 1 ),
@@ -62,7 +63,7 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_copyIndicesArray( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [0]*6), 3 )
+        attr = THREE.BufferAttribute( np.zeros( 6, np.float32 ), 3 )
 
         attr.copyIndicesArray( [
             {"a": 1, "b": 2, "c": 3 },
@@ -75,7 +76,7 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_copyVector2sArray( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [0]*4), 2 )
+        attr = THREE.BufferAttribute( np.zeros( 4, np.float32 ), 2 )
 
         attr.copyVector2sArray( [
             THREE.Vector2(1, 2),
@@ -88,7 +89,7 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_copyVector3sArray( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [0]*6), 2 )
+        attr = THREE.BufferAttribute( np.zeros( 6, np.float32 ), 2 )
 
         attr.copyVector3sArray( [
             THREE.Vector3(1, 2, 3),
@@ -101,7 +102,7 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_copyVector4sArray( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [0]*8), 2 )
+        attr = THREE.BufferAttribute( np.zeros( 8, np.float32 ), 2 )
 
         attr.copyVector4sArray( [
             THREE.Vector4(1, 2, 3, 4),
@@ -114,9 +115,9 @@ class TestBufferAttribute( unittest.TestCase ):
 
     def test_clone( self ):
 
-        attr = THREE.BufferAttribute( array( "f", [1, 2, 3, 4, 0.12, -12]), 2 )
+        attr = THREE.BufferAttribute( np.array( [1, 2, 3, 4, 0.12, -12], np.float32 ), 2 )
         attrCopy = attr.clone()
 
-        self.assertEqual( len( attr.array ), len( attrCopy.array ) ) # attribute was cloned
-        for i in range( len( attr.array ) ):
+        self.assertEqual( attr.array.size, attrCopy.array.size ) # attribute was cloned
+        for i in range( attr.array.size ):
             self.assertEqual( attr.array[i], attrCopy.array[i] ) # array item is equal

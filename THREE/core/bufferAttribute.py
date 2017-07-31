@@ -1,5 +1,6 @@
 from __future__ import division
-from array import array
+
+import numpy as np
 
 import logging
 
@@ -28,7 +29,7 @@ class BufferAttribute( object ):
 
         self.array = array
         self.itemSize = itemSize
-        self.count = len( array ) // itemSize if array is not None else 0
+        self.count = array.size // itemSize if array is not None else 0
         self.normalized = normalized
 
         self.dynamic = False
@@ -52,7 +53,7 @@ class BufferAttribute( object ):
 
             raise ValueError( "THREE.BufferAttribute: array should be a Typed Array." )
 
-        self.count = len( array ) // self.itemSize if array is not None else 0
+        self.count = array.size // self.itemSize if array is not None else 0
         self.array = array
 
     def setDynamic( self, value ):
@@ -63,7 +64,7 @@ class BufferAttribute( object ):
 
     def copy( self, source ):
 
-        self.array = source.array[:]
+        self.array = source.array.copy()
         self.itemSize = source.itemSize
         self.count = source.count
         self.normalized = source.normalized
@@ -85,7 +86,7 @@ class BufferAttribute( object ):
 
     def copyArray( self, array ):
 
-        self.array.set( array )
+        self.array[0:] = array
 
         return self
 
@@ -191,7 +192,7 @@ class BufferAttribute( object ):
 
     def set( self, value, offset = 0 ):
 
-        self.array.set( value, offset )
+        self.array[0:] = value
 
         return self
 
@@ -283,7 +284,7 @@ class Int8BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Int8BufferAttribute, self ).__init__( array( "b", arr ), itemSize )
+        super( Int8BufferAttribute, self ).__init__( np.array( arr, np.int8 ), itemSize )
 
 class Uint8BufferAttribute( BufferAttribute ):
 
@@ -291,7 +292,7 @@ class Uint8BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Uint8BufferAttribute, self ).__init__( array( "B", arr ), itemSize )
+        super( Uint8BufferAttribute, self ).__init__( np.array( arr, np.uint8 ), itemSize )
 
 class Uint8ClampedBufferAttribute( BufferAttribute ):
 
@@ -299,7 +300,7 @@ class Uint8ClampedBufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Uint8ClampedBufferAttribute, self ).__init__( array( "B", arr ), itemSize )
+        super( Uint8ClampedBufferAttribute, self ).__init__( np.array( arr, np.uint8 ), itemSize )
 
 class Int16BufferAttribute( BufferAttribute ):
 
@@ -307,7 +308,7 @@ class Int16BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Int16BufferAttribute, self ).__init__( array( "h", arr ), itemSize )
+        super( Int16BufferAttribute, self ).__init__( np.array( arr, np.int16 ), itemSize )
 
 class Uint16BufferAttribute( BufferAttribute ):
 
@@ -315,7 +316,7 @@ class Uint16BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Uint16BufferAttribute, self ).__init__( array( "H", arr ), itemSize )
+        super( Uint16BufferAttribute, self ).__init__( np.array( arr, np.uint16 ), itemSize )
 
 class Int32BufferAttribute( BufferAttribute ):
 
@@ -323,7 +324,7 @@ class Int32BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Int32BufferAttribute, self ).__init__( arra( "l", arr ), itemSize )
+        super( Int32BufferAttribute, self ).__init__( np.array( arr, np.int32 ), itemSize )
 
 class Uint32BufferAttribute( BufferAttribute ):
 
@@ -331,7 +332,7 @@ class Uint32BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0] * arr
 
-        super( Uint32BufferAttribute, self ).__init__( array( "L", arr ), itemSize )
+        super( Uint32BufferAttribute, self ).__init__( np.array( arr, np.uint32 ), itemSize )
 
 class Float32BufferAttribute( BufferAttribute ):
 
@@ -339,7 +340,7 @@ class Float32BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0.] * arr
 
-        super( Float32BufferAttribute, self ).__init__( array( "f", arr ), itemSize )
+        super( Float32BufferAttribute, self ).__init__( np.array( arr, np.float32 ), itemSize )
 
 class Float64BufferAttribute( BufferAttribute ):
 
@@ -347,4 +348,4 @@ class Float64BufferAttribute( BufferAttribute ):
 
         if isinstance( arr, int ): arr = [0.] * arr
 
-        super( Float64BufferAttribute, self ).__init__( array( "d", arr ), itemSize )
+        super( Float64BufferAttribute, self ).__init__( np.array( arr, np.float64 ), itemSize )
