@@ -26,8 +26,8 @@ from webgl import webGLGeometries
 # from webgl import webGLObjects
 # from webgl import webGLPrograms
 # from webgl import webGLTextures
-# from webgl import webGLProperties
-# from webgl import webGLState
+from webgl import webGLProperties
+from webgl import webGLState
 from webgl import webGLCapabilities
 # from webvr import webVRManager
 from ..core import bufferGeometry
@@ -251,7 +251,7 @@ class WebGLRenderer( object ):
 
         self.capabilities = webGLCapabilities.WebGLCapabilities( self.extensions, self.parameters )
 
-        self.state = webGLState.WebGLState( extensions, utils )
+        self.state = webGLState.WebGLState( self.extensions, self.utils )
         self.state.scissor( self._currentScissor.copy( self._scissor ).multiplyScalar( self._pixelRatio ) )
         self.state.viewport( self._currentViewport.copy( self._viewport ).multiplyScalar( self._pixelRatio ) )
 

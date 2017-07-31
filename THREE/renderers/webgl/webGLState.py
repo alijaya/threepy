@@ -1,6 +1,6 @@
 from __future__ import division
 
-from array import array
+import numpy as np
 import re
 
 import logging
@@ -15,7 +15,7 @@ from ...math import vector4
 
 class WebGLState( object ):
 
-    def WebGLState( self, extensions, utils ):
+    def __init__( self, extensions, utils ):
 
         self.extensions = extensions
         self.utils = utils
@@ -31,9 +31,9 @@ class WebGLState( object ):
         }
 
         self.maxVertexAttributes = GL.glGetIntegerv( GL.GL_MAX_VERTEX_ATTRIBS )
-        self.newAttributes = array( "B", self.maxVertexAttributes )
-        self.enabledAttributes = array( "B", self.maxVertexAttributes )
-        self.attributeDivisors = array( "B", self.maxVertexAttributes )
+        self.newAttributes = np.zeros( self.maxVertexAttributes, np.uint8 )
+        self.enabledAttributes = np.zeros( self.maxVertexAttributes, np.uint8 )
+        self.attributeDivisors = np.zeros( self.maxVertexAttributes, np.uint8 )
 
         self.capabilities = {}
         self.compressedTextureFormats = None
@@ -59,9 +59,9 @@ class WebGLState( object ):
 
         self.currentScissorTest = None
 
-        self.maxTextures = GL.glGetParameter( GL.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS )
+        self.maxTextures = GL.glGetIntegerv( GL.GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS )
 
-        self.version = float( re.match( "WebGL\ ([0-9])", GL.glGetString( GL.GL_VERSION ) ).groups( 1 ) )
+        self.version = float( re.match( "([0-9])", GL.glGetString( GL.GL_VERSION ) ).group( 1 ) )
         self.lineWidthAvailable = float( self.version ) >= 1.0
 
         self.currentTextureSlot = None
@@ -93,8 +93,8 @@ class WebGLState( object ):
 
     def createTexture( self, type, target, count ):
 
-        data = array( "B", [0] * 4 ) # 4 is required to match default unpack alignment of 4.
-        texture = GL.glCreateTexture()
+        data = np.zeros( 4, np.uint8 ) # 4 is required to match default unpack alignment of 4.
+        texture = GL.glGenTextures( 1 )
 
         GL.glBindTexture( type, texture )
         GL.glTexParameteri( type, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST )
@@ -155,7 +155,7 @@ class WebGLState( object ):
 
     def enable( self, id ):
 
-        if self.capabilities[ id ] != True :
+        if self.capabilities.get( id ) != True :
 
             GL.glEnable( id )
             self.capabilities[ id ] = True
@@ -197,7 +197,7 @@ class WebGLState( object ):
 
         return False
 
-    def setBlending( self, blending, blendEquation, blendSrc, blendDst, blendEquationAlpha, blendSrcAlpha, blendDstAlpha, premultipliedAlpha ):
+    def setBlending( self, blending, blendEquation = None, blendSrc = None, blendDst = None, blendEquationAlpha = None, blendSrcAlpha = None, blendDstAlpha = None, premultipliedAlpha = None ):
 
         if blending != NoBlending :
 
@@ -516,7 +516,7 @@ class ColorBuffer( object ):
 
         self.locked = lock
 
-    def setClear( self, r, g, b, a, premultipliedAlpha ):
+    def setClear( self, r, g, b, a, premultipliedAlpha = False ):
 
         if premultipliedAlpha == True :
 
