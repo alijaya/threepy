@@ -10,31 +10,31 @@ from OpenGL import GL
 
 class WebGLCapabilities( object ):
 
-    def WebGLCapabilities( self, extensions, parameters ):
+    def __init__( self, extensions, parameters ):
 
         self.extensions = extensions
         self.parameters = parameters
         self.maxAnisotropy = None
 
-        self.precision = self.parameters.precision if self.parameters.precision is not None else "highp"
+        self.precision = self.parameters.get( "precision", "highp" )
         maxPrecision = self.getMaxPrecision( self.precision )
 
-        if maxPrecision != precision :
+        if maxPrecision != self.precision :
 
-            logging.warning( "THREE.WebGLRenderer: %s not supported, using %s instead." % ( precision, maxPrecision ) )
-            precision = maxPrecision
+            logging.warning( "THREE.WebGLRenderer: %s not supported, using %s instead." % ( self.precision, maxPrecision ) )
+            self.precision = maxPrecision
 
-        self.logarithmicDepthBuffer = self.parameters.logarithmicDepthBuffer == True and not self.extensions.get( "EXT_frag_depth" )
+        self.logarithmicDepthBuffer = self.parameters.get( "logarithmicDepthBuffer" ) == True and not self.extensions.get( "EXT_frag_depth" )
 
-        self.maxTextures = GL.glGet( GL.GL_MAX_TEXTURE_IMAGE_UNITS )
-        self.maxVertexTextures = GL.glGet( GL.GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS )
-        self.maxTextureSize = GL.glGet( GL.GL_MAX_TEXTURE_SIZE )
-        self.maxCubemapSize = GL.glGet( GL.GL_MAX_CUBE_MAP_TEXTURE_SIZE )
+        self.maxTextures = GL.glGetIntegerv( GL.GL_MAX_TEXTURE_IMAGE_UNITS )
+        self.maxVertexTextures = GL.glGetIntegerv( GL.GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS )
+        self.maxTextureSize = GL.glGetIntegerv( GL.GL_MAX_TEXTURE_SIZE )
+        self.maxCubemapSize = GL.glGetIntegerv( GL.GL_MAX_CUBE_MAP_TEXTURE_SIZE )
 
-        self.maxAttributes = GL.glGet( GL.GL_MAX_VERTEX_ATTRIBS )
-        self.maxVertexUniforms = GL.glGet( GL.GL_MAX_VERTEX_UNIFORM_VECTORS )
-        self.maxVaryings = GL.glGet( GL.GL_MAX_VARYING_VECTORS )
-        self.maxFragmentUniforms = GL.glGet( GL.GL_MAX_FRAGMENT_UNIFORM_VECTORS )
+        self.maxAttributes = GL.glGetIntegerv( GL.GL_MAX_VERTEX_ATTRIBS )
+        # self.maxVertexUniforms = GL.glGetIntegerv( GL.GL_MAX_VERTEX_UNIFORM_VECTORS )
+        # self.maxVaryings = GL.glGetIntegerv( GL.GL_MAX_VARYING_VECTORS )
+        # self.maxFragmentUniforms = GL.glGetIntegerv( GL.GL_MAX_FRAGMENT_UNIFORM_VECTORS )
 
         self.vertexTextures = self.maxVertexTextures > 0
         self.floatFragmentTextures = not self.extensions.get( "OES_texture_float" )
@@ -60,18 +60,19 @@ class WebGLCapabilities( object ):
 
         if precision == "highp" :
 
-            if GL.glGetShaderPrecisionFormat( GL.GL_VERTEX_SHADER, GL.GL_HIGH_FLOAT ).precision > 0 and \
-                 GL.glGetShaderPrecisionFormat( GL.GL_FRAGMENT_SHADER, GL.GL_HIGH_FLOAT ).precision > 0 :
+            # if GL.glGetShaderPrecisionFormat( GL.GL_VERTEX_SHADER, GL.GL_HIGH_FLOAT ).precision > 0 and \
+            #      GL.glGetShaderPrecisionFormat( GL.GL_FRAGMENT_SHADER, GL.GL_HIGH_FLOAT ).precision > 0 :
 
-                return "highp"
+            #     return "highp"
 
             precision = "mediump"
 
         if precision == "mediump" :
 
-            if GL.glGetShaderPrecisionFormat( GL.GL_VERTEX_SHADER, GL.GL_MEDIUM_FLOAT ).precision > 0 and \
-                 GL.glGetShaderPrecisionFormat( GL.GL_FRAGMENT_SHADER, GL.GL_MEDIUM_FLOAT ).precision > 0 :
+            # if GL.glGetShaderPrecisionFormat( GL.GL_VERTEX_SHADER, GL.GL_MEDIUM_FLOAT ).precision > 0 and \
+            #      GL.glGetShaderPrecisionFormat( GL.GL_FRAGMENT_SHADER, GL.GL_MEDIUM_FLOAT ).precision > 0 :
 
-                return "mediump"
+            #     return "mediump"
+            pass
 
         return "lowp"

@@ -37,7 +37,7 @@ from ..math import sphere
 from webgl import webGLClipping
 from ..math import frustum
 from ..math import vector4
-# from webgl import webGLUtils
+from webgl import webGLUtils
 #
 """
  * @author supereggbert / "http":#www.paulbrunt.co.uk/
