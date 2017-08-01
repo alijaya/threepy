@@ -1,5 +1,7 @@
 import openGLProgram
 
+from ...utils import Expando
+
 programs = []
 
 shaderIDs = {
@@ -40,26 +42,26 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
 
     # currentRenderTarget = renderer.getRenderTarget()
 
-    parameters = {
-        "shaderID": shaderId,
+    parameters = Expando(
+        shaderID = shaderId,
 
-        # "precision": precision,
-        # "supportsVertexTextures":
-        # "outputEncoding":
-        "map": bool( material.map ),
-        # "mapEncoding":
-        # "envMap": bool( material.envMap),
-        # "envMapMode": material.envMap and material.envMap.mapping,
-        # "envMapEncoding":
+        # precision = precision,
+        # supportsVertexTextures =
+        # outputEncoding =
+        map = bool( material.map ),
+        # mapEncoding =
+        # envMap = bool( material.envMap),
+        # envMapMode = material.envMap and material.envMap.mapping,
+        # envMapEncoding =
 
-        "fog": bool( fog ),
-        "useFog": material.fog,
-        "fogExp": fog and fog.isFogExp2,
+        fog = bool( fog ),
+        useFog = material.fog,
+        fogExp = fog and fog.isFogExp2,
 
-        "flatShading": material.flatShading,
+        flatShading = material.flatShading,
 
         # etc
-    }
+    )
 
     return parameters
 
@@ -68,9 +70,9 @@ def getProgramCode( material, parameters ):
 
     array = []
 
-    if parameters[ "shaderID" ]:
+    if parameters.shaderID:
 
-        array.append( parameters[ "shaderID" ] )
+        array.append( parameters.shaderID )
     
     else:
 
@@ -86,7 +88,7 @@ def getProgramCode( material, parameters ):
     
     for param in parameterNames:
 
-        array.append( parameters.get( param ) )
+        array.append( parameters[ param ] )
     
     # array.push()
 
@@ -105,7 +107,7 @@ def acquireProgram( material, shader, parameters, code ):
         if programInfo.code == code:
 
             program = programInfo
-            program[ "usedTimes" ] += 1
+            program.usedTimes += 1
 
             break
 

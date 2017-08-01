@@ -8,6 +8,7 @@ from ..objects.mesh import Mesh
 from ..math.frustum import Frustum
 from ..math.vector3 import Vector3
 from ..math.vector4 import Vector4
+from ..utils import Expando
 
 from opengl import OpenGLObjects as objects
 from opengl import OpenGLState as state
@@ -112,7 +113,7 @@ def projectObject( object, camera, projScreenMatrix, frustum, currentRenderList,
 
 def releaseMaterialProgramReference( material ):
 
-    programInfo = properties.get( material )[ "program" ]
+    programInfo = properties.get( material ).program
 
     del material.program
 
@@ -129,7 +130,7 @@ def initMaterial( material, fog, object ):
 
     code = programCache.getProgramCode( material, parameters )
 
-    program = materialProperties.get( "program" )
+    program = materialProperties.program
     programChange = True
 
     if not program:
@@ -155,51 +156,51 @@ def initMaterial( material, fog, object ):
 
     if programChange:
 
-        if parameters.get( "shaderID" ):
+        if "shaderID" in parameters:
 
-            shader = ShaderLib[ parameters.get( "shaderID" ) ]
+            shader = ShaderLib[ parameters.shaderID ]
 
-            materialProperties[ "shader" ] = {
-                "name": material.type,
-                "uniforms": UniformsUtils.clone( shader["uniforms"] ),
-                "vertexShader": shader["vertexShader"],
-                "fragmentShader": shader["fragmentShader"]
-            }
+            materialProperties.shader = Expando(
+                name = material.type,
+                uniforms = UniformsUtils.clone( shader.uniforms ),
+                vertexShader = shader.vertexShader,
+                fragmentShader = shader.fragmentShader
+            )
         
         else:
 
-            materialProperties[ "shader" ] = {
-                "name": material.type,
-                "uniforms": material.uniforms,
-                "vertexShader": material.vertexShader,
-                "fragmentShader": material.fragmentShader
-            }
+            materialProperties.shader = Expando(
+                name = material.type,
+                uniforms = material.uniforms,
+                vertexShader = material.vertexShader,
+                fragmentShader = material.fragmentShader
+            )
         
-        # material.onBeforeCompile( materialProperties[ "shader" ] )
+        # material.onBeforeCompile( materialProperties.shader )
 
-        program = programCache.acquireProgram( material, materialProperties[ "shader" ], parameters, code )
+        program = programCache.acquireProgram( material, materialProperties.shader, parameters, code )
 
-        materialProperties[ "program" ] = program
+        materialProperties.program = program
         material.program = program
 
     programAttributes = program.getAttributes()
 
     # TODO morphTargets
 
-    uniforms = materialProperties[ "shader" ][ "uniforms" ]
+    uniforms = materialProperties.shader.uniforms
 
     # TODO clipping
 
-    materialProperties[ "fog" ] = fog
+    materialProperties.fog = fog
 
     # store the light setup it was created for
 
     # TODO lights
 
-    progUniforms = materialProperties[ "program" ].getUniforms()
+    progUniforms = materialProperties.program.getUniforms()
     uniformsList = OpenGLUniforms.seqWithValue( progUniforms.seq, uniforms )
 
-    materialProperties[ "uniformsList" ] = uniformsList
+    materialProperties.uniformsList = uniformsList
 
 def setProgram( camera, fog, material, object ):
 
@@ -217,9 +218,9 @@ def setProgram( camera, fog, material, object ):
     refreshMaterial = False
     refreshLights = False
 
-    program = materialProperties[ "program" ]
+    program = materialProperties.program
     p_uniforms = program.getUniforms()
-    m_uniforms = materialProperties[ "shader" ][ "uniforms" ]
+    m_uniforms = materialProperties.shader.uniforms
 
     if state.useProgram( program.program ):
 
@@ -306,7 +307,7 @@ def setProgram( camera, fog, material, object ):
 
         # TODO RectAreaLight Texture
 
-        WebGLUniforms.upload( materialProperties[ "uniformsList" ], m_uniforms, self )
+        WebGLUniforms.upload( materialProperties.uniformsList, m_uniforms, self )
 
     # common matrices
 
@@ -415,10 +416,10 @@ def renderObjects( renderList, scene, camera, overrideMaterial = None ):
 
     for renderItem in renderList:
 
-        object = renderItem[ "object" ]
-        geometry = renderItem[ "geometry" ]
-        material = overrideMaterial or renderItem[ "material" ]
-        group = renderItem[ "group" ]
+        object = renderItem.object
+        geometry = renderItem.geometry
+        material = overrideMaterial or renderItem.material
+        group = renderItem.group
 
         # TODO array camera
 

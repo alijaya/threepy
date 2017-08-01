@@ -1,10 +1,11 @@
 from ..core import eventDispatcher
 from ..constants import NoColors, FrontSide, FlatShading, NormalBlending, LessEqualDepth, AddEquation, OneMinusSrcAlphaFactor, SrcAlphaFactor
 from ..math import _Math
+from ..utils import Expando
 
 """
- * @author mrdoob / "http":#mrdoob.com/
- * @author alteredq / "http":#alteredqualia.com/
+ * @author mrdoob / http:#mrdoob.com/
+ * @author alteredq / http:#alteredqualia.com/
  """
 
 class Material( object ):
@@ -85,7 +86,7 @@ class Material( object ):
 
             if newValue is None :
 
-                logging.warning( "\"THREE.Material\": \"%s\" parameter is None." % key )
+                logging.warning( "THREE.Material: \"%s\" parameter is None." % key )
                 continue
 
             # for backward compatability if shading is set in the constructor
@@ -125,18 +126,18 @@ class Material( object ):
 
         if isRoot :
 
-            meta = {
-                "textures": {},
-                "images": {}
-            }
+            meta = Expando(
+                textures = {},
+                images = {}
+            )
 
-        data = {
-            "metadata": {
-                "version": 4.5,
-                "type": "Material",
-                "generator": "Material.toJSON"
-            }
-        }
+        data = Expando(
+            metadata = Expando(
+                version = 4.5,
+                type = "Material",
+                generator = "Material.toJSON"
+            )
+        )
 
         # standard Material serialization
         data.uuid = self.uuid
@@ -216,7 +217,7 @@ class Material( object ):
 
         data.dithering = self.dithering
 
-        # "TODO": Copied from Object3D.toJSON
+        # TODO: Copied from Object3D.toJSON
 
         def extractFromCache( cache ):
 
@@ -307,4 +308,4 @@ class Material( object ):
 
     def dispose( self ):
 
-        self.dispatchEvent( { "type": "dispose" } )
+        self.dispatchEvent( Expando( type = "dispose" ) )

@@ -11,12 +11,13 @@ from ..core import face3
 from ..constants import DoubleSide, BackSide, TrianglesDrawMode
 from ..materials import meshBasicMaterial
 from ..core import bufferGeometry
+from ..utils import Expando
 
 """
- * @author mrdoob / "http":#mrdoob.com/
- * @author alteredq / "http":#alteredqualia.com/
- * @author mikael emtinger / "http":#gomo.se/
- * @author jonobr1 / "http":#jonobr1.com/
+ * @author mrdoob / http:#mrdoob.com/
+ * @author alteredq / http:#alteredqualia.com/
+ * @author mikael emtinger / http:#gomo.se/
+ * @author jonobr1 / http:#jonobr1.com/
  """
 
 class Mesh( object3D.Object3D ):
@@ -30,7 +31,7 @@ class Mesh( object3D.Object3D ):
         self.type = "Mesh"
 
         self.geometry = geometry or bufferGeometry.BufferGeometry()
-        self.material = material or meshBasicMaterial.MeshBasicMaterial( { "color": math.random() * 0xffffff } )
+        self.material = material or meshBasicMaterial.MeshBasicMaterial( Expando( color = math.random() * 0xffffff ) )
         self.drawMode = TrianglesDrawMode
 
         self.updateMorphTargets()
@@ -142,11 +143,11 @@ class Mesh( object3D.Object3D ):
 
             if distance < raycaster.near or distance > raycaster.far : return None
 
-            return {
-                "distance": distance,
-                "point": intersectionPointWorld.clone(),
-                "object": object
-            }
+            return Expando(
+                distance = distance,
+                point = intersectionPointWorld.clone(),
+                object = object
+            )
 
         def checkBufferGeometryIntersection( object, raycaster, ray, position, uv, a, b, c ):
 

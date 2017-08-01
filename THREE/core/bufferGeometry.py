@@ -15,6 +15,7 @@ import object3D
 from ..math import matrix4
 from ..math import matrix3
 from ..math import _Math
+from ..utils import Expando
 import geometry
 
 """
@@ -44,7 +45,7 @@ class BufferGeometry( object ):
         self.boundingBox = None
         self.boundingSphere = None
 
-        self.drawRange = { "start": 0, "count": float( "inf" ) }
+        self.drawRange = Expando( start = 0, count = float( "inf" ) )
 
     def getIndex( self ):
 
@@ -78,13 +79,13 @@ class BufferGeometry( object ):
 
     def addGroup( self, start, count, materialIndex = 0 ):
 
-        self.groups.append( {
+        self.groups.append( Expando(
 
-            "start": start,
-            "count": count,
-            "materialIndex": materialIndex
+            start = start,
+            count = count,
+            materialIndex = materialIndex
 
-        } )
+        ) )
 
     def clearGroups( self ):
 
@@ -482,11 +483,11 @@ class BufferGeometry( object ):
         attributes = self.attributes
         groups = self.groups
 
-        if attributes.get( "position" ):
+        if "position" in attributes:
 
             positions = attributes[ "position" ].array
 
-            if attributes.get( "normal" ) is None:
+            if "normal" not in attributes:
 
                 self.addAttribute( "normal", BufferAttribute( np.zeros( len( positions ), np.float32 ), 3 ) )
 
@@ -494,7 +495,7 @@ class BufferGeometry( object ):
 
                 # reset existing normals to zero
 
-                arr = attributes[ "normal" ].array
+                arr = attributes.normal.array
 
                 for i in range( len( array ) ):
 
@@ -667,19 +668,19 @@ class BufferGeometry( object ):
 
     def toJSON( self ):
 
-        data = {
-            "metadata": {
-                "version": 4.5,
-                "type": "BufferGeometry",
-                "generator": "BufferGeometry.toJSON"
-            }
-        }
+        data = Expando(
+            metadata = Expando(
+                version = 4.5,
+                type = "BufferGeometry",
+                generator = "BufferGeometry.toJSON"
+            )
+        )
 
         # standard BufferGeometry serialization
 
-        data[ "uuid" ] = self.uuid
-        data[ "type" ] = self.type
-        if self.name != "": data[ "name" ] = self.name
+        data.uuid = self.uuid
+        data.type = self.type
+        if self.name != "": data.name = self.name
 
         if self.parameters is not None:
 
@@ -691,17 +692,17 @@ class BufferGeometry( object ):
 
             return data
 
-        data[ "data" ] = { "attributes": {} }
+        data.data = Expando( attributes = {} )
         index = self.index
 
         if index is not None:
 
             array = list( index.array )
 
-            data[ "data" ].index = {
-                "type": type( index.array ).__name__,
-                "array": array
-            }
+            data.data.index = Expando(
+                type = index.array.dtype,
+                array = array
+            )
 
         attributes = self.attributes
 
@@ -711,27 +712,27 @@ class BufferGeometry( object ):
 
             array =list( attribute.array )
 
-            data[ "data" ][ "attributes" ][ key ] = {
-                "itemSize": attribute.itemSize,
-                "type": type( attribute.array ).__name__,
-                "array": array,
-                "normalized": attribute.normalized
-            }
+            data.data.attributes[ key ] = Expando(
+                itemSize = attribute.itemSize,
+                type = type( attribute.array ).__name__,
+                array = array,
+                normalized = attribute.normalized
+            )
 
         groups = self.groups
 
         if len( groups ) > 0:
 
-            data[ "data" ][ "groups" ] = json.loads( json.dumps( groups ) )
+            data.data.groups = json.loads( json.dumps( groups ) )
 
         boundingSphere = self.boundingSphere
 
         if boundingSphere is not None:
 
-            data[ "data" ][ "boundingSphere" ] = {
-                "center": boundingSphere.center.toArray(),
-                "radius": boundingSphere.radius
-            }
+            data.data.boundingSphere = Expando(
+                center = boundingSphere.center.toArray(),
+                radius = boundingSphere.radius
+            )
 
         return data
 
@@ -832,11 +833,11 @@ class BufferGeometry( object ):
 
         # draw range
 
-        self.drawRange[ "start" ] = source.drawRange[ "start" ]
-        self.drawRange[ "count" ] = source.drawRange[ "count" ]
+        self.drawRange.start = source.drawRange.start
+        self.drawRange.count = source.drawRange.count
 
         return self
 
     def dispose( self ):
 
-        self.dispatchEvent( { "type": "dispose" } )
+        self.dispatchEvent( Expando( type = "dispose" ) )

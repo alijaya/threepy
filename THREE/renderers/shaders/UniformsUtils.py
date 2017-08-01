@@ -11,13 +11,13 @@ def clone( uniforms_src ):
 
             parameter_src = uniforms_src[ u ][ p ]
 
-            if parameter_src and (  hasattr( parameter_src, "isColor" ) or \
-                                    hasattr( parameter_src, "isMatrix3" ) or \
-                                    hasattr( parameter_src, "isMatrix4" ) or \
-                                    hasattr( parameter_src, "isVector2" ) or \
-                                    hasattr( parameter_src, "isVector3" ) or \
-                                    hasattr( parameter_src, "isVector4" ) or \
-                                    hasattr( parameter_src, "isTexture" ) ):
+            if parameter_src and (  getattr( parameter_src, "isColor", None ) or \
+                                    getattr( parameter_src, "isMatrix3", None ) or \
+                                    getattr( parameter_src, "isMatrix4", None ) or \
+                                    getattr( parameter_src, "isVector2", None ) or \
+                                    getattr( parameter_src, "isVector3", None ) or \
+                                    getattr( parameter_src, "isVector4", None ) or \
+                                    getattr( parameter_src, "isTexture", None ) ):
 
                 uniforms_dst[ u ][ p ] = parameter_src.clone()
 

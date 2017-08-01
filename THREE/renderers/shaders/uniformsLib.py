@@ -1,6 +1,7 @@
 from ...math import vector4
 from ...math import color
 from ...math import vector2
+from ...utils import Expando
 
 """
  * Uniforms library for shared webgl shaders
@@ -8,179 +9,179 @@ from ...math import vector2
 
 UniformsLib = {
 
-	"common": {
+	"common": Expando(
 
-		"diffuse": { "value": color.Color( 0xeeeeee ) },
-		"opacity": { "value": 1.0 },
+		diffuse = Expando( value = color.Color( 0xeeeeee ) ),
+		opacity = Expando( value = 1.0 ),
 
-		"map": { "value": None },
-		"offsetRepeat": { "value": vector4.Vector4( 0, 0, 1, 1 ) },
+		map = Expando( value = None ),
+		offsetRepeat = Expando( value = vector4.Vector4( 0, 0, 1, 1 ) ),
 
-		"alphaMap": { "value": None },
+		alphaMap = Expando( value = None ),
 
-	},
+	),
 
-	"specularmap": {
+	"specularmap": Expando(
 
-		"specularMap": { "value": None },
+		specularMap = Expando( value = None ),
 
-	},
+	),
 
-	"envmap": {
+	"envmap": Expando(
 
-		"envMap": { "value": None },
-		"flipEnvMap": { "value": - 1 },
-		"reflectivity": { "value": 1.0 },
-		"refractionRatio": { "value": 0.98 }
+		envMap = Expando( value = None ),
+		flipEnvMap = Expando( value = - 1 ),
+		reflectivity = Expando( value = 1.0 ),
+		refractionRatio = Expando( value = 0.98 )
 
-	},
+	),
 
-	"aomap": {
+	"aomap": Expando(
 
-		"aoMap": { "value": None },
-		"aoMapIntensity": { "value": 1 }
+		aoMap = Expando( value = None ),
+		aoMapIntensity = Expando( value = 1 )
 
-	},
+	),
 
-	"lightmap": {
+	"lightmap": Expando(
 
-		"lightMap": { "value": None },
-		"lightMapIntensity": { "value": 1 }
+		lightMap = Expando( value = None ),
+		lightMapIntensity = Expando( value = 1 )
 
-	},
+	),
 
-	"emissivemap": {
+	"emissivemap": Expando(
 
-		"emissiveMap": { "value": None }
+		emissiveMap = Expando( value = None )
 
-	},
+	),
 
-	"bumpmap": {
+	"bumpmap": Expando(
 
-		"bumpMap": { "value": None },
-		"bumpScale": { "value": 1 }
+		bumpMap = Expando( value = None ),
+		bumpScale = Expando( value = 1 )
 
-	},
+	),
 
-	"normalmap": {
+	"normalmap": Expando(
 
-		"normalMap": { "value": None },
-		"normalScale": { "value": vector2.Vector2( 1, 1 ) }
+		normalMap = Expando( value = None ),
+		normalScale = Expando( value = vector2.Vector2( 1, 1 ) )
 
-	},
+	),
 
-	"displacementmap": {
+	"displacementmap": Expando(
 
-		"displacementMap": { "value": None },
-		"displacementScale": { "value": 1 },
-		"displacementBias": { "value": 0 }
+		displacementMap = Expando( value = None ),
+		displacementScale = Expando( value = 1 ),
+		displacementBias = Expando( value = 0 )
 
-	},
+	),
 
-	"roughnessmap": {
+	"roughnessmap": Expando(
 
-		"roughnessMap": { "value": None }
+		roughnessMap = Expando( value = None )
 
-	},
+	),
 
-	"metalnessmap": {
+	"metalnessmap": Expando(
 
-		"metalnessMap": { "value": None }
+		metalnessMap = Expando( value = None )
 
-	},
+	),
 
-	"gradientmap": {
+	"gradientmap": Expando(
 
-		"gradientMap": { "value": None }
+		gradientMap = Expando( value = None )
 
-	},
+	),
 
-	"fog": {
+	"fog": Expando(
 
-		"fogDensity": { "value": 0.00025 },
-		"fogNear": { "value": 1 },
-		"fogFar": { "value": 2000 },
-		"fogcolor.Color": { "value": color.Color( 0xffffff ) }
+		fogDensity = Expando( value = 0.00025 ),
+		fogNear = Expando( value = 1 ),
+		fogFar = Expando( value = 2000 ),
+		fogcolor = Expando( value = color.Color( 0xffffff ) )
 
-	},
+	),
 
-	"lights": {
+	"lights": Expando(
 
-		"ambientLightcolor.Color": { "value": [] },
+		ambientLightcolor = Expando( value = [] ),
 
-		"directionalLights": { "value": [], "properties": {
-			"direction": {},
-			"color": {},
+		directionalLights = Expando( value = [], properties = Expando(
+			direction = Expando(),
+			color = Expando(),
 
-			"shadow": {},
-			"shadowBias": {},
-			"shadowRadius": {},
-			"shadowMapSize": {}
-		} },
+			shadow = Expando(),
+			shadowBias = Expando(),
+			shadowRadius = Expando(),
+			shadowMapSize = Expando()
+		) ),
 
-		"directionalShadowMap": { "value": [] },
-		"directionalShadowMatrix": { "value": [] },
+		directionalShadowMap = Expando( value = [] ),
+		directionalShadowMatrix = Expando( value = [] ),
 
-		"spotLights": { "value": [], "properties": {
-			"color": {},
-			"position": {},
-			"direction": {},
-			"distance": {},
-			"coneCos": {},
-			"penumbraCos": {},
-			"decay": {},
+		spotLights = Expando( value = [], properties = Expando(
+			color = Expando(),
+			position = Expando(),
+			direction = Expando(),
+			distance = Expando(),
+			coneCos = Expando(),
+			penumbraCos = Expando(),
+			decay = Expando(),
 
-			"shadow": {},
-			"shadowBias": {},
-			"shadowRadius": {},
-			"shadowMapSize": {}
-		} },
+			shadow = Expando(),
+			shadowBias = Expando(),
+			shadowRadius = Expando(),
+			shadowMapSize = Expando()
+		) ),
 
-		"spotShadowMap": { "value": [] },
-		"spotShadowMatrix": { "value": [] },
+		spotShadowMap = Expando( value = [] ),
+		spotShadowMatrix = Expando( value = [] ),
 
-		"pointLights": { "value": [], "properties": {
-			"color": {},
-			"position": {},
-			"decay": {},
-			"distance": {},
+		pointLights = Expando( value = [], properties = Expando(
+			color = Expando(),
+			position = Expando(),
+			decay = Expando(),
+			distance = Expando(),
 
-			"shadow": {},
-			"shadowBias": {},
-			"shadowRadius": {},
-			"shadowMapSize": {},
-			"shadowCameraNear": {},
-			"shadowCameraFar": {}
-		} },
+			shadow = Expando(),
+			shadowBias = Expando(),
+			shadowRadius = Expando(),
+			shadowMapSize = Expando(),
+			shadowCameraNear = Expando(),
+			shadowCameraFar = Expando()
+		) ),
 
-		"pointShadowMap": { "value": [] },
-		"pointShadowMatrix": { "value": [] },
+		pointShadowMap = Expando( value = [] ),
+		pointShadowMatrix = Expando( value = [] ),
 
-		"hemisphereLights": { "value": [], "properties": {
-			"direction": {},
-			"skycolor.Color": {},
-			"groundcolor.Color": {}
-		} },
+		hemisphereLights = Expando( value = [], properties = Expando(
+			direction = Expando(),
+			skycolor= Expando(),
+			groundcolor = Expando()
+		) ),
 
-		# TODO "(abelnation)": RectAreaLight BRDF data needs to be moved from example to main src
-		"rectAreaLights": { "value": [], "properties": {
-			"color": {},
-			"position": {},
-			"width": {},
-			"height": {}
-		} }
+		# TODO (abelnation) = RectAreaLight BRDF data needs to be moved from example to main src
+		rectAreaLights = Expando( value = [], properties = Expando(
+			color = Expando(),
+			position = Expando(),
+			width = Expando(),
+			height = Expando()
+		) )
 
-	},
+	),
 
-	"points": {
+	"points": Expando(
 
-		"diffuse": { "value": color.Color( 0xeeeeee ) },
-		"opacity": { "value": 1.0 },
-		"size": { "value": 1.0 },
-		"scale": { "value": 1.0 },
-		"map": { "value": None },
-		"offsetRepeat": { "value": vector4.Vector4( 0, 0, 1, 1 ) }
+		diffuse = Expando( value = color.Color( 0xeeeeee ) ),
+		opacity = Expando( value = 1.0 ),
+		size = Expando( value = 1.0 ),
+		scale = Expando( value = 1.0 ),
+		map = Expando( value = None ),
+		offsetRepeat = Expando( value = vector4.Vector4( 0, 0, 1, 1 ) )
 
-	}
+	)
 
 }

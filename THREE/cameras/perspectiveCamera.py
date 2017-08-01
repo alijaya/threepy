@@ -5,6 +5,8 @@ import camera
 from ..core import object3D
 from ..math import _Math
 
+from ..utils import Expando
+
 """
  * @author mrdoob / http:#mrdoob.com/
  * @author greggman / http:#games.greggman.com/
@@ -139,14 +141,14 @@ class PerspectiveCamera( camera.Camera ):
 
         self.aspect = fullWidth / fullHeight
 
-        self.view = {
-            "fullWidth": fullWidth,
-            "fullHeight": fullHeight,
-            "offsetX": x,
-            "offsetY": y,
-            "width": width,
-            "height": height
-        }
+        self.view = Expando(
+            fullWidth = fullWidth,
+            fullHeight = fullHeight,
+            offsetX = x,
+            offsetY = y,
+            width = width,
+            height = height
+        )
 
         self.updateProjectionMatrix()
 

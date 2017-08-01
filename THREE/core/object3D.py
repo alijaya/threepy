@@ -7,6 +7,7 @@ from ..math import euler
 from ..math import quaternion
 from ..math import matrix4
 from ..math import matrix3
+from ..utils import Expando
 
 import eventDispatcher
 import layers
@@ -387,31 +388,31 @@ class Object3D( eventDispatcher.EventDispatcher ):
         # being serialized.
         if isRootObject:
 
-            meta = {
-                "geometries": {},
-                "materials": {},
-                "textures": {},
-                "images": {}
-            }
+            meta = Expando(
+                geometries = {},
+                materials = {},
+                textures = {},
+                images = {}
+            )
 
-            output[ "metadata" ] = {
-                "version": 4.5,
-                "type": "Object",
-                "generator": "Object3D.toJSON"
-            }
+            output.metadata = Expando(
+                version = 4.5,
+                type = "Object",
+                generator = "Object3D.toJSON"
+            )
         
-        object = {}
+        object = Expando()
 
-        object[ "uuid" ] = self.uuid
-        object[ "type" ] = self.type
+        object.uuid = self.uuid
+        object.type = self.type
 
-        if self.name != "": object[ "name" ] = self.name
-        if json.dumps( self.userdata ) != "{}": object[ "userdata" ] = self.userData
-        if self.castShadow == True: object[ "castShadow" ] = True
-        if self.receiveShadow == True: object[ "receiveShadow" ] = True
-        if self.visible == False: object[ "visible" ] = False
+        if self.name != "": object.name = self.name
+        if json.dumps( self.userdata ) != "{}": object.userdata = self.userData
+        if self.castShadow == True: object.castShadow = True
+        if self.receiveShadow == True: object.receiveShadow = True
+        if self.visible == False: object.visible = False
 
-        object[ "matrix" ] = self.matrix.toArray()
+        object.matrix = self.matrix.toArray()
 
         #
 
@@ -425,7 +426,7 @@ class Object3D( eventDispatcher.EventDispatcher ):
 
         if self.geometry is not None:
 
-            object[ "geometry" ] = serialize( meta.geometries, self.geometry )
+            object.geometry = serialize( meta.geometries, self.geometry )
         
         if self.material is not None:
 
@@ -437,21 +438,21 @@ class Object3D( eventDispatcher.EventDispatcher ):
 
                     uuids.append( serialize( meta.materials, mat ) )
                 
-                object[ "material" ] = uuids
+                object.material = uuids
             
             else:
 
-                object[ "material" ] = serialize( meta.materials, self.material )
+                object.material = serialize( meta.materials, self.material )
         
         #
 
         if len( self.children ) > 0:
 
-            object[ "children" ] = []
+            object.children = []
 
             for child in self.children:
 
-                object[ "children" ].append( child.toJSON( meta ).object )
+                object.children.append( child.toJSON( meta ).object )
 
         if isRootObject:
 
@@ -460,12 +461,12 @@ class Object3D( eventDispatcher.EventDispatcher ):
             textures = extractFromCache( meta.textures )
             images = extractFromCache( meta.images )
 
-            if len( geometries ) > 0: output[ "geometries" ] = geometries
-            if len( materials ) > 0: output[ "materials" ] = materials
-            if len( textures ) > 0: output[ "textures" ] = textures
-            if len( images ) > 0: output[ "images" ] = images
+            if len( geometries ) > 0: output.geometries = geometries
+            if len( materials ) > 0: output.materials = materials
+            if len( textures ) > 0: output.textures = textures
+            if len( images ) > 0: output.images = images
         
-        output[ "object" ] = object
+        output.object = object
 
         return output
 

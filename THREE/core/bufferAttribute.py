@@ -9,6 +9,7 @@ from ..math import vector3
 from ..math import vector2
 from ..math import color
 from ..math import _Math
+from ..utils import Expando
 
 """
  * @author mrdoob / http:#mrdoob.com/
@@ -33,7 +34,7 @@ class BufferAttribute( object ):
         self.normalized = normalized
 
         self.dynamic = False
-        self.updateRange = { "offset": 0, "count": - 1 }
+        self.updateRange = Expando( offset = 0, count = - 1 )
         self.onUploadCallback = lambda: None
         self.version = 0
 

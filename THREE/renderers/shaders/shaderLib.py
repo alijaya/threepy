@@ -3,18 +3,19 @@ import UniformsUtils
 from ...math import vector3
 from uniformsLib import UniformsLib
 from ...math import color
+from ...utils import Expando
 
 """
- * @author alteredq / "http":#alteredqualia.com/
- * @author mrdoob / "http":#mrdoob.com/
- * @author mikael emtinger / "http":#gomo.se/
+ * @author alteredq / http =#alteredqualia.com/
+ * @author mrdoob / http =#mrdoob.com/
+ * @author mikael emtinger / http =#gomo.se/
  """
 
 ShaderLib = {
 
-    "basic": {
+    "basic": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "specularmap" ],
             UniformsLib[ "envmap" ],
@@ -23,13 +24,13 @@ ShaderLib = {
             UniformsLib[ "fog" ]
         ] ),
 
-        "vertexShader": ShaderChunk.meshbasic_vert,
-        "fragmentShader": ShaderChunk.meshbasic_frag
-    },
+        vertexShader = ShaderChunk.meshbasic_vert,
+        fragmentShader = ShaderChunk.meshbasic_frag
+    ),
 
-    "lambert": {
+    "lambert": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "specularmap" ],
             UniformsLib[ "envmap" ],
@@ -38,19 +39,19 @@ ShaderLib = {
             UniformsLib[ "emissivemap" ],
             UniformsLib[ "fog" ],
             UniformsLib[ "lights" ],
-            {
-                "emissive": { "value": color.Color( 0x000000 ) }
-            }
+            Expando(
+                emissive = Expando( value = color.Color( 0x000000 ) )
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.meshlambert_vert,
-        "fragmentShader": ShaderChunk.meshlambert_frag
+        vertexShader = ShaderChunk.meshlambert_vert,
+        fragmentShader = ShaderChunk.meshlambert_frag
         
-    },
+    ),
 
-    "phong": {
+    "phong": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "specularmap" ],
             UniformsLib[ "envmap" ],
@@ -63,20 +64,20 @@ ShaderLib = {
             UniformsLib[ "gradientmap" ],
             UniformsLib[ "fog" ],
             UniformsLib[ "lights" ],
-            {
-                "emissive": { "value": color.Color( 0x000000 ) },
-                "specular": { "value": color.Color( 0x111111 ) },
-                "shininess": { "value": 30 }
-            }
+            Expando(
+                emissive = Expando( value = color.Color( 0x000000 ) ),
+                specular = Expando( value = color.Color( 0x111111 ) ),
+                shininess = Expando( value = 30 )
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.meshphong_vert,
-        "fragmentShader": ShaderChunk.meshphong_frag
-    },
+        vertexShader = ShaderChunk.meshphong_vert,
+        fragmentShader = ShaderChunk.meshphong_frag
+    ),
 
-    "standard": {
+    "standard": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "envmap" ],
             UniformsLib[ "aomap" ],
@@ -89,148 +90,148 @@ ShaderLib = {
             UniformsLib[ "metalnessmap" ],
             UniformsLib[ "fog" ],
             UniformsLib[ "lights" ],
-            {
-                "emissive": { "value": color.Color( 0x000000 ) },
-                "roughness": { "value": 0.5 },
-                "metalness": { "value": 0.5 },
-                "envMapIntensity": { "value": 1 } # temporary
-            }
+            Expando(
+                emissive = Expando( value = color.Color( 0x000000 ) ),
+                roughness = Expando( value = 0.5 ),
+                metalness = Expando( value = 0.5 ),
+                envMapIntensity = Expando( value = 1 ) # temporary
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.meshphysical_vert,
-        "fragmentShader": ShaderChunk.meshphysical_frag
+        vertexShader = ShaderChunk.meshphysical_vert,
+        fragmentShader = ShaderChunk.meshphysical_frag
 
-    },
+    ),
 
-    "points": {
+    "points": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "points" ],
             UniformsLib[ "fog" ]
         ] ),
 
-        "vertexShader": ShaderChunk.points_vert,
-        "fragmentShader": ShaderChunk.points_frag
+        vertexShader = ShaderChunk.points_vert,
+        fragmentShader = ShaderChunk.points_frag
     
-    },
+    ),
 
-    "dashed": {
+    "dashed": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "fog" ],
-            {
-                "scale": { "value": 1 },
-                "dashSize": { "value": 1 },
-                "totalSize": { "value": 2 }
-            }
+            Expando(
+                scale = Expando( value = 1 ),
+                dashSize = Expando( value = 1 ),
+                totalSize = Expando( value = 2 )
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.linedashed_vert,
-        "fragmentShader": ShaderChunk.linedashed_frag
+        vertexShader = ShaderChunk.linedashed_vert,
+        fragmentShader = ShaderChunk.linedashed_frag
     
-    },
+    ),
 
-    "depth": {
+    "depth": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "displacementmap" ]
         ] ),
 
-        "vertexShader": ShaderChunk.depth_vert,
-        "fragmentShader": ShaderChunk.depth_frag
+        vertexShader = ShaderChunk.depth_vert,
+        fragmentShader = ShaderChunk.depth_frag
     
-    },
+    ),
 
-    "normal": {
+    "normal": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "bumpmap" ],
             UniformsLib[ "normalmap" ],
             UniformsLib[ "displacementmap" ],
-            {
-                "opacity": { "value": 1.0 }
-            }
+            Expando(
+                opacity = Expando( value = 1.0 )
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.normal_vert,
-        "fragmentShader": ShaderChunk.normal_frag
+        vertexShader = ShaderChunk.normal_vert,
+        fragmentShader = ShaderChunk.normal_frag
     
-    },
+    ),
 
     """ -= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-
     #    Cube map shader
      -= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1-= 1- """
 
-    "cube": {
+    "cube": Expando(
 
-        "uniforms": {
-            "tCube": { "value": None },
-            "tFlip": { "value": - 1 },
-            "opacity": { "value": 1.0}
-        },
-        "vertexShader": ShaderChunk.cube_vert,
-        "fragmentShader": ShaderChunk.cube_frag
+        uniforms = Expando(
+            tCube = Expando( value = None ),
+            tFlip = Expando( value = - 1 ),
+            opacity = Expando( value = 1.0)
+        ),
+        vertexShader = ShaderChunk.cube_vert,
+        fragmentShader = ShaderChunk.cube_frag
     
-    },
+    ),
 
-    "equirect": {
+    "equirect": Expando(
 
-        "uniforms": {
-            "tEquirect": { "value": None },
-        },
-        "vertexShader": ShaderChunk.equirect_vert,
-        "fragmentShader": ShaderChunk.equirect_frag
+        uniforms = Expando(
+            tEquirect = Expando( value = None ),
+        ),
+        vertexShader = ShaderChunk.equirect_vert,
+        fragmentShader = ShaderChunk.equirect_frag
 
-    },
+    ),
 
-    "distanceRGBA": {
+    "distanceRGBA": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "common" ],
             UniformsLib[ "displacementmap" ],
-            {
-                "referencePosition": { "value": vector3.Vector3() },
-                "nearDistance": { "value": 1 },
-                "farDistance": { "value": 1000 }
-            }
+            Expando(
+                referencePosition = Expando( value = vector3.Vector3() ),
+                nearDistance = Expando( value = 1 ),
+                farDistance = Expando( value = 1000 )
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.distanceRGBA_vert,
-        "fragmentShader": ShaderChunk.distanceRGBA_frag
+        vertexShader = ShaderChunk.distanceRGBA_vert,
+        fragmentShader = ShaderChunk.distanceRGBA_frag
     
-    },
+    ),
 
-    "shadow": {
+    "shadow": Expando(
 
-        "uniforms": UniformsUtils.merge( [
+        uniforms = UniformsUtils.merge( [
             UniformsLib[ "lights" ],
-            {
-                "color": { "value": color.Color( 0x00000 ) },
-                "opacity": { "value": 1.0 },
-            }
+            Expando(
+                color = Expando( value = color.Color( 0x00000 ) ),
+                opacity = Expando( value = 1.0 ),
+            )
         ] ),
 
-        "vertexShader": ShaderChunk.shadow_vert,
-        "fragmentShader": ShaderChunk.shadow_frag
+        vertexShader = ShaderChunk.shadow_vert,
+        fragmentShader = ShaderChunk.shadow_frag
     
-    },
+    ),
 
 }
 
-ShaderLib[ "physical" ] = {
+ShaderLib[ "physical" ] = Expando(
 
-    "uniforms": UniformsUtils.merge( [
-        ShaderLib[ "standard" ][ "uniforms" ],
-        {
-            "clearCoat": { "value": 0 },
-            "clearCoatRoughness": { "value": 0 },
-        }
+    uniforms = UniformsUtils.merge( [
+        ShaderLib[ "standard" ].uniforms,
+        Expando(
+            clearCoat = Expando( value = 0 ),
+            clearCoatRoughness = Expando( value = 0 ),
+        )
     ] ),
 
-    "vertexShader": ShaderChunk.meshphysical_vert,
-    "fragmentShader": ShaderChunk.meshphysical_frag
+    vertexShader = ShaderChunk.meshphysical_vert,
+    fragmentShader = ShaderChunk.meshphysical_frag
 
-}
+)

@@ -13,7 +13,7 @@ from ..math import vector2
 from ..math import color
 import object3D
 from ..math import _Math
-
+from ..utils import Expando
 """
  * @author mrdoob / http:#mrdoob.com/
  * @author kile / http:#kile.stravaganza.org/
@@ -240,14 +240,14 @@ class Geometry( eventDispatcher.EventDispatcher ):
             
             for group in groups:
 
-                start = group[ "start" ]
-                count = group[ "count" ]
+                start = group.start
+                count = group.count
 
                 for j in range( start, start + count, 3 ):
 
                     if indices is not None:
 
-                        addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ], group[ "materialIndex" ] )
+                        addFace( indices[ j ], indices[ j + 1 ], indices[ j + 2 ], group.materialIndex )
 
                     else:
 
@@ -463,16 +463,16 @@ class Geometry( eventDispatcher.EventDispatcher ):
             if self.morphNormals[ i ] is None:
 
                 self.morphNormals[ i ] = {}
-                self.morphNormals[ i ][ "faceNormals" ] = []
-                self.morphNormals[ i ][ "vertexNormals" ] = []
+                self.morphNormals[ i ].faceNormals = []
+                self.morphNormals[ i ].vertexNormals = []
 
-                dstNormalsFace = self.morphNormals[ i ][ "faceNormals" ] 
-                dstNormalsVertex = self.morphNormals[ i ][ "vertexNormals" ]
+                dstNormalsFace = self.morphNormals[ i ].faceNormals 
+                dstNormalsVertex = self.morphNormals[ i ].vertexNormals
 
                 for f in range( len( self.faces ) ):
 
                     faceNormal = vector3.Vector3()
-                    vertexNormals = { "a": vector3.Vector3(), "b": vector3.Vector3(), "c": vector3.Vector3() }
+                    vertexNormals = Expando( a = vector3.Vector3(), b = vector3.Vector3(), c = vector3.Vector3() )
                     dstNormalsFace.push( faceNormal )
                     dstNormalsVertex.push( vertexNormals )
 
@@ -747,19 +747,19 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
     def toJSON( self ):
 
-        data = {
-            "metadata": {
-                "version": 4.5,
-                "type": "Geometry",
-                "generator": "Geometry.toJSON"
-            }
-        }
+        data = Expando(
+            metadata = Expando(
+                version = 4.5,
+                type = "Geometry",
+                generator = "Geometry.toJSON"
+            )
+        )
 
         # standard Geometry serialization
 
-        data[ "uuid" ] = self.uuid
-        data[ "type" ] = self.type
-        if self.name != "": data[ "name" ] = self.name
+        data.uuid = self.uuid
+        data.type = self.type
+        if self.name != "": data.name = self.name
 
         if hasattr( self, "parameters" ):
 
@@ -893,13 +893,13 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
             return uvsHash[ hash ]
 
-        data[ "data" ] = {}
+        data.data = {}
 
-        data[ "data" ][ "vertices" ] = vertices
-        data[ "data" ][ "normals" ] = normals
-        if len( colors ) > 0: data[ "data" ][ "colors" ] = colors
-        if len( uvs ) > 0: data[ "data" ][ "uvs" ] = [ uvs ] # temporal backward compatibility
-        data[ "data" ][ "faces" ] = faces
+        data.data.vertices = vertices
+        data.data.normals = normals
+        if len( colors ) > 0: data.data.colors = colors
+        if len( uvs ) > 0: data.data.uvs = [ uvs ] # temporal backward compatibility
+        data.data.faces = faces
 
         return data
 
@@ -996,27 +996,27 @@ class Geometry( eventDispatcher.EventDispatcher ):
         for mt in morphTargets:
 
             morphTarget = {}
-            morphTarget[ "name" ] = mt[ "name" ]
+            morphTarget.name = mt.name
 
             # vertices
 
             if "vertices" in mt:
 
-                morphTarget[ "vertices" ] = []
+                morphTarget.vertices = []
 
-                for vertex in mt[ "vertices" ]:
+                for vertex in mt.vertices:
 
-                    morphTarget[ "vertices" ].append( vertex.clone() )
+                    morphTarget.vertices.append( vertex.clone() )
 
             # normals
 
             if "normals" in mt:
 
-                morphTarget[ "normals" ] = []
+                morphTarget.normals = []
 
-                for normal in mt[ "normals" ]:
+                for normal in mt.normals:
 
-                    morphTarget[ "normals" ].push( normal.clone() )
+                    morphTarget.normals.push( normal.clone() )
 
             self.morphTargets.append( morphTarget )
 
@@ -1031,14 +1031,14 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
             if "vertexNormals" in mn:
 
-                morphNormal[ "vertexNormals" ] = []
+                morphNormal.vertexNormals = []
 
-                for srcVertexNormal in mn[ "vertexNormals" ]:
+                for srcVertexNormal in mn.vertexNormals:
 
                     destVertexNormal = {}
-                    destVertexNormal[ "a" ] = srcVertexNormal[ "a" ].clone()
-                    destVertexNormal[ "b" ] = srcVertexNormal[ "b" ].clone()
-                    destVertexNormal[ "c" ] = srcVertexNormal[ "c" ].clone()
+                    destVertexNormal.a = srcVertexNormal.a.clone()
+                    destVertexNormal.b = srcVertexNormal.b.clone()
+                    destVertexNormal.c = srcVertexNormal.c.clone()
 
                     morphNormal.vertexNormals.append( destVertexNormal )
 
@@ -1046,9 +1046,9 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
             if "faceNormals" in mn:
 
-                morphNormal[ "faceNormals" ] = []
+                morphNormal.faceNormals = []
 
-                for faceNormal in mn[ "faceNormals" ]:
+                for faceNormal in mn.faceNormals:
 
                     morphNormal.faceNormals.append( faceNormal.clone() )
 
@@ -1108,4 +1108,4 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
     def dispose( self ):
 
-        self.dispatchEvent( { "type": "dispose" } )
+        self.dispatchEvent( Expando( type = "dispose" ) )

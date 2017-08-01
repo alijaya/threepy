@@ -1,39 +1,40 @@
+from ...utils import Expando
 
 def painterSortStable( a, b ):
 
-    if a["renderOrder"] != b["renderOrder"]:
+    if a.renderOrder != b.renderOrder:
 
-        return a["renderOrder"] - b["renderOrder"]
+        return a.renderOrder - b.renderOrder
 
-    elif a["program"] and b["program"] and a["program"] != b["program"]:
+    elif a.program and b.program and a.program != b.program:
 
-        return a["program"].id - b["program"].id
+        return a.program.id - b.program.id
 
-    elif a["material"].id != b["material"].id:
+    elif a.material.id != b.material.id:
 
-        return a["material"].id - b["material"].id
+        return a.material.id - b.material.id
 
-    elif a["z"] != b["z"]:
+    elif a.z != b.z:
 
-        return a["z"] - b["z"]
+        return a.z - b.z
 
     else:
 
-        return a["id"] - b["id"]
+        return a.id - b.id
 
 def reversePainterSortStable( a, b ):
 
-    if a["renderOrder"] != b["renderOrder"]:
+    if a.renderOrder != b.renderOrder:
 
-        return a["renderOrder"] - b["renderOrder"]
+        return a.renderOrder - b.renderOrder
 
-    elif a["z"] != b["z"]:
+    elif a.z != b.z:
 
-        return b["z"] - a["z"]
+        return b.z - a.z
 
     else:
 
-        return a["id"] - b["id"]
+        return a.id - b.id
 
 class OpenGLRenderList( object ):
 
@@ -53,16 +54,16 @@ class OpenGLRenderList( object ):
 
     def push( self, object, geometry, material, z, group ):
 
-        renderItem = {
-            "id": object.id,
-            "object": object,
-            "geometry": geometry,
-            "material": material,
-            "program": getattr( material, "program", None ),
-            "renderOrder": object.renderOrder,
-            "z": z,
-            "group": group
-        }
+        renderItem = Expando(
+            id = object.id,
+            object = object,
+            geometry = geometry,
+            material = material,
+            program = getattr( material, "program", None ),
+            renderOrder = object.renderOrder,
+            z = z,
+            group = group
+        )
 
         if material.transparent: self.transparent.append( renderItem )
         else: self.opaque.append( renderItem )

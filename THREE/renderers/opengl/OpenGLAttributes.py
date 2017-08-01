@@ -4,6 +4,8 @@ import numpy as np
 
 import logging
 
+from ...utils import Expando
+
 buffers = {}
 
 def createBuffer( attribute, bufferType ):
@@ -29,12 +31,12 @@ def createBuffer( attribute, bufferType ):
     elif array.dtype == np.float32: type = GL_FLOAT
     elif array.dtype == np.float64: logging.warning( "THREE.OpenGLAttributes: Unsupported data buffer format: float64." )
 
-    return {
-        "buffer": buffer,
-        "type": type,
-        "bytesPerElement": array.itemsize,
-        "version": attribute.version
-    }
+    return Expando(
+        buffer = buffer,
+        type = type,
+        bytesPerElement = array.itemsize,
+        version = attribute.version
+    )
 
 def updateBuffer( buffer, attribute, bufferType ):
 
@@ -47,22 +49,22 @@ def updateBuffer( buffer, attribute, bufferType ):
 
         glBufferData( bufferType, array, GL_STATIC_DRAW )
 
-    elif updateRange[ "count" ] == -1:
+    elif updateRange.count == -1:
 
         # Not using update ranges
 
         glBufferSubData( bufferType, 0, array )
 
-    elif updateRange[ "count" ] == 0:
+    elif updateRange.count == 0:
 
         logging.error( "THREE.OpenGLObjects.updateBuffer: dynamic THREE.BufferAttribute marked as needsUpdate but updateRange.count is 0, ensure you are using set methods or updating manually." )
 
     else:
 
-        subArray = array[ updateRange.offset : updateRange[ "offset" ] + updateRange[ "count" ] ]
-        glBufferSubData( bufferType, updateRange[ "offset" ] * array.itemsize, subArray )
+        subArray = array[ updateRange.offset : updateRange.offset + updateRange.count ]
+        glBufferSubData( bufferType, updateRange.offset * array.itemsize, subArray )
 
-        updateRange[ "count" ] = -1
+        updateRange.count = -1
 
 def update( attribute, bufferType ):
 
@@ -72,7 +74,7 @@ def update( attribute, bufferType ):
 
         updateBuffer( data.buffer, attribute, bufferType )
 
-        data[ "version" ] = attribute.version
+        data.version = attribute.version
 
     else: # hasn't cached, create new
 

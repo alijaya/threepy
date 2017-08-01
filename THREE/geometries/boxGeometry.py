@@ -4,9 +4,10 @@ from ..core import geometry
 from ..core import bufferGeometry
 from ..core import bufferAttribute
 from ..math import vector3
+from ..utils import Expando
 """
- * @author mrdoob / "http":#mrdoob.com/
- * @author Mugen87 / "https":#github.com/Mugen87
+ * @author mrdoob / http:#mrdoob.com/
+ * @author Mugen87 / https:#github.com/Mugen87
  """
 
 # BoxGeometry
@@ -19,14 +20,14 @@ class BoxGeometry( geometry.Geometry ):
 
         self.type = "BoxGeometry"
 
-        self.parameters = {
-            "width": width,
-            "height": height,
-            "depth": depth,
-            "widthSegments": widthSegments,
-            "heightSegments": heightSegments,
-            "depthSegments": depthSegments
-        }
+        self.parameters = Expando(
+            width = width,
+            height = height,
+            depth = depth,
+            widthSegments = widthSegments,
+            heightSegments = heightSegments,
+            depthSegments = depthSegments
+        )
 
         self.fromBufferGeometry( BoxBufferGeometry( width, height, depth, widthSegments, heightSegments, depthSegments ) )
         self.mergeVertices()
@@ -41,14 +42,14 @@ class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
 
         self.type = "BoxBufferGeometry"
 
-        self.parameters = {
-            "width": width,
-            "height": height,
-            "depth": depth,
-            "widthSegments": widthSegments,
-            "heightSegments": heightSegments,
-            "depthSegments": depthSegments
-        }
+        self.parameters = Expando(
+            width = width,
+            height = height,
+            depth = depth,
+            widthSegments = widthSegments,
+            heightSegments = heightSegments,
+            depthSegments = depthSegments
+        )
 
         # segments
 
@@ -65,17 +66,17 @@ class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # helper variables
 
-        scope = {
-            "numberOfVertices": 0,
-            "groupStart": 0
-        }
+        scope = Expando(
+            numberOfVertices = 0,
+            groupStart = 0
+        )
 
         # buildPlane
 
         def buildPlane( u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex ):
 
-            numberOfVertices = scope[ "numberOfVertices" ]
-            groupStart = scope[ "groupStart" ]
+            numberOfVertices = scope.numberOfVertices
+            groupStart = scope.groupStart
 
             segmentWidth = width / gridX
             segmentHeight = height / gridY
@@ -167,8 +168,8 @@ class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
 
             numberOfVertices += vertexCounter
 
-            scope[ "numberOfVertices" ] = numberOfVertices
-            scope[ "groupStart" ] = groupStart
+            scope.numberOfVertices = numberOfVertices
+            scope.groupStart = groupStart
 
         # end buildPlane
 

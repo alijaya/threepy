@@ -1,3 +1,5 @@
+from ...utils import Expando
+
 properties = {}
 
 def get( object ):
@@ -6,7 +8,7 @@ def get( object ):
     
     if not uuid in properties: # if not in cache
 
-        properties[ uuid ] = {}
+        properties[ uuid ] = Expando()
     
     return properties[ uuid ]
 

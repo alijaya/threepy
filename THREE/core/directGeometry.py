@@ -1,8 +1,9 @@
 from __future__ import division
 
 from ..math import vector2
+from ..utils import Expando
 """
- * @author mrdoob / "http":#mrdoob.com/
+ * @author mrdoob / http:#mrdoob.com/
  """
 
 class DirectGeometry( object ):
@@ -55,17 +56,17 @@ class DirectGeometry( object ):
 
                 if group is not None:
 
-                    group[ "count" ] = ( i * 3 ) - group[ "start" ]
+                    group.count = ( i * 3 ) - group.start
                     groups.append( group )
 
-                group = {
-                    "start": i * 3,
-                    "materialIndex": materialIndex
-                }
+                group = Expando(
+                    start = i * 3,
+                    materialIndex = materialIndex
+                )
 
         if group is not None:
 
-            group[ "count" ] = ( i * 3 ) - group[ "start" ]
+            group.count = ( i * 3 ) - group.start
             groups.append( group )
 
         self.groups = groups
@@ -161,7 +162,7 @@ class DirectGeometry( object ):
 
                 else:
 
-                    logging.warning( "\"THREE.DirectGeometry.fromGeometry()\": Undefined vertexUv ", i )
+                    logging.warning( "THREE.DirectGeometry.fromGeometry(): Undefined vertexUv ", i )
 
                     self.uvs.extend( [ vector2.Vector2(), vector2.Vector2(), vector2.Vector2() ] )
 
@@ -175,7 +176,7 @@ class DirectGeometry( object ):
 
                 else:
 
-                    logging.warning( "\"THREE.DirectGeometry.fromGeometry()\": Undefined vertexUv2 ", i )
+                    logging.warning( "THREE.DirectGeometry.fromGeometry(): Undefined vertexUv2 ", i )
 
                     self.uvs2.extend( [ vector2.Vector2(), vector2.Vector2(), vector2.Vector2() ] )
 
