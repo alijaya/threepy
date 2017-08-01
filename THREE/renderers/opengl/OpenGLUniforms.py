@@ -1,12 +1,33 @@
 from OpenGL.GL import *
 
+import re
+
+class UniformContainer( object ):
+
+    def __init__( self ):
+
+        self.seq = []
+        self.map = {}
+
+RePathPart = re.compile( "([\w\d_]+)(\])?(\[|\.)?" )
+
+# def parseUniform( activeInfo, addr, container ):
+
+#     path = activeInfo.name
+#     pathLength = path.length
+
+#     while True:
+
+#         match = RePathPart.search( path )
+#         matchEnd = 
+
 class OpenGLUniforms( UniformContainer ):
 
     def __init__( self, program ):
 
         super( OpenGLUniforms, self ).__init__()
 
-        n = glGetProgramiv( program, glActiveUniforms )
+        n = glGetProgramiv( program, GL_ACTIVE_UNIFORMS )
 
         for i in range( n ):
 
@@ -14,7 +35,8 @@ class OpenGLUniforms( UniformContainer ):
             path = info.name
             addr = glGetUniformLocation( program, path )
 
-        parseUniform( info, add, self )
+            logging.warning( info )
+            # parseUniform( info, add, self )
 
     def setValue( self, name, value ):
 
@@ -23,3 +45,15 @@ class OpenGLUniforms( UniformContainer ):
     def setOptional( self, object, name ):
 
         if name in self.object: self.setValue( name, self.object[ name ] )
+
+    @staticmethod
+
+    def seqWithValue( seq, values ):
+
+        r = []
+
+        for u in seq:
+
+            if u.id in values: r.append( u )
+
+        return r

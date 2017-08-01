@@ -1,5 +1,6 @@
 import openGLShader
 from ..shaders import ShaderChunk
+from openGLUniforms import OpenGLUniforms
 
 from OpenGL.GL import *
 
@@ -189,8 +190,8 @@ class OpenGLProgram( object ):
         vertexGlsl = prefixVertex + vertexShader
         fragmentGlsl = prefixFragment + fragmentShader
 
-        print( "*VERTEX*", vertexGlsl )
-        print( "*FRAGMENT*", fragmentGlsl )
+        # print( "*VERTEX*", vertexGlsl )
+        # print( "*FRAGMENT*", fragmentGlsl )
 
         glVertexShader = openGLShader.OpenGLShader( GL_VERTEX_SHADER, vertexGlsl )
         glFragmentShader = openGLShader.OpenGLShader( GL_FRAGMENT_SHADER, fragmentGlsl )

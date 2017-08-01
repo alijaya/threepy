@@ -17,6 +17,7 @@ from opengl import OpenGLBackground as background
 from opengl import OpenGLPrograms as programCache
 from shaders.shaderLib import ShaderLib
 from shaders import UniformsUtils
+from opengl.openGLUniforms import OpenGLUniforms
 
 # internal cache
 
@@ -218,7 +219,7 @@ def setProgram( camera, fog, material, object ):
 
     program = materialProperties[ "program" ]
     p_uniforms = program.getUniforms()
-    m_uniforms = materialProperties[ "shader" ].uniforms
+    m_uniforms = materialProperties[ "shader" ][ "uniforms" ]
 
     if state.useProgram( program.program ):
 
