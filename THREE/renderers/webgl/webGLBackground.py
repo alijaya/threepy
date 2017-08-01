@@ -22,6 +22,11 @@ class WebGLBackground( object ):
 
     def __init__( self, renderer, state, geometries, premultipliedAlpha ):
 
+        self.renderer = renderer
+        self.state = state
+        self.geometries = geometries
+        self.premultipliedAlpha = premultipliedAlpha
+
         self.clearColor = color.Color( 0x000000 )
         self.clearAlpha = 0
 
@@ -35,16 +40,16 @@ class WebGLBackground( object ):
 
         if background is None :
 
-            setClear( self.clearColor, self.clearAlpha )
+            self.setClear( self.clearColor, self.clearAlpha )
 
         elif background and hasattr( background, "isColor" ) :
 
-            setClear( background, 1 )
+            self.setClear( background, 1 )
             forceClear = True
 
-        if renderer.autoClear or forceClear :
+        if self.renderer.autoClear or forceClear :
 
-            renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil )
+            self.renderer.clear( self.renderer.autoClearColor, self.renderer.autoClearDepth, self.renderer.autoClearStencil )
 
         if background and hasattr( background, "isCubeTexture" ) :
 
@@ -78,7 +83,7 @@ class WebGLBackground( object ):
 
                 self.boxMesh.onBeforeRender = onBeforeRender
 
-                geometries.update( self.boxMesh.geometry )
+                self.geometries.update( self.boxMesh.geometry )
 
             self.boxMesh.material.uniforms.tCube.value = background
 
@@ -94,17 +99,17 @@ class WebGLBackground( object ):
                     planeBufferGeometry.PlaneBufferGeometry( 2, 2 ),
                     meshBasicMaterial.MeshBasicMaterial( { "depthTest": False, "depthWrite": False, "fog": False } ) )
 
-                geometries.update( self.planeMesh.geometry )
+                self.geometries.update( self.planeMesh.geometry )
 
             self.planeMesh.material.map = background
 
             # TODO Push self to renderList
 
-            renderer.renderBufferDirect( self.planeCamera, None, self.planeMesh.geometry, self.planeMesh.material, self.planeMesh, None )
+            self.renderer.renderBufferDirect( self.planeCamera, None, self.planeMesh.geometry, self.planeMesh.material, self.planeMesh, None )
 
     def setClear( self, color, alpha ):
 
-        state.buffers.color.setClear( color.r, color.g, color.b, alpha, premultipliedAlpha )
+        self.state.buffers[ "color" ].setClear( color.r, color.g, color.b, alpha, self.premultipliedAlpha )
 
     def getClearColor( self ):
 

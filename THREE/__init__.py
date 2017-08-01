@@ -37,6 +37,7 @@ from THREE.math.vector4 import Vector4
 
 from THREE.objects.mesh import Mesh
 
-from THREE.renderers.webGLRenderer import WebGLRenderer
+# from THREE.renderers.webGLRenderer import WebGLRenderer
+from THREE.renderers import OpenGLRenderer
 
 from THREE.scenes.scene import Scene

@@ -12,24 +12,24 @@ class WebGLProperties( object ):
 
     def __init__( self ):
 
-        properties = {}
+        self.properties = {}
 
     def get( self, object ):
 
         uuid = object.uuid
-        map = properties.get( uuid )
+        map = self.properties.get( uuid )
 
         if map is None :
 
             map = {}
-            properties[ uuid ] = map
+            self.properties[ uuid ] = map
 
         return map
 
     def remove( self, object ):
 
-        del properties[ object.uuid ]
+        del self.properties[ object.uuid ]
 
     def clear( self ):
 
-        properties = {}
+        self.properties = {}

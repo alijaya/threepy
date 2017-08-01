@@ -24,7 +24,7 @@ from webgl import webGLMorphtargets
 from webgl import webGLGeometries
 # from webgl import webGLLights
 from webgl import webGLObjects
-# from webgl import webGLPrograms
+from webgl import webGLPrograms
 from webgl import webGLTextures
 from webgl import webGLProperties
 from webgl import webGLState
@@ -247,25 +247,25 @@ class WebGLRenderer( object ):
 
             bufferGeometry.BufferGeometry.MaxIndex = 4294967296
 
-        # self.utils = webGLUtils.WebGLUtils( self.extensions )
+        self.utils = webGLUtils.WebGLUtils( self.extensions )
 
-        # self.capabilities = webGLCapabilities.WebGLCapabilities( self.extensions, self.parameters )
+        self.capabilities = webGLCapabilities.WebGLCapabilities( self.extensions, self.parameters )
 
-        # self.state = webGLState.WebGLState( self.extensions, self.utils )
-        # self.state.scissor( self._currentScissor.copy( self._scissor ).multiplyScalar( self._pixelRatio ) )
-        # self.state.viewport( self._currentViewport.copy( self._viewport ).multiplyScalar( self._pixelRatio ) )
+        self.state = webGLState.WebGLState( self.extensions, self.utils )
+        self.state.scissor( self._currentScissor.copy( self._scissor ).multiplyScalar( self._pixelRatio ) )
+        self.state.viewport( self._currentViewport.copy( self._viewport ).multiplyScalar( self._pixelRatio ) )
 
-        # self.properties = webGLProperties.WebGLProperties()
-        # self.textures = webGLTextures.WebGLTextures( self.extensions, self.state, self.properties, self.capabilities, self.utils, self._infoMemory )
+        self.properties = webGLProperties.WebGLProperties()
+        self.textures = webGLTextures.WebGLTextures( self.extensions, self.state, self.properties, self.capabilities, self.utils, self._infoMemory )
         self.attributes = webGLAttributes.WebGLAttributes()
         self.geometries = webGLGeometries.WebGLGeometries( self.attributes, self._infoMemory )
         self.objects = webGLObjects.WebGLObjects( self.geometries, self._infoRender )
         # self.morphtargets = webGLMorphtargets.WebGLMorphtargets()
-        # self.programCache = webGLPrograms.WebGLPrograms( self, self.extensions, self.capabilities )
+        self.programCache = webGLPrograms.WebGLPrograms( self, self.extensions, self.capabilities )
         # self.lights = webGLLights.WebGLLights()
         self.renderLists = webGLRenderLists.WebGLRenderLists()
 
-        # self.background = webGLBackground.WebGLBackground( self, self.state, self.geometries, self._premultipliedAlpha )
+        self.background = webGLBackground.WebGLBackground( self, self.state, self.geometries, self._premultipliedAlpha )
 
         # self.bufferRenderer = webGLBufferRenderer.WebGLBufferRenderer( self.extensions, self._infoRender )
         # self.indexedBufferRenderer = webGLIndexedBufferRenderer.WebGLIndexedBufferRenderer( self.extensions, self._infoRender )
@@ -891,19 +891,19 @@ class WebGLRenderer( object ):
 
         if self._clippingEnabled : self._clipping.beginShadows()
 
-        self.shadowMap.render( self.shadowsArray, scene, camera )
+        # self.shadowMap.render( self.shadowsArray, scene, camera )
 
-        self.lights.setup( self.lightsArray, self.shadowsArray, camera )
+        # self.lights.setup( self.lightsArray, self.shadowsArray, camera )
 
         if self._clippingEnabled : self._clipping.endShadows()
 
         #
 
-        self._infoRender.frame += 1
-        self._infoRender.calls = 0
-        self._infoRender.vertices = 0
-        self._infoRender.faces = 0
-        self._infoRender.points = 0
+        self._infoRender[ "frame" ] += 1
+        self._infoRender[ "calls" ] = 0
+        self._infoRender[ "vertices" ] = 0
+        self._infoRender[ "faces" ] = 0
+        self._infoRender[ "points" ] = 0
 
         self.setRenderTarget( renderTarget )
 
@@ -920,18 +920,18 @@ class WebGLRenderer( object ):
 
             overrideMaterial = scene.overrideMaterial
 
-            if len( opaqueObjects ) > 0 : renderObjects( opaqueObjects, scene, camera, overrideMaterial )
-            if len( transparentObjects ) > 0 : renderObjects( transparentObjects, scene, camera, overrideMaterial )
+            if len( opaqueObjects ) > 0 : self.renderObjects( opaqueObjects, scene, camera, overrideMaterial )
+            if len( transparentObjects ) > 0 : self.renderObjects( transparentObjects, scene, camera, overrideMaterial )
 
         else:
 
             # opaque pass (front-to-back order)
 
-            if len( opaqueObjects ) > 0 : renderObjects( opaqueObjects, scene, camera )
+            if len( opaqueObjects ) > 0 : self.renderObjects( opaqueObjects, scene, camera )
 
             # transparent pass (back-to-front order)
 
-            if len( transparentObjects ) > 0 : renderObjects( transparentObjects, scene, camera )
+            if len( transparentObjects ) > 0 : self.renderObjects( transparentObjects, scene, camera )
 
         # custom renderers
 
@@ -1070,7 +1070,7 @@ class WebGLRenderer( object ):
                                 self.currentRenderList.push( object, geometry, groupMaterial, self._vector3.z, group )
 
                     elif material.visible :
-
+                        
                         self.currentRenderList.push( object, geometry, material, self._vector3.z, None )
 
         children = object.children
@@ -1079,14 +1079,14 @@ class WebGLRenderer( object ):
 
             self.projectObject( child, camera, sortObjects )
 
-    def renderObjects( self, renderList, scene, camera, overrideMaterial ):
+    def renderObjects( self, renderList, scene, camera, overrideMaterial = None ):
 
         for renderItem in renderList:
 
-            object = renderItem.object
-            geometry = renderItem.geometry
-            material = renderItem.material if overrideMaterial is None else overrideMaterial
-            group = renderItem.group
+            object = renderItem[ "object" ]
+            geometry = renderItem[ "geometry" ]
+            material = overrideMaterial or renderItem[ "material" ]
+            group = renderItem[ "group" ]
 
             if hasattr( camera, "isArrayCamera" ) :
 
@@ -1142,7 +1142,7 @@ class WebGLRenderer( object ):
 
     def initMaterial( self, material, fog, object ):
 
-        materialProperties = properties.get( material )
+        materialProperties = self.properties.get( material )
 
         parameters = self.programCache.getParameters( material, self.lights.state, self.shadowsArray, fog, self._clipping.numPlanes, self._clipping.numIntersection, object )
 
@@ -1266,7 +1266,7 @@ class WebGLRenderer( object ):
 
         self._usedTextureUnits = 0
 
-        materialProperties = properties.get( material )
+        materialProperties = self.properties.get( material )
 
         if self._clippingEnabled :
 
@@ -1905,7 +1905,7 @@ class WebGLRenderer( object ):
 
         if renderTarget :
 
-            __webglFramebuffer = properties.get( renderTarget ).__webglFramebuffer
+            __webglFramebuffer = self.properties.get( renderTarget ).__webglFramebuffer
 
             if hasattr( renderTarget, "isWebGLRenderTargetCube" ) :
 
@@ -1931,9 +1931,9 @@ class WebGLRenderer( object ):
             GL.glBindFramebuffer( GL.GL_FRAMEBUFFER, framebuffer )
             self._currentFramebuffer = framebuffer
 
-        state.viewport( self._currentViewport )
-        state.scissor( self._currentScissor )
-        state.setScissorTest( self._currentScissorTest )
+        self.state.viewport( self._currentViewport )
+        self.state.scissor( self._currentScissor )
+        self.state.setScissorTest( self._currentScissorTest )
 
         if isCube :
 

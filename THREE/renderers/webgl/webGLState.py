@@ -20,9 +20,9 @@ class WebGLState( object ):
         self.extensions = extensions
         self.utils = utils
 
-        self.colorBuffer = ColorBuffer()
-        self.depthBuffer = DepthBuffer()
-        self.stencilBuffer = StencilBuffer()
+        self.colorBuffer = ColorBuffer( self )
+        self.depthBuffer = DepthBuffer( self )
+        self.stencilBuffer = StencilBuffer( self )
 
         self.buffers = {
             "color": self.colorBuffer,
@@ -162,7 +162,7 @@ class WebGLState( object ):
 
     def disable( self, id ):
 
-        if self.capabilities[ id ] != False :
+        if self.capabilities.get( id ) != False :
 
             GL.glDisable( id )
             self.capabilities[ id ] = False
@@ -497,7 +497,9 @@ class WebGLState( object ):
 
 class ColorBuffer( object ):
 
-    def __init__( self ):
+    def __init__( self, state ):
+
+        self.state = state
 
         self.locked = False
 
@@ -540,7 +542,9 @@ class ColorBuffer( object ):
 
 class DepthBuffer( object ):
 
-    def __init__( self ):
+    def __init__( self, state ):
+
+        self.state = state
 
         self.locked = False
 
@@ -552,11 +556,11 @@ class DepthBuffer( object ):
 
         if depthTest :
 
-            self.enable( GL.GL_DEPTH_TEST )
+            self.state.enable( GL.GL_DEPTH_TEST )
 
         else:
 
-            self.disable( GL.GL_DEPTH_TEST )
+            self.state.disable( GL.GL_DEPTH_TEST )
 
     def setMask( self, depthMask ):
 
@@ -634,7 +638,9 @@ class DepthBuffer( object ):
 
 class StencilBuffer( object ):
 
-    def __init__( self ):
+    def __init__( self, state ):
+
+        self.state = state
 
         self.locked = False
 

@@ -79,8 +79,8 @@ class Object3D( eventDispatcher.EventDispatcher ):
 
         self.isObject3D = True
 
-        self.onBeforeRender = lambda: None
-        self.onAfterRender = lambda: None
+        self.onBeforeRender = lambda *args: None
+        self.onAfterRender = lambda *args: None
 
     def applyMatrix( self, matrix ):
 

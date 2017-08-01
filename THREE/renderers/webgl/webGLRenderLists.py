@@ -72,12 +72,13 @@ class WebGLRenderList( object ):
                 "object": object,
                 "geometry": geometry,
                 "material": material,
-                "program": material.program,
+                "program": getattr( material, "program", None ),
                 "renderOrder": object.renderOrder,
                 "z": z,
                 "group": group
             }
 
+            while self.renderItemsIndex >= len( self.renderItems ) : self.renderItems.append( None )
             self.renderItems[ self.renderItemsIndex ] = renderItem
 
         else:
@@ -86,7 +87,7 @@ class WebGLRenderList( object ):
             renderItem.object = object
             renderItem.geometry = geometry
             renderItem.material = material
-            renderItem.program = material.program
+            renderItem.program = getattr( material, "program", None )
             renderItem.renderOrder = object.renderOrder
             renderItem.z = z
             renderItem.group = group
