@@ -1,4 +1,4 @@
-import ShaderChunk
+from shaderChunk import ShaderChunk
 import UniformsUtils
 from ...math import vector3
 from uniformsLib import UniformsLib
@@ -24,8 +24,8 @@ ShaderLib = {
             UniformsLib[ "fog" ]
         ] ),
 
-        vertexShader = ShaderChunk.meshbasic_vert,
-        fragmentShader = ShaderChunk.meshbasic_frag
+        vertexShader = ShaderChunk[ "meshbasic_vert" ],
+        fragmentShader = ShaderChunk[ "meshbasic_frag" ]
     ),
 
     "lambert": Expando(
@@ -44,8 +44,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.meshlambert_vert,
-        fragmentShader = ShaderChunk.meshlambert_frag
+        vertexShader = ShaderChunk[ "meshlambert_vert" ],
+        fragmentShader = ShaderChunk[ "meshlambert_frag" ]
         
     ),
 
@@ -71,8 +71,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.meshphong_vert,
-        fragmentShader = ShaderChunk.meshphong_frag
+        vertexShader = ShaderChunk[ "meshphong_vert" ],
+        fragmentShader = ShaderChunk[ "meshphong_frag" ]
     ),
 
     "standard": Expando(
@@ -98,8 +98,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.meshphysical_vert,
-        fragmentShader = ShaderChunk.meshphysical_frag
+        vertexShader = ShaderChunk[ "meshphysical_vert" ],
+        fragmentShader = ShaderChunk[ "meshphysical_frag" ]
 
     ),
 
@@ -110,8 +110,8 @@ ShaderLib = {
             UniformsLib[ "fog" ]
         ] ),
 
-        vertexShader = ShaderChunk.points_vert,
-        fragmentShader = ShaderChunk.points_frag
+        vertexShader = ShaderChunk[ "points_vert" ],
+        fragmentShader = ShaderChunk[ "points_frag" ]
     
     ),
 
@@ -127,8 +127,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.linedashed_vert,
-        fragmentShader = ShaderChunk.linedashed_frag
+        vertexShader = ShaderChunk[ "linedashed_vert" ],
+        fragmentShader = ShaderChunk[ "linedashed_frag" ]
     
     ),
 
@@ -139,8 +139,8 @@ ShaderLib = {
             UniformsLib[ "displacementmap" ]
         ] ),
 
-        vertexShader = ShaderChunk.depth_vert,
-        fragmentShader = ShaderChunk.depth_frag
+        vertexShader = ShaderChunk[ "depth_vert" ],
+        fragmentShader = ShaderChunk[ "depth_frag" ]
     
     ),
 
@@ -156,8 +156,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.normal_vert,
-        fragmentShader = ShaderChunk.normal_frag
+        vertexShader = ShaderChunk[ "normal_vert" ],
+        fragmentShader = ShaderChunk[ "normal_frag" ]
     
     ),
 
@@ -172,8 +172,8 @@ ShaderLib = {
             tFlip = Expando( value = - 1 ),
             opacity = Expando( value = 1.0)
         ),
-        vertexShader = ShaderChunk.cube_vert,
-        fragmentShader = ShaderChunk.cube_frag
+        vertexShader = ShaderChunk[ "cube_vert" ],
+        fragmentShader = ShaderChunk[ "cube_frag" ]
     
     ),
 
@@ -182,8 +182,8 @@ ShaderLib = {
         uniforms = Expando(
             tEquirect = Expando( value = None ),
         ),
-        vertexShader = ShaderChunk.equirect_vert,
-        fragmentShader = ShaderChunk.equirect_frag
+        vertexShader = ShaderChunk[ "equirect_vert" ],
+        fragmentShader = ShaderChunk[ "equirect_frag" ]
 
     ),
 
@@ -199,8 +199,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.distanceRGBA_vert,
-        fragmentShader = ShaderChunk.distanceRGBA_frag
+        vertexShader = ShaderChunk[ "distanceRGBA_vert" ],
+        fragmentShader = ShaderChunk[ "distanceRGBA_frag" ]
     
     ),
 
@@ -214,8 +214,8 @@ ShaderLib = {
             )
         ] ),
 
-        vertexShader = ShaderChunk.shadow_vert,
-        fragmentShader = ShaderChunk.shadow_frag
+        vertexShader = ShaderChunk[ "shadow_vert" ],
+        fragmentShader = ShaderChunk[ "shadow_frag" ]
     
     ),
 
@@ -231,7 +231,7 @@ ShaderLib[ "physical" ] = Expando(
         )
     ] ),
 
-    vertexShader = ShaderChunk.meshphysical_vert,
-    fragmentShader = ShaderChunk.meshphysical_frag
+    vertexShader = ShaderChunk[ "meshphysical_vert" ],
+    fragmentShader = ShaderChunk[ "meshphysical_frag" ]
 
 )

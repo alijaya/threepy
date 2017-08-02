@@ -1,6 +1,8 @@
 import openGLProgram
 
+from ...constants import BackSide, DoubleSide, CubeUVRefractionMapping, CubeUVReflectionMapping, GammaEncoding, LinearEncoding
 from ...utils import Expando
+import OpenGLCapabilities as capabilities
 
 programs = []
 
@@ -33,26 +35,78 @@ parameterNames = [
     "alphaTest", "doubleSided", "flipSided", "numClippingPlanes", "numClipIntersection", "depthPacking", "dithering"
 ]
 
+def getTextureEncodingFromMap( map, gammaOverrideLinear ):
+
+    encoding = None
+
+    if not map:
+
+        encoding = LinearEncoding
+
+    elif hasattr( map, isTexture ):
+
+        encoding = map.encoding
+
+    elif hasattr( map, isOpenGLRenderTarget ):
+
+        logging.warning( "THREE.WebGLPrograms.getTextureEncodingFromMap: don't use render targets as textures. Use their .texture property instead.")
+        encoding = map.texture.encoding
+    
+    if encoding == LinearEncoding and gammaOverrideLinear:
+
+        encoding = GammaEncoding
+
+    return encoding
+
 def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersection, object ):
+
+    from .. import OpenGLRenderer as renderer
 
     shaderId = shaderIDs.get( material.type )
 
     # TODO maxBones
-    # TODO precision
 
-    # currentRenderTarget = renderer.getRenderTarget()
+    precision = capabilities.precision
+
+    if material.precision != None:
+
+        precision = capabilities.getMaxPrecision( material.precision )
+
+        if precision != material.precision:
+
+            logging.warning( "THREE.WebGLProgram.getParameters: %s not supported, using %s instead.", material.precision, precision )
+
+    currentRenderTarget = renderer.getRenderTarget()
 
     parameters = Expando(
         shaderID = shaderId,
 
-        # precision = precision,
-        # supportsVertexTextures =
-        # outputEncoding =
-        map = bool( material.map ),
-        # mapEncoding =
-        # envMap = bool( material.envMap),
+        precision = precision,
+        # supportsVertexTextures = capabilities.vertexTextures,
+        outputEncoding = getTextureEncodingFromMap( None if not currentRenderTarget else currentRenderTarget.texture, renderer.gammaOutput ),
+        # map = bool( material.map ),
+        mapEncoding = getTextureEncodingFromMap( material.map, renderer.gammaInput ),
+        # envMap = bool( material.envMap ),
         # envMapMode = material.envMap and material.envMap.mapping,
-        # envMapEncoding =
+        envMapEncoding = getTextureEncodingFromMap( material.envMap, renderer.gammaInput ),
+        # envMapCubeUV = bool( material.envMap ) and ( material.envMap.mapping == CubeUVReflectionMapping or material.envMap.mapping == CubeUVRefractionMapping ),
+        # lightMap = bool( material.lightMap ),
+        # aoMap = bool( material.aoMap ),
+        # emissiveMap = bool( material.emissiveMap ),
+        emissiveMapEncoding = getTextureEncodingFromMap( material.emissiveMap, renderer.gammaInput ),
+        # bumpMap = bool( material.bumpMap ),
+        # normalMap = bool( material.normalMap ),
+        # displacementMap = bool( material.displacementMap ),
+        # roughnessMap = bool( material.roughnessMap ),
+        # metalnessMap = bool( material.metalnessMap ),
+        # specularMap = bool( material.specularMap ),
+        # alphaMap = bool( material.alphaMap ),
+
+        # gradientMap = bool( material.gradientMap ),
+
+        # combine = material.combine,
+
+        vertexColors = material.vertexColors,
 
         fog = bool( fog ),
         useFog = material.fog,
@@ -60,6 +114,15 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
 
         flatShading = material.flatShading,
 
+        numClippingPlanes = nClipPlanes, # TODO
+
+        toneMapping = renderer.toneMapping,
+
+        alphaTest = material.alphaTest,
+        doubleSided = material.side == DoubleSide,
+        flipSided = material.side == BackSide,
+
+        # depthPacking = bool( material.depthPacking )
         # etc
     )
 

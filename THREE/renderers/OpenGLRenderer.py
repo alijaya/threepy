@@ -4,6 +4,7 @@ from OpenGL.GL import *
 
 import numpy as np
 
+from ..constants import REVISION, RGBAFormat, HalfFloatType, FloatType, ByteType, UnsignedByteType, FrontFaceDirectionCW, TriangleFanDrawMode, TriangleStripDrawMode, TrianglesDrawMode, NoColors, LinearToneMapping
 from ..objects.mesh import Mesh
 from ..math.frustum import Frustum
 from ..math.vector3 import Vector3
@@ -19,6 +20,7 @@ from opengl import OpenGLPrograms as programCache
 from shaders.shaderLib import ShaderLib
 from shaders import UniformsUtils
 from opengl.openGLUniforms import OpenGLUniforms
+from opengl import OpenGLBufferRenderer as bufferRenderer
 
 # internal cache
 
@@ -36,6 +38,18 @@ _height = 600
 _viewport = Vector4( 0, 0, _width, _height )
 _scissor = Vector4( 0, 0, _width, _height )
 _scissorTest = False
+
+# physically based shading
+
+gammaFactor = 2.0
+gammaInput = False
+gammaOutput = False
+
+# tone mapping
+
+toneMapping = LinearToneMapping
+toneMappingExposure = 1.0
+toneMappingWhitePoint = 1.0
 
 def getRenderTarget():
 
@@ -126,7 +140,7 @@ def initMaterial( material, fog, object ):
     materialProperties = properties.get( material )
 
     # parameters = programCache.getParameters( material, lights.state, shadowsArray, fog, _clipping.numPlanes, _clipping.numIntersection, object )
-    parameters = programCache.getParameters( material, None, None, fog, None, None, object )
+    parameters = programCache.getParameters( material, None, None, fog, 0, None, object ) # TODO
 
     code = programCache.getProgramCode( material, parameters )
 
@@ -144,7 +158,7 @@ def initMaterial( material, fog, object ):
         # changed glsl or parameters
         releaseMaterialProgramReference( material )
 
-    elif not parameters.get( "ShaderID" ):
+    elif "shaderID" not in parameters:
 
         # same glsl and uniform list
         return
@@ -222,6 +236,9 @@ def setProgram( camera, fog, material, object ):
     p_uniforms = program.getUniforms()
     m_uniforms = materialProperties.shader.uniforms
 
+    global _currentMaterialId
+    global _currentCamera
+
     if state.useProgram( program.program ):
 
         refreshProgram = True
@@ -247,9 +264,9 @@ def setProgram( camera, fog, material, object ):
         refreshMaterial = True
         refreshLights = True
 
-        if  hasattr( material, "isHaderMaterial" ) or \
-            hasattr( material, "isMeshPongMaterial" ) or \
-            hasattr( material, "isMeshStandardMaterial" ) or \
+        if  getattr( material, "isHaderMaterial", None ) or \
+            getattr( material, "isMeshPongMaterial", None ) or \
+            getattr( material, "isMeshStandardMaterial", None ) or \
             material.envMap:
 
             uCamPos = p_uniforms.map.get( "cameraPosition" )
@@ -258,11 +275,11 @@ def setProgram( camera, fog, material, object ):
 
                 uCamPos.setValue( vector3.Vector3().setFromMatrixPosition( camera.matrixWorld ) )
         
-        if  hasattr( material, "isMeshPhongMaterial" ) or \
-            hasattr( material, "isMeshLambertMaterial" ) or \
-            hasattr( material, "isMeshBasicMaterial" ) or \
-            hasattr( material, "isMeshStandardMaterial" ) or \
-            hasattr( material, "isShaderMaterial" ) or \
+        if  getattr( material, "isMeshPhongMaterial", None ) or \
+            getattr( material, "isMeshLambertMaterial", None ) or \
+            getattr( material, "isMeshBasicMaterial", None ) or \
+            getattr( material, "isMeshStandardMaterial", None ) or \
+            getattr( material, "isShaderMaterial", None ) or \
             material.skinning:
 
             p_uniforms.setValue( "viewMatrix", camera.matrixWorldInverse )
@@ -280,13 +297,13 @@ def setProgram( camera, fog, material, object ):
 
         # TODO light
 
-        if fog and material.fog:
+        # if fog and material.fog:
 
-            refreshUniformsFog( m_uniforms, fog )
+        #     refreshUniformsFog( m_uniforms, fog )
 
-        if hasattr( material, "isMeshBasicMaterial" ):
+        # if hasattr( material, "isMeshBasicMaterial" ):
 
-            refreshUniformsCommon( m_uniforms, material )
+        #     refreshUniformsCommon( m_uniforms, material )
 
         # elif hasattr( material, "isMeshLambertMaterial" ):
 
@@ -307,7 +324,7 @@ def setProgram( camera, fog, material, object ):
 
         # TODO RectAreaLight Texture
 
-        WebGLUniforms.upload( materialProperties.uniformsList, m_uniforms, self )
+        OpenGLUniforms.upload( materialProperties.uniformsList, m_uniforms )
 
     # common matrices
 
@@ -318,6 +335,8 @@ def setProgram( camera, fog, material, object ):
     return program
 
 def renderBufferDirect( camera, fog, geometry, material, object, group ):
+
+    global _currentGeometryProgram
 
     state.setMaterial( material )
 

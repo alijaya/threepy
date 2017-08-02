@@ -1,10 +1,104 @@
 import openGLShader
-from ..shaders import ShaderChunk
+from ..shaders.shaderChunk import ShaderChunk
 from openGLUniforms import OpenGLUniforms
+from ...constants import NoToneMapping, AddOperation, MixOperation, MultiplyOperation, EquirectangularRefractionMapping, CubeRefractionMapping, SphericalReflectionMapping, EquirectangularReflectionMapping, CubeUVRefractionMapping, CubeUVReflectionMapping, CubeReflectionMapping, PCFSoftShadowMap, PCFShadowMap, CineonToneMapping, Uncharted2ToneMapping, ReinhardToneMapping, LinearToneMapping, GammaEncoding, RGBDEncoding, RGBM16Encoding, RGBM7Encoding, RGBEEncoding, sRGBEncoding, LinearEncoding
+from ...utils import Expando
 
 from OpenGL.GL import *
 
 import re
+
+import logging
+
+def text( arr ):
+
+    return "\n".join( filter( lambda v: v != "", arr ) )
+
+def opt( str, f ):
+
+    return str if f else ""
+
+def getEncodingComponents( encoding ):
+
+    if   encoding == LinearEncoding: return [ "Linear", "( value )" ]
+    elif encoding == sRGBEncoding: return [ "sRGB", "( value )" ]
+    elif encoding == RGBEEncoding: return [ "RGBE", "( value )" ]
+    elif encoding == RGBM7Encoding: return [ "RGBM", "( value, 7.0 )" ]
+    elif encoding == RGBM16Encoding: return [ "RGBM", "( value, 16.0 )" ]
+    elif encoding == RGBDEncoding: return [ "RGBD", "( value, 256.0 )" ]
+    elif encoding == GammaEncoding: return [ "Gamma", "( value, float( GAMMA_FACTOR ) )" ]
+    else: raise ValueError( "unsupported encoding: %s" % encoding )
+
+def getTexelDecodingFunction( functionName, encoding ):
+
+    components = getEncodingComponents( encoding )
+    return "vec4 %s( vec4 value ) { return %sToLinear%s; }" % ( functionName, components[ 0 ], components[ 1 ] )
+
+def getTexelEncodingFunction( functionName, encoding ):
+
+    components = getEncodingComponents( encoding )
+    return "vec4 %s( vec4 value ) { return LinearTo%s%s; }" % ( functionName, components[ 0 ], components[ 1 ] )
+
+def getToneMappingFunction( functionName, toneMapping ):
+
+    toneMappingName = None
+
+    if   toneMapping == LinearToneMapping: toneMappingName = "Linear"
+    elif toneMapping == ReinhardToneMapping: toneMappingName = "Reinhard"
+    elif toneMapping == Uncharted2ToneMapping: toneMappingName = "Uncharted2"
+    elif toneMapping == CineonToneMapping: toneMappingName = "OptimizedCineon"
+    else: raise ValueError( "unsupported toneMapping: %s" % toneMapping )
+
+    return "vec3 %s( vec3 color ) { return %sToneMapping( color ); }" % ( functionName, toneMappingName )
+
+def generateExtensions( extensions, parameters, rendererExtensions ):
+
+    extensions = extensions or Expando()
+
+    chunks = [
+        opt( "#extension GL_OES_standard_derivatives : enable", extensions.derivatives or parameters.envMapCubeUV or parameters.bumpMap or parameters.normalMap or parameters.flatShading ),
+        opt( "#extension GL_EXT_frag_depth : enable", ( extensions.fragDepth or parameters.logarithmicDepthBuffer ) and rendererExtensions.get( "EXT_frag_depth" ) ),
+        opt( "#extension GL_EXT_draw_buffers : require", extensions.drawBuffers and rendererExtensions.get( "WEBGL_draw_buffers" ) ),
+        opt( "#extension GL_EXT_shader_texture_lod : enable", ( extensions.shaderTextureLOD or parameters.envMap ) and rendererExtensions.get( "EXT_shader_texture_lod" ) )
+    ]
+
+    return text( chunks )
+
+def generateDefines( defines ):
+
+    chunks = []
+
+    for name, value in defines:
+
+        if value == False: continue
+
+        chunks.append( "#define %s %s" % ( name, value ) )
+
+    return text( chunks )
+
+def fetchAttributeLocations( program ):
+
+    attributes = {}
+
+    n = glGetProgramiv( program, GL_ACTIVE_ATTRIBUTES )
+    
+    # because there's no wrapper for glGetActiveAttrib
+    # we hack our way
+    bufSize = glGetProgramiv( program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH )
+    length = GLsizei()
+    size = GLint()
+    type = GLenum()
+    name = (GLchar * bufSize)()
+
+    for i in range( n ):
+
+        glGetActiveAttrib( program, i, bufSize, length, size, type, name )
+        info = Expando( name = name.value, size = size.value, type = type.value )
+        name = info.name
+
+        attributes[ name ] = glGetAttribLocation( program, name )
+
+    return attributes
 
 def parseIncludes( string ):
 
@@ -14,7 +108,7 @@ def parseIncludes( string ):
 
         include = match.group( 1 )
 
-        replace = getattr( ShaderChunk, include )
+        replace = ShaderChunk[ include ]
 
         if replace is None :
 
@@ -46,12 +140,23 @@ def unrollLoops( string ):
 
 class OpenGLProgram( object ):
 
+    OpenGLProgramId = 0
+
+    @staticmethod
+    def getOpenGLProgramId():
+
+        ret = OpenGLProgram.OpenGLProgramId
+        OpenGLProgram.OpenGLProgramId += 1
+        return ret
+
     def __init__( self, code, material, shader, parameters ):
+
+        self.id = OpenGLProgram.getOpenGLProgramId()
 
         defines = getattr( material, "defines", None )
         
-        vertexShader = shader["vertexShader"]
-        fragmentShader = shader["fragmentShader"]
+        vertexShader = shader.vertexShader
+        fragmentShader = shader.fragmentShader
 
         # TODO shadowMap
 
@@ -61,18 +166,10 @@ class OpenGLProgram( object ):
 
         self.program = glCreateProgram()
 
-        def text( arr ):
-
-            return "\n".join( filter( lambda v: v != "", arr ) )
-
-        def opt( str, f ):
-
-            return str if f else ""
-
         prefixVertex = None
         prefixFragment = None
 
-        if hasattr( material, "isRawShaderMaterial" ):
+        if material.isRawShaderMaterial:
 
             prefixVertex = text( [
                 # customDefines,
@@ -89,15 +186,23 @@ class OpenGLProgram( object ):
 
             prefixVertex = text( [
 
-                # precision
+                # "precision %s float;" % parameters.precision,
+                # "precision %s int;" % parameters.precision,
+                
+                # no need precision? hack all the way
+                "#define highp",
+                "#define mediump",
+                "#define lowp",
 
-                "#define SHADER_NAME %s" % shader["name"],
+                "#define SHADER_NAME %s" % shader.name,
                 
                 # customDefines
 
-                opt( "#define USE_MAP", parameters[ "map" ] ),
+                opt( "#define USE_MAP", parameters.map ),
 
-                opt( "#define FLAT_SHADED", parameters[ "flatShading" ] ),
+                opt( "#define FLAT_SHADED", parameters.flatShading ),
+
+                "#define NUM_CLIPPING_PLANES %s" % parameters.numClippingPlanes,
 
                 # etc
 
@@ -158,20 +263,42 @@ class OpenGLProgram( object ):
 
                 # customExtensions,
 
-                # precision
+                # "precision %s float;" % parameters.precision,
+                # "precision %s int;" % parameters.precision,
+                
+                # no need precision? hack all the way
+                "#define highp",
+                "#define mediump",
+                "#define lowp",
 
-                "#define SHADER_NAME %s" % shader["name"],
+                "#define SHADER_NAME %s" % shader.name,
 
                 # customDefines
 
-                opt( "#define USE_MAP", parameters[ "map" ] ),
+                opt( "#define USE_MAP", parameters.map ),
 
-                opt( "#define FLAT_SHADED", parameters[ "flatShading" ] ),
+                opt( "#define FLAT_SHADED", parameters.flatShading ),
+
+                "#define NUM_CLIPPING_PLANES %s" % parameters.numClippingPlanes,
 
                 # etc
 
                 "uniform mat4 viewMatrix;",
                 "uniform vec3 cameraPosition;",
+
+                opt( "#define TONE_MAPPING", parameters.toneMapping != NoToneMapping ),
+                opt( ShaderChunk[ "tonemapping_pars_fragment" ], parameters.toneMapping != NoToneMapping ),
+                opt( getToneMappingFunction( "toneMapping", parameters.toneMapping ), parameters.toneMapping != NoToneMapping ),
+
+                opt( "#define DITHERING", parameters.dithering ),
+
+                opt( ShaderChunk[ "encodings_pars_fragment" ], parameters.outputEncoding or parameters.mapEncoding or parameters.envMapEncoding or parameters.emissiveMapEncoding ),
+                opt( getTexelDecodingFunction( "mapTexelToLinear", parameters.mapEncoding ), parameters.mapEncoding ),
+                opt( getTexelDecodingFunction( "envMapTexelToLinear", parameters.envMapEncoding ), parameters.envMapEncoding ),
+                opt( getTexelDecodingFunction( "emissiveMapTexelToLinear", parameters.emissiveMapEncoding ), parameters.emissiveMapEncoding ),
+                opt( getTexelEncodingFunction( "linearToOutputTexel", parameters.outputEncoding ), parameters.outputEncoding ),
+
+                opt( "#define DEPTH_PACKING %s" % material.depthPacking, parameters.depthPacking ),
 
                 "\n"
             ] )
@@ -240,24 +367,9 @@ class OpenGLProgram( object ):
 
         if not self.cachedAttributes:
 
-            self.cachedAttributes = self.fetchAttributeLocations( self.program )
+            self.cachedAttributes = fetchAttributeLocations( self.program )
 
         return self.cachedAttributes
-
-    def fetchAttributeLocations( self, program ):
-
-        attributes = {}
-
-        n = glGetProgramiv( program, GL_ACTIVE_ATTRIBUTES )
-
-        for i in range( n ):
-
-            info = glGetActiveAttrib( program, i )
-            name = info.name
-
-            attributes[ name ] = glGetAttribLocation( program, name )
-
-        return attributes
 
     def destroy( self ):
 

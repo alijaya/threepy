@@ -1,11 +1,12 @@
+from ...utils import Expando
 
 def clone( uniforms_src ):
 
-    uniforms_dst = {}
+    uniforms_dst = Expando()
 
     for u in uniforms_src:
 
-        uniforms_dst[ u ] = {}
+        uniforms_dst[ u ] = Expando()
 
         for p in uniforms_src[ u ]:
 
@@ -33,7 +34,7 @@ def clone( uniforms_src ):
 
 def merge( uniforms ):
 
-    merged = {}
+    merged = Expando()
 
     for u in uniforms:
 

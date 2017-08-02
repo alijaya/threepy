@@ -111,6 +111,8 @@ currentViewport = Vector4()
 currentScissor = Vector4()
 currentScissorTest = None
 
+currentProgram = None
+
 def enable( id ):
 
     if capabilities.get( id, False ):
@@ -137,6 +139,8 @@ def getScissorTest():
     return currentScissorTest
 
 def setScissorTest( scissorTest ):
+
+    global currentScissorTest
 
     currentScissorTest = scissorTest
 
@@ -166,3 +170,17 @@ def setMaterial( material ):
     colorBuffer.setMask( material.colorWrite )
 
     # TODO setPolygonOffset( material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits )
+
+def useProgram( program ):
+
+    global currentProgram
+
+    if currentProgram != program:
+
+        glUseProgram( program )
+
+        currentProgram = program
+
+        return True
+
+    return False

@@ -8,7 +8,7 @@ from ..utils import Expando
  * @author alteredq / http:#alteredqualia.com/
  """
 
-class Material( object ):
+class Material( Expando ):
 
     MaterialId = 0
 
