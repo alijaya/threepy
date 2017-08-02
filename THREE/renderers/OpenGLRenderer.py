@@ -4,11 +4,14 @@ from OpenGL.GL import *
 
 import numpy as np
 
+from ctypes import c_void_p
+
 from ..constants import REVISION, RGBAFormat, HalfFloatType, FloatType, ByteType, UnsignedByteType, FrontFaceDirectionCW, TriangleFanDrawMode, TriangleStripDrawMode, TrianglesDrawMode, NoColors, LinearToneMapping
 from ..objects.mesh import Mesh
 from ..math.frustum import Frustum
 from ..math.vector3 import Vector3
 from ..math.vector4 import Vector4
+from ..math.matrix4 import Matrix4
 from ..utils import Expando
 
 from opengl import OpenGLObjects as objects
@@ -48,6 +51,10 @@ autoClear = True
 autoClearColor = True
 autoClearDepth = True
 autoClearStencil = True
+
+# scene graph
+
+sortObjects = True
 
 # physically based shading
 
@@ -265,6 +272,75 @@ def initMaterial( material, fog, object ):
 
     materialProperties.uniformsList = uniformsList
 
+# Uniforms (refresh uniforms objects)
+
+def refreshUniformsCommon( uniforms, material ):
+
+    uniforms.opacity.value = material.opacity
+
+    if material.color: uniforms.diffuse.value = material.color
+
+    if material.emissive: uniforms.emissive.value.copy( material.emissive ).multiplyScalar( material.emissiveIntensity )
+
+    if material.map: uniforms.map.value = material.map
+
+    if material.alphaMap: uniforms.alphaMap.value = material.alphaMap
+
+    if material.specularMap: uniforms.specularMap.value = material.specularMap
+
+    if material.envMap:
+        
+        uniforms.envMap.value = material.envMap
+
+        # don't flip CubeTexture envMaps, flip everything else:
+        # WebGLRenderTargetCube will be flipped for backwards compatibility
+        # WebGLRenderTargetCube.texture will be flipped because it's a Texture and NOT a CubeTexture
+        # this check must be handled differently, or removed entirely, if WebGLRenderTargetCube uses a CubeTexture in the future
+        uniforms.flipEnvMap.value = 1 if not ( material.envMap and hasattr( material.envMap, "isCubeTexture" ) ) else - 1
+
+        uniforms.reflectivity.value = material.reflectivity
+        uniforms.refractionRatio.value = material.refractionRatio
+    
+    if material.lightMap:
+
+        uniforms.lightMap.value = material.lightMap
+        uniforms.lightMapIntensity.value = material.lightMapIntensity
+    
+    if material.aoMap:
+
+        uniforms.aoMap.value = material.aoMap
+        uniforms.aoMapIntensity.value = material.aoMapIntensity
+
+    # uv repeat and offset setting priorities
+    # 1. color map
+    # 2. specular map
+    # 3. normal map
+    # 4. bump map
+    # 5. alpha map
+    # 6. emissive map
+
+    uvScaleMap = None
+
+    if   material.map: uvScaleMap = material.map
+    elif material.specularMap: uvScaleMap = material.specularMap
+    elif material.displacementMap: uvScaleMap = material.displacementMap
+    elif material.normalMap: uvScaleMap = material.normalMap
+    elif material.bumpMap: uvScaleMap = material.bumpMap
+    elif material.roughnessMap: uvScaleMap = material.roughnessMap
+    elif material.metalnessMap: uvScaleMap = material.metalnessMap
+    elif material.alphaMap: uvScaleMap = material.alphaMap
+    elif material.emissiveMap: uvScaleMap = material.emissiveMap
+
+    if uvScaleMap:
+
+        # backwards compatibility
+        if hasattr( uvScaleMap, "isOpenGLRenderTarget" ): uvScaleMap = uvScaleMap.texture
+
+        offset = uvScaleMap.offset
+        repeat = uvScaleMap.repeat
+
+        uniforms.offsetRepeat.value.set( offset.x, offset.y, repeat.x, repeat.y )
+
 def setProgram( camera, fog, material, object ):
 
     materialProperties = properties.get( material )
@@ -313,9 +389,9 @@ def setProgram( camera, fog, material, object ):
         refreshMaterial = True
         refreshLights = True
 
-        if  getattr( material, "isHaderMaterial", None ) or \
-            getattr( material, "isMeshPongMaterial", None ) or \
-            getattr( material, "isMeshStandardMaterial", None ) or \
+        if  material.isShaderMaterial or \
+            material.isMeshPongMaterial or \
+            material.isMeshStandardMaterial or \
             material.envMap:
 
             uCamPos = p_uniforms.map.get( "cameraPosition" )
@@ -324,11 +400,11 @@ def setProgram( camera, fog, material, object ):
 
                 uCamPos.setValue( vector3.Vector3().setFromMatrixPosition( camera.matrixWorld ) )
         
-        if  getattr( material, "isMeshPhongMaterial", None ) or \
-            getattr( material, "isMeshLambertMaterial", None ) or \
-            getattr( material, "isMeshBasicMaterial", None ) or \
-            getattr( material, "isMeshStandardMaterial", None ) or \
-            getattr( material, "isShaderMaterial", None ) or \
+        if  material.isMeshPhongMaterial or \
+            material.isMeshLambertMaterial or \
+            material.isMeshBasicMaterial or \
+            material.isMeshStandardMaterial or \
+            material.isShaderMaterial or \
             material.skinning:
 
             p_uniforms.setValue( "viewMatrix", camera.matrixWorldInverse )
@@ -350,9 +426,9 @@ def setProgram( camera, fog, material, object ):
 
         #     refreshUniformsFog( m_uniforms, fog )
 
-        # if hasattr( material, "isMeshBasicMaterial" ):
+        if material.isMeshBasicMaterial:
 
-        #     refreshUniformsCommon( m_uniforms, material )
+            refreshUniformsCommon( m_uniforms, material )
 
         # elif hasattr( material, "isMeshLambertMaterial" ):
 
@@ -437,7 +513,9 @@ def setupVertexAttributes( material, program, geometry, startIndex = 0 ):
                         state.enableAttribute( programAttribute )
 
                     glBindBuffer( GL_ARRAY_BUFFER, buffer )
-                    glVertexAttribPointer( programAttribute, size, type, normalized, 0, startIndex * size * bytesPerElement )
+                    glVertexAttribPointer( programAttribute, size, type, normalized, 0, c_void_p( startIndex * size * bytesPerElement ) )
+
+                    print( programAttribute, size, type, normalized, 0, c_void_p( startIndex * size * bytesPerElement ) )
 
             elif materialDefaultAttributeValues:
 
@@ -509,12 +587,15 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
     rangeCount = geometry.drawRange.count * rangeFactor
 
     groupStart = group.start * rangeFactor if group else 0
-    groupCount = group.cound * rangeFactor if group else float("inf")
+    groupCount = group.count * rangeFactor if group else float("inf")
 
     drawStart = max( rangeStart, groupStart )
     drawEnd = min( dataCount, rangeStart + rangeCount, groupStart + groupCount ) - 1
 
     drawCount = max( 0, drawEnd - drawStart + 1 )
+
+    # print( geometry.drawRange.start, geometry.drawRange.count )
+    # print( rangeStart, rangeCount, groupStart, groupCount, drawStart, drawEnd, drawCount )
 
     if drawCount == 0: return
 
@@ -538,7 +619,7 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
 
 def renderObject( object, scene, camera, geometry, material, group ):
 
-    # TODO object.onBeforeRender
+    object.onBeforeRender( scene, camera, geometry, material, group )
 
     # transform from world space to camera space
     object.modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, object.matrixWorld )
@@ -548,7 +629,7 @@ def renderObject( object, scene, camera, geometry, material, group ):
 
     renderBufferDirect( camera, scene.fog, geometry, material, object, group )
 
-    # TODO object.onAfterRender
+    object.onAfterRender( scene, camera, geometry, material, group )
 
 def renderObjects( renderList, scene, camera, overrideMaterial = None ):
 
@@ -575,18 +656,16 @@ def render( scene, camera ):
 
     # project to screen
 
-    # projScreenMatrix = camera.projectionMatrix.multiply( camera.matrixWorldInverse )
-    # frustum = Frustum().setFromMatrix( projScreenMatrix )
+    projScreenMatrix = Matrix4().multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse )
+    frustum = Frustum().setFromMatrix( projScreenMatrix )
     
     currentRenderList = renderLists.get( scene, camera )
     currentRenderList.init()
 
-    # sortObjects = True
-
     # traverse scene, update opengl buffer, add to render list
-    # projectObject( scene, camera, projScreenMatrix, frustum, currentRenderList, sortObjects )
+    projectObject( scene, camera, projScreenMatrix, frustum, currentRenderList, sortObjects )
 
-    # if sortObjects: currentRenderList.sort()
+    if sortObjects: currentRenderList.sort()
 
     # TODO clipping
 
@@ -595,7 +674,7 @@ def render( scene, camera ):
     # TODO custom renderTarget
 
     # TODO
-    # setRenderTarget( None )
+    setRenderTarget( None )
 
     # render background
 
@@ -604,17 +683,17 @@ def render( scene, camera ):
 
     # render scene
 
-    # opaqueObjects = currentRenderList.opaque
-    # transparentObjects = currentRenderList.transparent
+    opaqueObjects = currentRenderList.opaque
+    transparentObjects = currentRenderList.transparent
 
-    # if scene.overrideMaterial:
+    if scene.overrideMaterial:
 
-    #     overrideMaterial = scene.overrideMaterial
+        overrideMaterial = scene.overrideMaterial
 
-    #     if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera, overrideMaterial )
-    #     if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera, overrideMaterial )
+        if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera, overrideMaterial )
+        if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera, overrideMaterial )
 
-    # else:
+    else:
 
-    #     if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera )
-    #     if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera )
+        if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera )
+        if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera )

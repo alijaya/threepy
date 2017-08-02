@@ -46,6 +46,13 @@ class SingleUniform( object ):
 
         self.id = id
         self.addr = addr
+
+        # def setValue( value ):
+
+        #     print( id, value )
+        #     self.getSingularSetter( activeInfo.type )( value )
+
+        # self.setValue = setValue
         self.setValue = self.getSingularSetter( activeInfo.type )
 
     # Single scalar
@@ -134,6 +141,13 @@ class PureArrayUniform( object ):
         self.id = id
         self.addr = addr
         self.size = activeInfo.size
+        
+        # def setValue( value ):
+
+        #     print( value )
+        #     self.getPureArraySetter( activeInfo.type )( value )
+
+        # self.setValue = setValue
         self.setValue = self.getPureArraySetter( activeInfo.type )
 
     # Array of scalars

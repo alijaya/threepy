@@ -151,6 +151,8 @@ class OpenGLProgram( object ):
 
     def __init__( self, code, material, shader, parameters ):
 
+        from .. import OpenGLRenderer as renderer
+
         self.id = OpenGLProgram.getOpenGLProgramId()
         self.code = code
         self.usedTimes = 1
@@ -164,6 +166,8 @@ class OpenGLProgram( object ):
         # TODO shadowMap
 
         # TODO envMap
+
+        gammaFactorDefine = renderer.gammaFactor if renderer.gammaFactor > 0 else 1.0
 
         # TODO customDefines
 
@@ -198,6 +202,8 @@ class OpenGLProgram( object ):
                 "#define SHADER_NAME %s" % shader.name,
                 
                 # customDefines
+
+                "#define GAMMA_FACTOR %s" % gammaFactorDefine,
 
                 opt( "#define USE_MAP", parameters.map ),
 
@@ -276,6 +282,8 @@ class OpenGLProgram( object ):
 
                 # customDefines
 
+                "#define GAMMA_FACTOR %s" % gammaFactorDefine,
+
                 opt( "#define USE_MAP", parameters.map ),
 
                 opt( "#define FLAT_SHADED", parameters.flatShading ),
@@ -287,17 +295,17 @@ class OpenGLProgram( object ):
                 "uniform mat4 viewMatrix;",
                 "uniform vec3 cameraPosition;",
 
-                opt( "#define TONE_MAPPING", parameters.toneMapping != NoToneMapping ),
-                opt( ShaderChunk[ "tonemapping_pars_fragment" ], parameters.toneMapping != NoToneMapping ),
-                opt( getToneMappingFunction( "toneMapping", parameters.toneMapping ), parameters.toneMapping != NoToneMapping ),
+                "#define TONE_MAPPING" if parameters.toneMapping != NoToneMapping else "",
+                ShaderChunk[ "tonemapping_pars_fragment" ] if parameters.toneMapping != NoToneMapping else "",
+                getToneMappingFunction( "toneMapping", parameters.toneMapping ) if parameters.toneMapping != NoToneMapping else "",
 
                 opt( "#define DITHERING", parameters.dithering ),
 
-                opt( ShaderChunk[ "encodings_pars_fragment" ], parameters.outputEncoding or parameters.mapEncoding or parameters.envMapEncoding or parameters.emissiveMapEncoding ),
-                opt( getTexelDecodingFunction( "mapTexelToLinear", parameters.mapEncoding ), parameters.mapEncoding ),
-                opt( getTexelDecodingFunction( "envMapTexelToLinear", parameters.envMapEncoding ), parameters.envMapEncoding ),
-                opt( getTexelDecodingFunction( "emissiveMapTexelToLinear", parameters.emissiveMapEncoding ), parameters.emissiveMapEncoding ),
-                opt( getTexelEncodingFunction( "linearToOutputTexel", parameters.outputEncoding ), parameters.outputEncoding ),
+                ShaderChunk[ "encodings_pars_fragment" ] if parameters.outputEncoding or parameters.mapEncoding or parameters.envMapEncoding or parameters.emissiveMapEncoding else "",
+                getTexelDecodingFunction( "mapTexelToLinear", parameters.mapEncoding ) if parameters.mapEncoding else "",
+                getTexelDecodingFunction( "envMapTexelToLinear", parameters.envMapEncoding ) if parameters.envMapEncoding else "",
+                getTexelDecodingFunction( "emissiveMapTexelToLinear", parameters.emissiveMapEncoding ) if parameters.emissiveMapEncoding else "",
+                getTexelEncodingFunction( "linearToOutputTexel", parameters.outputEncoding ) if parameters.outputEncoding else "",
 
                 opt( "#define DEPTH_PACKING %s" % material.depthPacking, parameters.depthPacking ),
 
@@ -318,8 +326,22 @@ class OpenGLProgram( object ):
         vertexGlsl = prefixVertex + vertexShader
         fragmentGlsl = prefixFragment + fragmentShader
 
-        # print( "*VERTEX*", vertexGlsl )
-        # print( "*FRAGMENT*", fragmentGlsl )
+        vertexGlsl = """
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+attribute vec3 position;
+void main() {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}"""
+        fragmentGlsl = """
+uniform vec3 diffuse;
+uniform float opacity;
+void main() {
+    gl_FragColor = vec4( diffuse, opacity );
+}"""
+
+        logging.warning( "*VERTEX*\n%s", vertexGlsl )
+        logging.warning( "*FRAGMENT*\n%s", fragmentGlsl )
 
         self.vertexShader = openGLShader.OpenGLShader( GL_VERTEX_SHADER, vertexGlsl )
         self.fragmentShader = openGLShader.OpenGLShader( GL_FRAGMENT_SHADER, fragmentGlsl )

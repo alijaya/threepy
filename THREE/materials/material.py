@@ -96,11 +96,11 @@ class Material( Expando ):
                 self.flatShading = True if ( newValue == FlatShading ) else False
                 continue
 
-            currentValue = getattr( self, key )
+            currentValue = self[ key ]
 
             if currentValue is None :
 
-                console.warn( "THREE.%s: \"%s\" is not a property of self material." % ( self.type, key ) )
+                logging.warning( "THREE.%s: \"%s\" is not a property of self material." % ( self.type, key ) )
                 continue
 
             if currentValue and hasattr( currentValue, "isColor" ) :
