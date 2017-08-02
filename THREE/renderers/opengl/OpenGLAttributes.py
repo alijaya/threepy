@@ -66,11 +66,33 @@ def updateBuffer( buffer, attribute, bufferType ):
 
         updateRange.count = -1
 
+#
+
+def get( attribute ):
+
+    if hasattr( attribute, "isInterleavedBufferAttribute" ): attribute = attribute.data
+
+    return buffers.get( attribute.uuid )
+
+def remove( attribute ):
+
+    if hasattr( attribute, "isInterleavedBufferAttribute" ): attribute = attribute.data
+
+    data = buffers.get( attribute.uuid )
+
+    if data:
+
+        glDeleteBuffer( data.buffer )
+
+        del buffers[ attribute.uuid ]
+
 def update( attribute, bufferType ):
 
-    if attribute.uuid in buffers: # if already exist, update it
+    if hasattr( attribute, "isInterleavedBufferAttribute" ): attribute = attribute.data
 
-        data = buffers[ attribute.uuid ]
+    data = buffers.get( attribute.uuid )
+
+    if data: # if already exist, update it
 
         updateBuffer( data.buffer, attribute, bufferType )
 

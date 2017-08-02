@@ -152,6 +152,9 @@ class OpenGLProgram( object ):
     def __init__( self, code, material, shader, parameters ):
 
         self.id = OpenGLProgram.getOpenGLProgramId()
+        self.code = code
+        self.usedTimes = 1
+        self.program = glCreateProgram()
 
         defines = getattr( material, "defines", None )
         
@@ -163,8 +166,6 @@ class OpenGLProgram( object ):
         # TODO envMap
 
         # TODO customDefines
-
-        self.program = glCreateProgram()
 
         prefixVertex = None
         prefixFragment = None
@@ -320,11 +321,11 @@ class OpenGLProgram( object ):
         # print( "*VERTEX*", vertexGlsl )
         # print( "*FRAGMENT*", fragmentGlsl )
 
-        glVertexShader = openGLShader.OpenGLShader( GL_VERTEX_SHADER, vertexGlsl )
-        glFragmentShader = openGLShader.OpenGLShader( GL_FRAGMENT_SHADER, fragmentGlsl )
+        self.vertexShader = openGLShader.OpenGLShader( GL_VERTEX_SHADER, vertexGlsl )
+        self.fragmentShader = openGLShader.OpenGLShader( GL_FRAGMENT_SHADER, fragmentGlsl )
 
-        glAttachShader( self.program, glVertexShader )
-        glAttachShader( self.program, glFragmentShader )
+        glAttachShader( self.program, self.vertexShader )
+        glAttachShader( self.program, self.fragmentShader )
 
         # Force a particular attribute to index 0
 
@@ -337,8 +338,8 @@ class OpenGLProgram( object ):
         glLinkProgram( self.program )
 
         programLog = glGetProgramInfoLog( self.program )
-        vertexLog = glGetShaderInfoLog( glVertexShader )
-        fragmentLog = glGetShaderInfoLog( glFragmentShader )
+        vertexLog = glGetShaderInfoLog( self.vertexShader )
+        fragmentLog = glGetShaderInfoLog( self.fragmentShader )
 
         runnable = True
         haveDiagnostics = True
@@ -347,8 +348,8 @@ class OpenGLProgram( object ):
 
         # clean up
 
-        glDeleteShader( glVertexShader )
-        glDeleteShader( glFragmentShader )
+        glDeleteShader( self.vertexShader )
+        glDeleteShader( self.fragmentShader )
 
         # TODO caching action
 

@@ -4,6 +4,7 @@ mode = None
 
 def setMode( value ):
 
+    global mode
     mode = value
 
 def render( start, count ):

@@ -3,6 +3,8 @@ from ...math.vector4 import Vector4
 
 from OpenGL.GL import *
 
+import numpy as np
+
 class ColorBuffer( object ):
 
     def __init__( self ):
@@ -102,16 +104,42 @@ class DepthBuffer( object ):
 
 ###
 
-colorBuffer = ColorBuffer()
-depthBuffer = DepthBuffer()
+def initAttributes():
 
-capabilities = {}
+    if not newAttributes:
 
-currentViewport = Vector4()
-currentScissor = Vector4()
-currentScissorTest = None
+        global maxVertexAttributes
+        global newAttributes
+        global enabledAttributes
 
-currentProgram = None
+        maxVertexAttributes = glGetIntegerv( GL_MAX_VERTEX_ATTRIBS )
+        newAttributes = np.zeros( maxVertexAttributes )
+        enabledAttributes = np.zeros( maxVertexAttributes )
+
+    newAttributes.fill( 0 )
+
+def enableAttribute( attribute ):
+
+    newAttributes[ attribute ] = 1
+
+    if enabledAttributes[ attribute ] == 0:
+
+        glEnableVertexAttribArray( attribute )
+        enabledAttributes[ attribute ] = 1
+
+    # TODO extension
+    # if attributeDivisors[ attribute] != 0:
+
+# TODO enableAttributeAndDivisor
+
+def disableUnusedAttributes():
+
+    for i in range( enabledAttributes.size ):
+
+        if enabledAttributes[ i ] != newAttributes[ i ]:
+
+            glDisableVertexAttribArray( i )
+            enabledAttributes[ i ] = 0
 
 def enable( id ):
 
@@ -184,3 +212,18 @@ def useProgram( program ):
         return True
 
     return False
+
+colorBuffer = ColorBuffer()
+depthBuffer = DepthBuffer()
+
+maxVertexAttributes = None
+newAttributes = None
+enabledAttributes = None
+
+capabilities = {}
+
+currentViewport = Vector4()
+currentScissor = Vector4()
+currentScissorTest = None
+
+currentProgram = None

@@ -17,10 +17,13 @@ from opengl import OpenGLProperties as properties
 from opengl import OpenGLRenderLists as renderLists
 from opengl import OpenGLBackground as background
 from opengl import OpenGLPrograms as programCache
+from opengl import OpenGLBufferRenderer as bufferRenderer
+from opengl import OpenGLAttributes as attributes
+
+from opengl.openGLUniforms import OpenGLUniforms
+
 from shaders.shaderLib import ShaderLib
 from shaders import UniformsUtils
-from opengl.openGLUniforms import OpenGLUniforms
-from opengl import OpenGLBufferRenderer as bufferRenderer
 
 # internal cache
 
@@ -334,6 +337,76 @@ def setProgram( camera, fog, material, object ):
 
     return program
 
+def setupVertexAttributes( material, program, geometry, startIndex = 0 ):
+
+    # TODO check instancedBufferGeometry
+    # if geometry and hasattr( geometry, "isInstancedBufferGeometry" ):
+
+    state.initAttributes()
+
+    geometryAttributes = geometry.attributes
+
+    programAttributes = program.getAttributes()
+
+    materialDefaultAttributeValues = material.defaultAttributeValues
+
+    for name in programAttributes:
+
+        programAttribute = programAttributes[ name ]
+
+        if programAttribute >= 0:
+
+            geometryAttribute = geometryAttributes[ name ]
+
+            if geometryAttribute:
+
+                normalized = geometryAttribute.normalized
+                size = geometryAttribute.itemSize
+
+                attribute = attributes.get( geometryAttribute )
+
+                # TODO Attribute may not be available on context restore
+
+                if not attribute: continue
+
+                buffer = attribute.buffer
+                type = attribute.type
+                bytesPerElement = attribute.bytesPerElement
+
+                # TODO
+                if hasattr( geometryAttribute, "isInterleavedBufferAttribute" ):
+
+                    # TODO
+                    pass
+                
+                else:
+
+                    if hasattr( geometryAttribute, "isInstancedBufferAttribute" ):
+
+                        # TODO
+                        pass
+
+                    else:
+
+                        state.enableAttribute( programAttribute )
+
+                    glBindBuffer( GL_ARRAY_BUFFER, buffer )
+                    glVertexAttribPointer( programAttribute, size, type, normalized, 0, startIndex * size * bytesPerElement )
+
+            elif materialDefaultAttributeValues:
+
+                value = materialDefaultAttributeValues[ name ]
+
+                if value:
+
+                    if   len( value ) == 2: glVertexAttrib2fv( programAttribute, value )
+                    elif len( value ) == 3: glVertexAttrib3fv( programAttribute, value )
+                    elif len( value ) == 4: glVertexAttrib4fv( programAttribute, value )
+                    else: glVertexAttrib1fv( programAttribute, value )
+
+    state.disableUnusedAttributes()
+
+
 def renderBufferDirect( camera, fog, geometry, material, object, group ):
 
     global _currentGeometryProgram
@@ -393,7 +466,7 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
     groupCount = group.cound * rangeFactor if group else float("inf")
 
     drawStart = max( rangeStart, groupStart )
-    drawEnd = min( dataCount, rangeStart + rangeCound, groupStart + groupCount ) - 1
+    drawEnd = min( dataCount, rangeStart + rangeCount, groupStart + groupCount ) - 1
 
     drawCount = max( 0, drawEnd - drawStart + 1 )
 
@@ -406,7 +479,7 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
         # not wireframe
         dm = object.drawMode
 
-        if dm == TrianglesDrawmode: renderer.setMode( GL_TRIANGLES )
+        if dm == TrianglesDrawMode: renderer.setMode( GL_TRIANGLES )
         elif dm == TriangleStripDrawMode: renderer.setMode( GL_TRIANGLE_STRIP )
         elif dm == TriangleFanDrawMode: renderer.setMode( GL_TRIANGLE_FAN )
 

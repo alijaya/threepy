@@ -292,8 +292,6 @@ class OpenGLUniforms( UniformContainer ):
     @staticmethod
     def upload( seq, values ):
 
-        print( values )
-
         for u in seq:
 
             v = values[ u.id ]
