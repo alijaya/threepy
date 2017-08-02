@@ -20,6 +20,7 @@ scene = THREE.Scene()
 camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )
 
 renderer = THREE.OpenGLRenderer
+renderer.setSize( width, height )
 
 geometry = THREE.BoxGeometry( 1, 1, 1 )
 material = THREE.MeshBasicMaterial( Expando( color = 0x00ff00 ) )

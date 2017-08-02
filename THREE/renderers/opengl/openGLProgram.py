@@ -326,8 +326,8 @@ class OpenGLProgram( object ):
         vertexGlsl = prefixVertex + vertexShader
         fragmentGlsl = prefixFragment + fragmentShader
 
-        logging.warning( "*VERTEX*\n%s", vertexGlsl )
-        logging.warning( "*FRAGMENT*\n%s", fragmentGlsl )
+        # logging.warning( "*VERTEX*\n%s", vertexGlsl )
+        # logging.warning( "*FRAGMENT*\n%s", fragmentGlsl )
 
         self.vertexShader = openGLShader.OpenGLShader( GL_VERTEX_SHADER, vertexGlsl )
         self.fragmentShader = openGLShader.OpenGLShader( GL_FRAGMENT_SHADER, fragmentGlsl )

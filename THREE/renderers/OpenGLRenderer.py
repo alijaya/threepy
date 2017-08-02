@@ -39,8 +39,8 @@ _currentScissor = Vector4()
 _currentScissorTest = None
 _pixelRatio = 1
 
-_width = 800
-_height = 600
+_width = 0
+_height = 0
 _viewport = Vector4( 0, 0, _width, _height )
 _scissor = Vector4( 0, 0, _width, _height )
 _scissorTest = False
@@ -67,6 +67,75 @@ gammaOutput = False
 toneMapping = LinearToneMapping
 toneMappingExposure = 1.0
 toneMappingWhitePoint = 1.0
+
+# API
+
+def getPixelRatio():
+
+    return _pixelRatio
+
+def setPixelRatio( value ):
+
+    global _pixelRatio
+
+    if not value: return
+
+    _pixelRatio = value
+
+    setSize( _width, _height, False )
+
+def getSize():
+
+    return Expando(
+        width = _width,
+        height = _height
+    )
+
+def setSize( width, height ):
+
+    global _width
+    global _height
+
+    # TODO vr
+
+    _width = width
+    _height = height
+
+    setViewport( 0, 0, width, height )
+
+def getDrawingBufferSize():
+
+    return Expando(
+        width = _width * _pixelRatio,
+        height = _height * _pixelRatio
+    )
+
+def setDrawingBufferSize( width, height, pixelRatio ):
+
+    global _width
+    global _height
+    global _pixelRatio
+
+    _width = width
+    _height = height
+
+    self.setViewport( 0, 0, width, height )
+
+def setViewport( x, y, width, height ):
+
+    _viewport.set( x, _height - y - height, width, height )
+    state.viewport( _currentViewport.copy( _viewport ).multiplyScalar( _pixelRatio ) )
+
+def setScissor( x, y, width, height ):
+
+    _scissor.set( x, _height - y - height, width, height )
+    state.scissor( _currentScissor.copy( _scissor ).multiplyScalar( _pixelRatio ) ) 
+
+def setScissorTest( boolean ):
+
+    global _scissorTest
+    _scissorTest = boolean
+    state.setScissorTest( _scissorTest )
 
 # Clearing
 
@@ -101,6 +170,14 @@ def clearTarget( renderTarget, color, depth, stencil ):
 
     self.setRenderTarget( renderTarget )
     self.clear( color, depth, stencil )
+
+#
+
+def dispose():
+
+    renderLists.dispose()
+
+    # TODO vr
 
 #
 
@@ -514,8 +591,6 @@ def setupVertexAttributes( material, program, geometry, startIndex = 0 ):
 
                     glBindBuffer( GL_ARRAY_BUFFER, buffer )
                     glVertexAttribPointer( programAttribute, size, type, normalized, 0, c_void_p( startIndex * size * bytesPerElement ) )
-
-                    print( programAttribute, size, type, normalized, 0, c_void_p( startIndex * size * bytesPerElement ) )
 
             elif materialDefaultAttributeValues:
 
