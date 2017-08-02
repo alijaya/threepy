@@ -326,20 +326,6 @@ class OpenGLProgram( object ):
         vertexGlsl = prefixVertex + vertexShader
         fragmentGlsl = prefixFragment + fragmentShader
 
-        vertexGlsl = """
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
-attribute vec3 position;
-void main() {
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-}"""
-        fragmentGlsl = """
-uniform vec3 diffuse;
-uniform float opacity;
-void main() {
-    gl_FragColor = vec4( diffuse, opacity );
-}"""
-
         logging.warning( "*VERTEX*\n%s", vertexGlsl )
         logging.warning( "*FRAGMENT*\n%s", fragmentGlsl )
 

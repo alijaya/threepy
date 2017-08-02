@@ -6,7 +6,7 @@ import numpy as np
 
 from ctypes import c_void_p
 
-from ..constants import REVISION, RGBAFormat, HalfFloatType, FloatType, ByteType, UnsignedByteType, FrontFaceDirectionCW, TriangleFanDrawMode, TriangleStripDrawMode, TrianglesDrawMode, NoColors, LinearToneMapping
+from ..constants import REVISION, RGBAFormat, HalfFloatType, FloatType, ByteType, UnsignedByteType, FrontFaceDirectionCW, TriangleFanDrawMode, TriangleStripDrawMode, TrianglesDrawMode, NoColors, NoToneMapping, LinearToneMapping
 from ..objects.mesh import Mesh
 from ..math.frustum import Frustum
 from ..math.vector3 import Vector3
@@ -417,8 +417,8 @@ def setProgram( camera, fog, material, object ):
 
     if refreshMaterial:
 
-        # p_uniforms.setValue( "toneMappingExposure", toneMappingExposure )
-        # p_uniforms.setValue( "toneMappingWhitePoint", toneMappingWhitePoint )
+        p_uniforms.setValue( "toneMappingExposure", toneMappingExposure )
+        p_uniforms.setValue( "toneMappingWhitePoint", toneMappingWhitePoint )
 
         # TODO light
 
