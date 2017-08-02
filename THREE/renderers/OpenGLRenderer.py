@@ -42,6 +42,13 @@ _viewport = Vector4( 0, 0, _width, _height )
 _scissor = Vector4( 0, 0, _width, _height )
 _scissorTest = False
 
+# clearing
+
+autoClear = True
+autoClearColor = True
+autoClearDepth = True
+autoClearStencil = True
+
 # physically based shading
 
 gammaFactor = 2.0
@@ -54,11 +61,50 @@ toneMapping = LinearToneMapping
 toneMappingExposure = 1.0
 toneMappingWhitePoint = 1.0
 
+# Clearing
+
+getClearColor = background.getClearColor
+setClearColor = background.setClearColor
+getClearAlpha = background.getClearAlpha
+setClearAlpha = background.setClearAlpha
+
+def clear( color = True, depth = True, stencil = True ):
+
+    bits = 0
+
+    if color: bits |= GL_COLOR_BUFFER_BIT
+    if depth: bits |= GL_DEPTH_BUFFER_BIT
+    if stencil: bits |= GL_STENCIL_BUFFER_BIT
+
+    glClear( bits )
+
+def clearColor():
+
+    clear( True, False, False )
+
+def clearDepth():
+
+    clear( False, True, False )
+
+def clearStencil():
+
+    clear( False, False, True )
+
+def clearTarget( renderTarget, color, depth, stencil ):
+
+    self.setRenderTarget( renderTarget )
+    self.clear( color, depth, stencil )
+
+#
+
 def getRenderTarget():
 
     return _currentRenderTarget
 
 def setRenderTarget( renderTarget ):
+
+    global _currentRenderTarget
+    global _currentScissorTest
 
     _currentRenderTarget = renderTarget
 
@@ -529,18 +575,18 @@ def render( scene, camera ):
 
     # project to screen
 
-    projScreenMatrix = camera.projectionMatrix.multiply( camera.matrixWorldInverse )
-    frustum = Frustum().setFromMatrix( projScreenMatrix )
+    # projScreenMatrix = camera.projectionMatrix.multiply( camera.matrixWorldInverse )
+    # frustum = Frustum().setFromMatrix( projScreenMatrix )
     
     currentRenderList = renderLists.get( scene, camera )
     currentRenderList.init()
 
-    sortObjects = True
+    # sortObjects = True
 
     # traverse scene, update opengl buffer, add to render list
-    projectObject( scene, camera, projScreenMatrix, frustum, currentRenderList, sortObjects )
+    # projectObject( scene, camera, projScreenMatrix, frustum, currentRenderList, sortObjects )
 
-    if sortObjects: currentRenderList.sort()
+    # if sortObjects: currentRenderList.sort()
 
     # TODO clipping
 
@@ -549,7 +595,7 @@ def render( scene, camera ):
     # TODO custom renderTarget
 
     # TODO
-    setRenderTarget( None )
+    # setRenderTarget( None )
 
     # render background
 
@@ -558,17 +604,17 @@ def render( scene, camera ):
 
     # render scene
 
-    opaqueObjects = currentRenderList.opaque
-    transparentObjects = currentRenderList.transparent
+    # opaqueObjects = currentRenderList.opaque
+    # transparentObjects = currentRenderList.transparent
 
-    if scene.overrideMaterial:
+    # if scene.overrideMaterial:
 
-        overrideMaterial = scene.overrideMaterial
+    #     overrideMaterial = scene.overrideMaterial
 
-        if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera, overrideMaterial )
-        if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera, overrideMaterial )
+    #     if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera, overrideMaterial )
+    #     if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera, overrideMaterial )
 
-    else:
+    # else:
 
-        if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera )
-        if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera )
+    #     if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera )
+    #     if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera )

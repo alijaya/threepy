@@ -16,12 +16,14 @@ camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )
 
 renderer = THREE.OpenGLRenderer
 
-geometry = THREE.BoxGeometry( 1, 1, 1 )
-material = THREE.MeshBasicMaterial( { "color": 0x00ff00 } )
-cube = THREE.Mesh( geometry, material )
-scene.add( cube )
+# geometry = THREE.BoxGeometry( 1, 1, 1 )
+# material = THREE.MeshBasicMaterial( { "color": 0x00ff00 } )
+# cube = THREE.Mesh( geometry, material )
+# scene.add( cube )
 
-camera.position.z = 5
+# camera.position.z = 5
+
+renderer.render( scene, camera )
 
 while True:
     for event in pygame.event.get():
@@ -31,6 +33,7 @@ while True:
             pygame.quit()
             quit()
     
+    renderer.clear()
     renderer.render( scene, camera )
     pygame.display.flip()
     pygame.time.wait( 10 )
