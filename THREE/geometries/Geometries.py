@@ -1,1 +1,2 @@
 from boxGeometry import BoxGeometry, BoxBufferGeometry
+from torusKnotGeometry import TorusKnotGeometry, TorusKnotBufferGeometry

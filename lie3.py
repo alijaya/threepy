@@ -22,14 +22,13 @@ renderer.setSize( width, height )
 texture = THREE.TextureLoader().load("crate.gif")
 
 scene = THREE.Scene()
-camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )
+camera = THREE.PerspectiveCamera( 70, width / height, 1, 1000 )
+camera.position.z = 400
 
-geometry = THREE.BoxGeometry( 1, 1, 1 )
+geometry = THREE.TorusKnotGeometry()
 material = THREE.MeshBasicMaterial( map = texture )
 cube = THREE.Mesh( geometry, material )
 scene.add( cube )
-
-camera.position.z = 5
 
 while True:
 
@@ -40,8 +39,8 @@ while True:
             pygame.quit()
             quit()
 
-    cube.rotation.x += 0.05
-    cube.rotation.y += 0.05
+    cube.rotation.x += 0.01
+    cube.rotation.y += 0.01
     renderer.render( scene, camera )
 
     pygame.display.flip()
