@@ -23,9 +23,9 @@ texture = THREE.TextureLoader().load("crate.gif")
 
 scene = THREE.Scene()
 camera = THREE.PerspectiveCamera( 70, width / height, 1, 1000 )
-camera.position.z = 400
+camera.position.z = 30
 
-geometry = THREE.TorusKnotGeometry()
+geometry = THREE.TorusKnotGeometry( 10, 3, 100, 16 )
 material = THREE.MeshBasicMaterial( map = texture )
 cube = THREE.Mesh( geometry, material )
 scene.add( cube )

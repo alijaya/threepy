@@ -255,7 +255,7 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
         else:
 
-            if indices != None:
+            if indices is not None:
 
                 for i in range( 0, len( indices ), 3 ):
 
