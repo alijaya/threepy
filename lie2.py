@@ -13,14 +13,10 @@ import numpy as np
 width = 800
 height = 600
 
-pygame.init()
-pygame.display.set_mode( (width, height), DOUBLEBUF|OPENGL )
+renderer = THREE.OpenGLRenderer
 
 scene = THREE.Scene()
 camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )
-
-renderer = THREE.OpenGLRenderer
-renderer.setSize( width, height )
 
 geometry = THREE.BoxGeometry( 1, 1, 1 )
 material = THREE.MeshBasicMaterial( Expando( color = 0x00ff00 ) )
@@ -29,7 +25,12 @@ scene.add( cube )
 
 camera.position.z = 5
 
+pygame.init()
+pygame.display.set_mode( (width, height), DOUBLEBUF|OPENGL )
+renderer.setSize( width, height )
+
 while True:
+
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:

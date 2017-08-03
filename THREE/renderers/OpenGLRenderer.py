@@ -30,20 +30,62 @@ from shaders import UniformsUtils
 
 # internal cache
 
-_currentMaterialId = -1
-_currentCamera = None
 _currentRenderTarget = None
-_currentGeometryProgram = None
+_currentFramebuffer = None
+_currentMaterialId = -1
+_currentGeometryProgram = ""
+
+_currentCamera = None
+
 _currentViewport = Vector4()
 _currentScissor = Vector4()
 _currentScissorTest = None
-_pixelRatio = 1
+
+#
 
 _width = 0
 _height = 0
+
+_pixelRatio = 1
+
 _viewport = Vector4( 0, 0, _width, _height )
 _scissor = Vector4( 0, 0, _width, _height )
 _scissorTest = False
+
+# frustum
+
+_frustum = Frustum()
+
+# clipping
+
+# camera matrices cache
+
+_projScreenMatrix = Matrix4()
+
+# info
+
+_infoMemory = Expando(
+    geometries = 0,
+    textures = 0
+)
+
+_infoRender = Expando(
+    frame = 0,
+    calls = 0,
+    vertices = 0,
+    faces = 0,
+    points = 0
+)
+
+info = Expando(
+    render = _infoRender,
+    memory = _infoMemory,
+    programs = None
+)
+
+#
+
+currentRenderList = None
 
 # clearing
 
@@ -55,6 +97,8 @@ autoClearStencil = True
 # scene graph
 
 sortObjects = True
+
+# TODO clipping
 
 # physically based shading
 
@@ -211,7 +255,7 @@ def setRenderTarget( renderTarget ):
 
     # TODO isCube
 
-def projectObject( object, camera, projScreenMatrix, frustum, currentRenderList, sortObjects ):
+def projectObject( object, camera, sortObjects ):
 
     # if not visible, nothing to render
     if not object.visible: return
@@ -225,13 +269,13 @@ def projectObject( object, camera, projScreenMatrix, frustum, currentRenderList,
         if hasattr( object, "isMesh" ):
 
             # whether it in Frustum
-            if not object.frustumCulled or frustum.intersectsObject( object ):
+            if not object.frustumCulled or _frustum.intersectsObject( object ):
 
                 if sortObjects:
 
                     # get z position in screen space
 
-                    z = Vector3().setFromMatrixPosition( object.matrixWorld ).applyMatrix4( projScreenMatrix ).z
+                    z = Vector3().setFromMatrixPosition( object.matrixWorld ).applyMatrix4( _projScreenMatrix ).z
 
                 geometry = objects.update( object )
                 material = object.material
@@ -256,7 +300,7 @@ def projectObject( object, camera, projScreenMatrix, frustum, currentRenderList,
 
     for child in object.children:
 
-        projectObject( child, camera, projScreenMatrix, frustum, currentRenderList, sortObjects )
+        projectObject( child, camera, sortObjects )
 
 def releaseMaterialProgramReference( material ):
 
@@ -719,26 +763,39 @@ def renderObjects( renderList, scene, camera, overrideMaterial = None ):
 
         renderObject( object, scene, camera, geometry, material, group )
 
-def render( scene, camera ):
+def render( scene, camera, renderTarget = None, forceClear = True ):
+
+    global _currentGeometryProgram, _currentMaterialId, _currentCamera
+    global _projScreenMatrix, _frustum, currentRenderList
+
+    _currentGeometryProgram = ""
+    _currentMaterialId = - 1
+    _currentCamera = None
 
     # update matrix world of all objects
 
-    scene.updateMatrixWorld()
+    if scene.autoUpdate == True: scene.updateMatrixWorld()
 
     # update matrix world of camera
 
-    camera.updateMatrixWorld()
+    if camera.parent is None: camera.updateMatrixWorld()
+
+    # TODO vr
 
     # project to screen
 
-    projScreenMatrix = Matrix4().multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse )
-    frustum = Frustum().setFromMatrix( projScreenMatrix )
+    _projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse )
+    _frustum.setFromMatrix( _projScreenMatrix )
+
+    # TODO lightsArray, shadowsArray
+    # TODO spritesArray, flaresArray
+    # TODO clipping
     
     currentRenderList = renderLists.get( scene, camera )
     currentRenderList.init()
 
     # traverse scene, update opengl buffer, add to render list
-    projectObject( scene, camera, projScreenMatrix, frustum, currentRenderList, sortObjects )
+    projectObject( scene, camera, sortObjects )
 
     if sortObjects: currentRenderList.sort()
 
@@ -746,14 +803,16 @@ def render( scene, camera ):
 
     # TODO lights
 
-    # TODO custom renderTarget
+    _infoRender.frame += 1
+    _infoRender.calls = 0
+    _infoRender.vertices = 0
+    _infoRender.faces = 0
+    _infoRender.points = 0
 
-    # TODO
-    setRenderTarget( None )
+    setRenderTarget( renderTarget )
 
     # render background
 
-    forceClear = True # temp
     background.render( currentRenderList, scene, camera, forceClear )
 
     # render scene
@@ -772,3 +831,17 @@ def render( scene, camera ):
 
         if len( opaqueObjects ) > 0: renderObjects( opaqueObjects, scene, camera )
         if len( transparentObjects ) > 0: renderObjects( transparentObjects, scene, camera )
+
+    # TODO custom renderers
+
+    # TODO renderTarget
+
+    # Ensure depth buffer writing is enabled so it can be cleared on next render
+
+    state.buffers.depth.setTest( True )
+    state.buffers.depth.setMask( True )
+    state.buffers.color.setMask( True )
+
+    # TODO state.setPolygonOffset( False )
+
+    # TODO vr

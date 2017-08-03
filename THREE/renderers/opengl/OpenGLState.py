@@ -1,5 +1,6 @@
 from ...constants import DoubleSide, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, EqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth
 from ...math.vector4 import Vector4
+from ...utils import Expando
 
 from OpenGL.GL import *
 
@@ -106,7 +107,7 @@ class DepthBuffer( object ):
 
 def initAttributes():
 
-    if not newAttributes:
+    if newAttributes is None:
 
         global maxVertexAttributes
         global newAttributes
@@ -215,6 +216,11 @@ def useProgram( program ):
 
 colorBuffer = ColorBuffer()
 depthBuffer = DepthBuffer()
+
+buffers = Expando(
+    color = colorBuffer,
+    depth = depthBuffer
+)
 
 maxVertexAttributes = None
 newAttributes = None

@@ -14,6 +14,11 @@ from THREE.core.object3D import Object3D
 
 from THREE.geometries.Geometries import *
 
+from THREE.loaders.fileLoader import FileLoader
+from THREE.loaders.imageLoader import ImageLoader
+from THREE.loaders.loadingManager import LoadingManager
+from THREE.loaders.textureLoader import TextureLoader
+
 from THREE.materials.Materials import *
 
 from THREE.math.box2 import Box2
@@ -37,7 +42,6 @@ from THREE.math.vector4 import Vector4
 
 from THREE.objects.mesh import Mesh
 
-# from THREE.renderers.webGLRenderer import WebGLRenderer
 from THREE.renderers import OpenGLRenderer
 
 from THREE.scenes.scene import Scene

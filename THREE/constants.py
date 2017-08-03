@@ -1,5 +1,7 @@
+from utils import Expando
+
 REVISION = '87dev'
-MOUSE = { "LEFT": 0, "MIDDLE": 1, "RIGHT": 2 }
+MOUSE = Expando( LEFT = 0, MIDDLE = 1, RIGHT = 2 )
 CullFaceNone = 0
 CullFaceBack = 1
 CullFaceFront = 2

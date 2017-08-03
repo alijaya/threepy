@@ -131,6 +131,8 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
 # get hash code from parameters
 def getProgramCode( material, parameters ):
 
+    from .. import OpenGLRenderer as renderer
+
     array = []
 
     if parameters.shaderID:
@@ -142,20 +144,20 @@ def getProgramCode( material, parameters ):
         array.append( material.fragmentShader )
         array.append( material.vertexShader )
     
-    # if material.defines:
+    if material.defines:
 
-    #     for key, value in material.defines:
+        for key, value in material.defines:
 
-    #         array.append( key )
-    #         array.append( value )
+            array.append( key )
+            array.append( value )
     
     for param in parameterNames:
 
         array.append( parameters[ param ] )
     
-    # array.push()
+    array.append( str( material.onBeforeCompile ) )
 
-    # array.push( renderer.gammaOutput )
+    array.append( renderer.gammaOutput )
 
     return "".join( map( str, array ) )
 
