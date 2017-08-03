@@ -23,6 +23,8 @@ class Material( Expando ):
 
     def __init__( self ):
 
+        super( Material, self ).__init__()
+
         self.isMaterial = True
 
         self.id = Material.getMaterialId()
@@ -100,7 +102,7 @@ class Material( Expando ):
 
             currentValue = self[ key ]
 
-            if currentValue is None :
+            if not key in self :
 
                 logging.warning( "THREE.%s: \"%s\" is not a property of self material." % ( self.type, key ) )
                 continue

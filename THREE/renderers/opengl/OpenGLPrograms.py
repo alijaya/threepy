@@ -43,7 +43,7 @@ def getTextureEncodingFromMap( map, gammaOverrideLinear ):
 
         encoding = LinearEncoding
 
-    elif hasattr( map, isTexture ):
+    elif hasattr( map, "isTexture" ):
 
         encoding = map.encoding
 

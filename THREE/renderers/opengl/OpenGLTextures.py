@@ -4,18 +4,26 @@ from OpenGL.GL import *
 
 import logging
 
+from ctypes import c_void_p
+
 from ...constants import LinearFilter, NearestFilter, RGBFormat, RGBAFormat, DepthFormat, DepthStencilFormat, UnsignedShortType, UnsignedIntType, UnsignedInt248Type, FloatType, HalfFloatType, ClampToEdgeWrapping, NearestMipMapLinearFilter, NearestMipMapNearestFilter
 from ...math import _Math
 
 import OpenGLState as state
 import OpenGLProperties as properties
 import OpenGLCapabilities as capabilities
+import OpenGLUtils as utils
 
 # TODO _isWebGL2
 
 def isPowerOfTwo( image ):
 
     return _Math.isPowerOfTwo( image.get_width() ) and _Math.isPowerOfTwo( image.get_height() )
+
+def textureNeedsGenerateMipmaps( texture, isPowerOfTwo ):
+
+    return texture.generateMipmaps and isPowerOfTwo and \
+        texture.minFilter != NearestFilter and texture.minFilter != LinearFilter
 
 # Fallback filters for non-power-of-2 textures
 
@@ -119,9 +127,10 @@ def uploadTexture( textureProperties, texture, slot ):
 
     # glPixelStorei( GL_UNPACK_FLIP_Y_WEBGL, texture.flipY )
     # glPixelStorei( GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultiplyAlpha )
-    glPixelStorei( GL_UNPACK_ALIGNMENT, texture.unpackAlignment )
+    # glPixelStorei( GL_UNPACK_ALIGNMENT, texture.unpackAlignment )
 
     # image = clampToMaxSize( texture.image, capabilities.maxTextureSize )
+    image = texture.image
 
     # if textureNeedsPowerOfTwo( texture ) and isPowerOfTwo( image ) == False:
 
@@ -158,7 +167,7 @@ def uploadTexture( textureProperties, texture, slot ):
         # if there are no manual mipmaps
         # set 0 level mipmap and then use GL to generate other mipmap levels
 
-        if mimaps.length > 0 and isPowerOfTwoImage:
+        if len( mipmaps ) and isPowerOfTwoImage:
 
             for i in range( len( mipmaps ) ):
 
@@ -169,9 +178,9 @@ def uploadTexture( textureProperties, texture, slot ):
         
         else:
 
-            state.texImage2D( GL_TEXTURE_2D, 0, glFormat, glFormat, glType, image._pixels_address )
+            state.texImage2D( GL_TEXTURE_2D, 0, glFormat, image.get_width(), image.get_height(), 0, glFormat, glType, c_void_p( image._pixels_address ) )
 
-    # TODO textureNeedsGenerateMipmaps
+    if ( textureNeedsGenerateMipmaps( texture, isPowerOfTwoImage ) ): glGenerateMipmap( GL_TEXTURE_2D )
 
     textureProperties.__version = texture.version
 

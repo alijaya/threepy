@@ -107,16 +107,6 @@ class DepthBuffer( object ):
 
 def initAttributes():
 
-    if newAttributes is None:
-
-        global maxVertexAttributes
-        global newAttributes
-        global enabledAttributes
-
-        maxVertexAttributes = glGetIntegerv( GL_MAX_VERTEX_ATTRIBS )
-        newAttributes = np.zeros( maxVertexAttributes )
-        enabledAttributes = np.zeros( maxVertexAttributes )
-
     newAttributes.fill( 0 )
 
 def enableAttribute( attribute ):
@@ -144,14 +134,14 @@ def disableUnusedAttributes():
 
 def enable( id ):
 
-    if capabilities.get( id, False ):
+    if not capabilities.get( id, False ):
 
         glEnable( id )
         capabilities[ id ] = True
 
 def disable( id ):
 
-    if not capabilities.get( id, False ):
+    if capabilities.get( id, True ):
 
         glDisable( id )
         capabilities[ id ] = False
@@ -183,6 +173,55 @@ def scissor( scissor ):
 
         glScissor( scissor.x, scissor.y, scissor.z, scissor.w )
         currentScissor.copy( scissor )
+
+# texture
+
+def createTexture( type, target, count ):
+
+    data = np.zeros( 4, np.uint8 )
+    texture = glGenTextures( 1 )
+
+    glBindTexture( type, texture )
+    # glTexParameteri( type, GL_TEXTURE_MIN_FILTER, GL_NEAREST )
+    # glTexParamateri( type, GL_TEXTURE_MAX_FILTER, GL_NEAREST )
+
+    for i in range( count ):
+
+        glTexImage2D( target + i, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data )
+    
+    return texture
+
+def activeTexture( openglSlot = None ):
+
+    global currentTextureSlot
+
+    if openglSlot is None:
+
+        maxTextures = glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS )
+        openglSlot = GL_TEXTURE0 + maxTextures - 1
+
+    if currentTextureSlot != openglSlot:
+
+        glActiveTexture( openglSlot )
+        currentTextureSlot = openglSlot
+
+def bindTexture( openglType, openglTexture ):
+
+    if currentTextureSlot is None: activeTexture()
+
+    boundTexture = currentBoundTextures.get( currentTextureSlot )
+
+    if not boundTexture:
+
+        boundTexture = Expando( type = None, texture = None )
+        currentBoundTextures[ currentTextureSlot ] = boundTexture
+
+    if boundTexture.type != openglType or boundTexture.texture != openglTexture:
+
+        glBindTexture( openglType, openglTexture or emptyTextures[ openglType ] )
+
+        boundTexture.type = openglType
+        boundTexture.texture = openglTexture
 
 def texImage2D( *args ):
 
@@ -226,10 +265,6 @@ buffers = Expando(
     depth = depthBuffer
 )
 
-maxVertexAttributes = None
-newAttributes = None
-enabledAttributes = None
-
 capabilities = {}
 
 currentViewport = Vector4()
@@ -237,3 +272,24 @@ currentScissor = Vector4()
 currentScissorTest = None
 
 currentProgram = None
+
+currentTextureSlot = None
+currentBoundTextures = {}
+
+def init():
+
+    global emptyTextures, maxVertexAttributes, newAttributes, enabledAttributes
+
+    colorBuffer.setClear( 0, 0, 0, 1 )
+    depthBuffer.setClear( 1 )
+
+    enable( GL_DEPTH_TEST )
+    depthBuffer.setFunc( LessEqualDepth )
+
+    emptyTextures = {}
+    emptyTextures[ GL_TEXTURE_2D ] = createTexture( GL_TEXTURE_2D, GL_TEXTURE_2D, 1 )
+    emptyTextures[ GL_TEXTURE_CUBE_MAP ] = createTexture( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, 6 )
+
+    maxVertexAttributes = glGetIntegerv( GL_MAX_VERTEX_ATTRIBS )
+    newAttributes = np.zeros( maxVertexAttributes )
+    enabledAttributes = np.zeros( maxVertexAttributes )

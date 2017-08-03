@@ -32,3 +32,9 @@ if maxPrecision != precision:
 
     logging.warning( "THREE.WebGLRenderer: %s not supported, using %s instead.", precision, maxPrecision)
     precision = maxPrecision
+
+def init():
+
+    global maxTextures
+
+    maxTextures = glGetInteger( GL_MAX_TEXTURE_IMAGE_UNITS )

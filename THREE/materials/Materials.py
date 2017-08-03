@@ -1,3 +1,4 @@
 from meshBasicMaterial import MeshBasicMaterial
+from meshNormalMaterial import MeshNormalMaterial
 
 from material import Material

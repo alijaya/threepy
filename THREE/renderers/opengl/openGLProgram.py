@@ -94,9 +94,9 @@ def fetchAttributeLocations( program ):
 
         glGetActiveAttrib( program, i, bufSize, length, size, type, name )
         info = Expando( name = name.value, size = size.value, type = type.value )
-        name = info.name
+        nm = info.name
 
-        attributes[ name ] = glGetAttribLocation( program, name )
+        attributes[ nm ] = glGetAttribLocation( program, nm )
 
     return attributes
 

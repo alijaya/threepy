@@ -105,9 +105,9 @@ class SingleUniform( object ):
 
         from .. import OpenGLRenderer as renderer
 
-        unit = renderer.allocTexUnits( n )
+        unit = renderer.allocTextureUnit()
 
-        glUniform1i( self.addr, 1, unit )
+        glUniform1i( self.addr, unit )
 
         renderer.setTexture2D( v or emptyTexture, unit )
 
@@ -115,9 +115,9 @@ class SingleUniform( object ):
 
     #     from .. import OpenGLRenderer as renderer
 
-    #     unit = renderer.allocTexUnits( n )
+    #     unit = renderer.allocTextureUnit()
 
-    #     glUniform1i( self.addr, 1, unit )
+    #     glUniform1i( self.addr, unit )
 
     #     renderer.setTextureCube( v or emptyCubeTexture, unit )
 
@@ -134,7 +134,7 @@ class SingleUniform( object ):
         elif type == 0x8b5b: return self.setValue3fm # _MAT3
         elif type == 0x8b5c: return self.setValue4fm # _MAT4
 
-        # elif type == 0x8b5e or 0x8d66: return setValueT1 # SAMPLER_2D, SAMPLER_EXTERNAL_OES
+        elif type == 0x8b5e or 0x8d66: return self.setValueT1 # SAMPLER_2D, SAMPLER_EXTERNAL_OES
         # elif type == 0x8b60: return setValueT6 # SAMPLER_CUBE
 
         elif type == 0x1404 or type == 0x8b56: return self.setValue1i # INT, BOOL
@@ -248,7 +248,7 @@ class PureArrayUniform( object ):
         elif type == 0x8b5b: return self.setValueM3a # _MAT3
         elif type == 0x8b5c: return self.setValueM4a # _MAT4
 
-        # elif type == 0x8b5e: return setValueT1a # SAMPLER_2D
+        elif type == 0x8b5e: return self.setValueT1a # SAMPLER_2D
         # elif type == 0x8b60: return setValueT6a # SAMPLER_CUBE
 
         elif type == 0x1404 or type == 0x8b56: return self.setValue1iv # INT, BOOL

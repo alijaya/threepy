@@ -17,7 +17,8 @@ pygame.display.set_mode( (width, height), DOUBLEBUF|OPENGL )
 
 diffuse = ( 1.0, 1.0, 1.0 )
 
-map = pygame.image.load( "crate.gif" ).convert()
+image = pygame.image.load( "crate.gif" ).convert( (0xff, 0xff00, 0xff0000, 0xff000000) )
+print(image.get_masks())
 
 vertices = np.array( [
     -0.5, -0.5,
@@ -68,7 +69,7 @@ glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE )
 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE )
 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR )
 glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR )
-glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, map.get_width(), map.get_height(), 0, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8, c_void_p( map._pixels_address ) )
+glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, image.get_width(), image.get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, c_void_p( image._pixels_address ) )
 
 vertexSource = """
 attribute vec2 position;
@@ -88,6 +89,9 @@ void main() {
     gl_FragColor = texture2D( map, vUv );
 }
 """
+
+glEnable( GL_BLEND )
+glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA )
 
 vertexShader = glCreateShader( GL_VERTEX_SHADER )
 glShaderSource( vertexShader, vertexSource )
@@ -134,7 +138,7 @@ glBindBuffer( GL_ARRAY_BUFFER, vbuv )
 glVertexAttribPointer( uvAttrib, 2, GL_FLOAT, GL_FALSE, 0, None )
 glEnableVertexAttribArray( uvAttrib )
 
-glClearColor( 0.0, 0.0, 0.0, 0.0 )
+glClearColor( 1.0, 1.0, 0.0, 1.0 )
 glClear( GL_COLOR_BUFFER_BIT )
 
 glDrawElements( GL_TRIANGLES, indices.size, GL_UNSIGNED_INT, None )

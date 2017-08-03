@@ -6,6 +6,8 @@ import numpy as np
 
 from ctypes import c_void_p
 
+import logging
+
 from ..constants import REVISION, RGBAFormat, HalfFloatType, FloatType, ByteType, UnsignedByteType, FrontFaceDirectionCW, TriangleFanDrawMode, TriangleStripDrawMode, TrianglesDrawMode, NoColors, NoToneMapping, LinearToneMapping
 from ..objects.mesh import Mesh
 from ..math.frustum import Frustum
@@ -17,12 +19,14 @@ from ..utils import Expando
 from opengl import OpenGLObjects as objects
 from opengl import OpenGLState as state
 from opengl import OpenGLProperties as properties
+from opengl import OpenGLCapabilities as capabilities
 from opengl import OpenGLRenderLists as renderLists
 from opengl import OpenGLBackground as background
 from opengl import OpenGLPrograms as programCache
 from opengl import OpenGLIndexedBufferRenderer as indexedBufferRenderer
 from opengl import OpenGLBufferRenderer as bufferRenderer
 from opengl import OpenGLAttributes as attributes
+from opengl import OpenGLTextures as textures
 
 from opengl.openGLUniforms import OpenGLUniforms
 
@@ -116,6 +120,21 @@ gammaOutput = False
 toneMapping = LinearToneMapping
 toneMappingExposure = 1.0
 toneMappingWhitePoint = 1.0
+
+# init, need to be called after OpenGL Context created
+
+inited = False
+
+def init():
+
+    global inited
+
+    if inited: return
+
+    inited = True
+
+    capabilities.init()
+    state.init()
 
 # API
 
@@ -495,6 +514,10 @@ def refreshUniformsCommon( uniforms, material ):
 
 def setProgram( camera, fog, material, object ):
 
+    global _usedTextureUnits
+
+    _usedTextureUnits = 0
+
     materialProperties = properties.get( material )
 
     # TODO clipping
@@ -795,6 +818,11 @@ def renderObjects( renderList, scene, camera, overrideMaterial = None ):
         renderObject( object, scene, camera, geometry, material, group )
 
 def render( scene, camera, renderTarget = None, forceClear = True ):
+
+    if not inited:
+
+        logging.warning( "THREE.OpenGLRenderer: Please call init() first." )
+        quit()
 
     global _currentGeometryProgram, _currentMaterialId, _currentCamera
     global _projScreenMatrix, _frustum, currentRenderList

@@ -71,12 +71,12 @@ class Texture( object ):
         self.onUpdate = None
 
     @property
-    def needsUpdate():
+    def needsUpdate( self ):
 
         return None
 
     @needsUpdate.setter
-    def needsUpdate( value ):
+    def needsUpdate( self, value ):
 
         if value == True: self.version += 1
 
