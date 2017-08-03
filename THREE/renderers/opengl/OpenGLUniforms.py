@@ -1,5 +1,3 @@
-from ...utils import Expando
-
 from OpenGL.GL import *
 
 import re
@@ -8,6 +6,12 @@ import numbers
 import numpy as np
 
 import logging
+
+from ...textures import texture
+from ...utils import Expando
+
+emptyTexture = texture.Texture()
+# emptyCubeTexture = CubeTexture()
 
 class UniformContainer( object ):
 
@@ -97,19 +101,23 @@ class SingleUniform( object ):
 
     # Single texture (2D / Cube)
 
-    # def setValueT1( self, v ):
+    def setValueT1( self, v ):
 
-    #     unit = renderer.allocTexUnits( n )
+        from .. import OpenGLRenderer as renderer
 
-    #     glUniform1i( self.addr, unit )
+        unit = renderer.allocTexUnits( n )
 
-    #     renderer.setTexture2D( v or emptyTexture, unit )
+        glUniform1i( self.addr, 1, unit )
+
+        renderer.setTexture2D( v or emptyTexture, unit )
 
     # def setValueT6( self, v ):
 
+    #     from .. import OpenGLRenderer as renderer
+
     #     unit = renderer.allocTexUnits( n )
 
-    #     glUniform1i( self.addr, unit )
+    #     glUniform1i( self.addr, 1, unit )
 
     #     renderer.setTextureCube( v or emptyCubeTexture, unit )
 
@@ -191,23 +199,37 @@ class PureArrayUniform( object ):
 
     # Array of textures (2D / Cube)
 
-    # def setValueT1a( self, v ):
+    def allocTexUnits( self, n ):
 
-    #     n = v.length
-    #     units = allocTexUnits( n )
+        from .. import OpenGLRenderer as renderer
 
-    #     glUniform1iv( self.addr, units )
+        r = np.zeros( n, np.int32 )
 
-    #     for i in range( n ):
+        for i in range( n ):
 
-    #         renderer.setTexture2D( v[ i ] or emptyTexture, units[ i ] )
+            r[ i ] = renderer.allocTextureUnit()
+
+    def setValueT1a( self, v ):
+
+        from .. import OpenGLRenderer as renderer
+
+        n = v.length
+        units = allocTexUnits( n )
+
+        glUniform1iv( self.addr, units.size, units )
+
+        for i in range( n ):
+
+            renderer.setTexture2D( v[ i ] or emptyTexture, units[ i ] )
 
     # def setValueT6a( self, v ):
 
+    #     from .. import OpenGLRenderer as renderer
+
     #     n = v.length
     #     units = allocTexUnits( n )
 
-    #     glUniform1iv( self.addr, units )
+    #     glUniform1iv( self.addr. units.size, units )
 
     #     for i in range( n ):
 

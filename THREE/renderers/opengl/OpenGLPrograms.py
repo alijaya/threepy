@@ -84,7 +84,7 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
         precision = precision,
         # supportsVertexTextures = capabilities.vertexTextures,
         outputEncoding = getTextureEncodingFromMap( None if not currentRenderTarget else currentRenderTarget.texture, renderer.gammaOutput ),
-        # map = bool( material.map ),
+        map = bool( material.map ),
         mapEncoding = getTextureEncodingFromMap( material.map, renderer.gammaInput ),
         # envMap = bool( material.envMap ),
         # envMapMode = material.envMap and material.envMap.mapping,

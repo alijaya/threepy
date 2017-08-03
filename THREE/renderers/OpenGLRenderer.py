@@ -20,6 +20,7 @@ from opengl import OpenGLProperties as properties
 from opengl import OpenGLRenderLists as renderLists
 from opengl import OpenGLBackground as background
 from opengl import OpenGLPrograms as programCache
+from opengl import OpenGLIndexedBufferRenderer as indexedBufferRenderer
 from opengl import OpenGLBufferRenderer as bufferRenderer
 from opengl import OpenGLAttributes as attributes
 
@@ -40,6 +41,10 @@ _currentCamera = None
 _currentViewport = Vector4()
 _currentScissor = Vector4()
 _currentScissorTest = None
+
+#
+
+_usedTextureUnits = 0
 
 #
 
@@ -255,6 +260,32 @@ def setRenderTarget( renderTarget ):
 
     # TODO isCube
 
+# Textures
+
+def allocTextureUnit():
+
+    global _usedTextureUnits
+
+    textureUnit = _usedTextureUnits
+
+    if textureUnit >= capabilities.maxTextures:
+
+        logging.warning( "THREE.OpenGLRenderer: Trying to use %s texture units while this GPU supports only %s" % ( textureUnit, capabilities.maxTextures ) )
+
+    _usedTextureUnits += 1
+
+    return textureUnit
+
+def setTexture2D( texture, slot ):
+
+    if texture and hasattr( texture, "isOpenGLRenderTarget" ):
+
+        logging.warning( "THREE.WebGLRenderer.setTexture2D: don't use render targets as textures. Use their .texture property instead." )
+        
+        texture = texture.texture
+    
+    textures.setTexture2D( texture, slot )
+
 def projectObject( object, camera, sortObjects ):
 
     # if not visible, nothing to render
@@ -414,9 +445,9 @@ def refreshUniformsCommon( uniforms, material ):
         uniforms.envMap.value = material.envMap
 
         # don't flip CubeTexture envMaps, flip everything else:
-        # WebGLRenderTargetCube will be flipped for backwards compatibility
-        # WebGLRenderTargetCube.texture will be flipped because it's a Texture and NOT a CubeTexture
-        # this check must be handled differently, or removed entirely, if WebGLRenderTargetCube uses a CubeTexture in the future
+        # OpenGLRenderTargetCube will be flipped for backwards compatibility
+        # OpenGLRenderTargetCube.texture will be flipped because it's a Texture and NOT a CubeTexture
+        # this check must be handled differently, or removed entirely, if OpenGLRenderTargetCube uses a CubeTexture in the future
         uniforms.flipEnvMap.value = 1 if not ( material.envMap and hasattr( material.envMap, "isCubeTexture" ) ) else - 1
 
         uniforms.reflectivity.value = material.reflectivity

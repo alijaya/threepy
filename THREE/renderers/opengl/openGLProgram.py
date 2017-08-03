@@ -203,7 +203,13 @@ class OpenGLProgram( object ):
                 
                 # customDefines
 
+                # opt( "#define VERTEX_TEXTURES", parameters.supportsVertexTextures ),
+
                 "#define GAMMA_FACTOR %s" % gammaFactorDefine,
+
+                # "#define MAX_BONES %s" % parametes.maxBones,
+                opt( "#define USE_FOG", parameters.useFog and parameters.fog ),
+                opt( "#define FOG_EXP2", parameters.useFog and parameters.fogExp ),
 
                 opt( "#define USE_MAP", parameters.map ),
 
@@ -281,6 +287,8 @@ class OpenGLProgram( object ):
                 "#define SHADER_NAME %s" % shader.name,
 
                 # customDefines
+
+                opt( "#define ALPHATEST %s" % parameters.alphaTest, parameters.alphaTest ),
 
                 "#define GAMMA_FACTOR %s" % gammaFactorDefine,
 

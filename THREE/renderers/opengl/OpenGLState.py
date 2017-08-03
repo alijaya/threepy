@@ -184,6 +184,10 @@ def scissor( scissor ):
         glScissor( scissor.x, scissor.y, scissor.z, scissor.w )
         currentScissor.copy( scissor )
 
+def texImage2D( *args ):
+
+    glTexImage2D( *args )
+
 def setMaterial( material ):
 
     if material.side == DoubleSide: disable( GL_CULL_FACE )

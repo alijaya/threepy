@@ -14,7 +14,7 @@ scene = None
 
 mesh = None
 
-width, height = 1920, 1080
+width, height = 800, 600
 
 def toAbs( rel ):
 
@@ -46,10 +46,20 @@ def animate():
 
     while True:
 
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+
+                pygame.quit()
+                quit()
+
         mesh.rotation.x += 0.005
         mesh.rotation.y += 0.01
 
         renderer.render( scene, camera )
+
+        pygame.display.flip()
+        pygame.time.wait( 10 )
 
 if __name__ == "__main__":
 

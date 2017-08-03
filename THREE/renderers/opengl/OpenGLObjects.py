@@ -1,19 +1,27 @@
 import OpenGLGeometries as geometries
 
+updateList = {}
+
 # update to opengl
 def update( object ):
+
+    from ..OpenGLRenderer import _infoRender as infoRender
+
+    frame = infoRender.frame
 
     geometry = object.geometry
     buffergeometry = geometries.get( object, geometry )
 
-    # TODO update once per frame
+    # update once per frame
 
-    if True:
+    if updateList.get( buffergeometry.id ) != frame:
 
         if hasattr( geometry, "isGeometry" ):
 
             buffergeometry.updateFromObject( object )
         
         geometries.update( buffergeometry )
+
+        updateList[ buffergeometry.id ] = frame
     
     return buffergeometry
