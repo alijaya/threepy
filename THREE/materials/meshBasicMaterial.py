@@ -38,7 +38,7 @@ from ..math import color
 
 class MeshBasicMaterial( material.Material ):
 
-    def __init__( self, parameters = None ):
+    def __init__( self, **parameters ):
 
         super( MeshBasicMaterial, self ).__init__()
         
@@ -75,7 +75,7 @@ class MeshBasicMaterial( material.Material ):
 
         self.lights = False
 
-        self.setValues( parameters )
+        self.setValues( **parameters )
 
     def copy ( self, source ):
 

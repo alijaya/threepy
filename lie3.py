@@ -25,7 +25,7 @@ scene = THREE.Scene()
 camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )
 
 geometry = THREE.BoxGeometry( 1, 1, 1 )
-material = THREE.MeshBasicMaterial( Expando( map = texture ) )
+material = THREE.MeshBasicMaterial( map = texture )
 cube = THREE.Mesh( geometry, material )
 scene.add( cube )
 

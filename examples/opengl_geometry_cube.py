@@ -39,7 +39,7 @@ def init():
     # print(texture.image)
 
     geometry = THREE.BoxBufferGeometry( 200, 200, 200 )
-    material = THREE.MeshBasicMaterial( Expando( map = texture ) )
+    material = THREE.MeshBasicMaterial( map = texture )
 
     mesh = THREE.Mesh( geometry, material )
     scene.add( mesh )

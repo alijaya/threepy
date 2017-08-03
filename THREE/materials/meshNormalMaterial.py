@@ -28,7 +28,7 @@ from ..math import vector2
 
 class MeshNormalMaterial( material.Material ):
 
-    def __init__( self, parameters = None ):
+    def __init__( self, **parameters ):
 
         super( MeshNormalMaterial, self ).__init__()
 
@@ -56,7 +56,7 @@ class MeshNormalMaterial( material.Material ):
         self.morphTargets = False
         self.morphNormals = False
 
-        self.setValues( parameters )
+        self.setValues( **parameters )
 
     def copy( self, source ):
 

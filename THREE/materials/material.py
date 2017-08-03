@@ -80,7 +80,7 @@ class Material( Expando ):
 
         self.onBeforeCompile = lambda: None
 
-    def setValues( self, values ):
+    def setValues( self, **values ):
 
         if values is None : return
 
