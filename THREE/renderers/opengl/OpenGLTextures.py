@@ -169,7 +169,7 @@ def uploadTexture( textureProperties, texture, slot ):
 
         if len( mipmaps ) and isPowerOfTwoImage:
 
-            for i in range( len( mipmaps ) ):
+            for i in xrange( len( mipmaps ) ):
 
                 mipmap = mipmaps[ i ]
                 state.texImage2D( GL_TEXTURE_2D, i, glFormat, glFormat, glType, mipmap )

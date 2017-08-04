@@ -27,7 +27,7 @@ class TestFrustum( unittest.TestCase ):
         self.assertEqual( len( a.planes ), 6 ) # Passednot
 
         pDefault = THREE.Plane()
-        for i in range( 6 ):
+        for i in xrange( 6 ):
             self.assertTrue( a.planes[i].equals( pDefault ) ) # Passednot
 
         p0 = THREE.Plane( unit3, -1 )

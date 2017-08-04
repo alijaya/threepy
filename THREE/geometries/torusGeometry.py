@@ -73,9 +73,9 @@ class TorusBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate vertices, normals and uvs
 
-        for j in range( radialSegments + 1 ):
+        for j in xrange( radialSegments + 1 ):
 
-            for i in range( tubularSegments + 1 ):
+            for i in xrange( tubularSegments + 1 ):
 
                 u = i / tubularSegments * arc
                 v = j / radialSegments * math.pi * 2
@@ -103,9 +103,9 @@ class TorusBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate indices
 
-        for j in range( 1, radialSegments + 1 ):
+        for j in xrange( 1, radialSegments + 1 ):
 
-            for i in range( 1, tubularSegments + 1 ):
+            for i in xrange( 1, tubularSegments + 1 ):
 
                 # indices
 

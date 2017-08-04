@@ -96,7 +96,7 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate vertices, normals and uvs
 
-        for i in range( tubularSegments + 1 ):
+        for i in xrange( tubularSegments + 1 ):
 
             # the radian "u" is used to calculate the position on the torus curve of the current tubular segement
 
@@ -120,7 +120,7 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
             B.normalize()
             N.normalize()
 
-            for j in range( radialSegments + 1 ):
+            for j in xrange( radialSegments + 1 ):
 
                 # now calculate the vertices. they are nothing more than an extrusion of the torus curve.
                 # because we extrude a shape in the xy-plane, there is no need to calculate a z-value.
@@ -150,9 +150,9 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
                 uvs.append( j / radialSegments )
 
         # generate indices
-        for j in range( 1, tubularSegments + 1 ):
+        for j in xrange( 1, tubularSegments + 1 ):
 
-            for i in range( 1, radialSegments + 1 ):
+            for i in xrange( 1, radialSegments + 1 ):
 
                 # indices
 

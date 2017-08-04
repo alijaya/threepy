@@ -500,7 +500,7 @@ class Matrix4( object ):
 
         v1 = vector3.Vector3()
 
-        for i in range( attribute.count ):
+        for i in xrange( attribute.count ):
 
             v1.x = attribute.getX( i )
             v1.y = attribute.getY( i )
@@ -961,7 +961,7 @@ class Matrix4( object ):
         te = self.elements
         me = matrix.elements
 
-        for i in range( 16 ):
+        for i in xrange( 16 ):
 
             if te[ i ] != me[ i ]: return False
 
@@ -969,7 +969,7 @@ class Matrix4( object ):
     
     def fromArray( self, array, offset = 0 ):
 
-        for i in range( 16 ):
+        for i in xrange( 16 ):
 
             self.elements[ i ] = array[ i + offset ]
 

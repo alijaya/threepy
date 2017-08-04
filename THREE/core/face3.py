@@ -37,11 +37,11 @@ class Face3( object ):
 
         self.materialIndex = source.materialIndex
 
-        for i in range( len( source.vertexNormals ) ):
+        for i in xrange( len( source.vertexNormals ) ):
 
             self.vertexNormals[ i ] = source.vertexNormals[ i ].clone()
 
-        for i in range( len( source.vertexColors ) ):
+        for i in xrange( len( source.vertexColors ) ):
 
             self.vertexColors[ i ] = source.vertexColors[ i ].clone()
 

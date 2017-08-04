@@ -31,7 +31,7 @@ class WebGLMorphtargets( object ):
 
             influences = []
 
-            for i in range( length ) :
+            for i in xrange( length ) :
 
                 influences[ i ] = [ i, 0 ]
 
@@ -42,7 +42,7 @@ class WebGLMorphtargets( object ):
 
         # Remove current morphAttributes
 
-        for i in range( length ) :
+        for i in xrange( length ) :
 
             influence = influences[ i ]
 
@@ -53,7 +53,7 @@ class WebGLMorphtargets( object ):
 
         # Collect influences
 
-        for i in range( length ) :
+        for i in xrange( length ) :
 
             influence = influences[ i ]
 
@@ -64,7 +64,7 @@ class WebGLMorphtargets( object ):
 
         # Add morphAttributes
 
-        for i in range( 8 ) :
+        for i in xrange( 8 ) :
 
             influence = influences[ i ]
 

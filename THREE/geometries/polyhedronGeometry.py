@@ -70,7 +70,7 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # iterate over all faces and apply a subdivison with the given detail value
 
-            for i in range( 0, len( indices ), 3 ):
+            for i in xrange( 0, len( indices ), 3 ):
 
                 # get the vertices of the face
 
@@ -92,7 +92,7 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # construct all of the vertices for self subdivision
 
-            for i in range( cols + 1 ):
+            for i in xrange( cols + 1 ):
 
                 v.append( [] )
 
@@ -101,7 +101,7 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
                 rows = cols - i
 
-                for j in range( rows + 1 ):
+                for j in xrange( rows + 1 ):
 
                     if j == 0 and i == cols :
 
@@ -113,9 +113,9 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # construct all of the faces
 
-            for i in range( cols ):
+            for i in xrange( cols ):
 
-                for j in range( 2 * ( cols - i ) - 1 ):
+                for j in xrange( 2 * ( cols - i ) - 1 ):
 
                     k = j // 2 
 
@@ -137,7 +137,7 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # iterate over the entire buffer and apply the radius to each vertex
 
-            for i in range( 0, len( vertexBuffer ), 3 ):
+            for i in xrange( 0, len( vertexBuffer ), 3 ):
 
                 vertex.x = vertexBuffer[ i + 0 ]
                 vertex.y = vertexBuffer[ i + 1 ]
@@ -153,7 +153,7 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
             vertex = vector3.Vector3()
 
-            for i in range( 0, len( vertexBuffer ), 3 ):
+            for i in xrange( 0, len( vertexBuffer ), 3 ):
 
                 vertex.x = vertexBuffer[ i + 0 ]
                 vertex.y = vertexBuffer[ i + 1 ]
@@ -171,7 +171,7 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # handle case when face straddles the seam, see #3269
 
-            for i in range( 0, len( uvBuffer ), 6 ):
+            for i in xrange( 0, len( uvBuffer ), 6 ):
 
                 # uv data of a single face
 

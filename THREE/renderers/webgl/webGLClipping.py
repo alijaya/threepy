@@ -80,7 +80,7 @@ class WebGLClipping( object ):
 
             dstArray = projectPlanes( planes, camera, lGlobal, fromCache )
 
-            for i in range( lGlobal ):
+            for i in xrange( lGlobal ):
 
                 dstArray[ i ] = self.globalState[ i ]
 

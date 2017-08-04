@@ -34,7 +34,7 @@ class Box3( object ):
         maxY = - float( "inf" )
         maxZ = - float( "inf" )
 
-        for i in range( 0, len( array ), 3 ):
+        for i in xrange( 0, len( array ), 3 ):
 
             x = array[ i ]
             y = array[ i + 1 ]
@@ -63,7 +63,7 @@ class Box3( object ):
         maxY = - float( "inf" )
         maxZ = - float( "inf" )
 
-        for i in range( attribute.count ):
+        for i in xrange( attribute.count ):
 
             x = attribute.getX( i )
             y = attribute.getY( i )
@@ -86,7 +86,7 @@ class Box3( object ):
 
         self.makeEmpty()
 
-        for i in range( len( points ) ):
+        for i in xrange( len( points ) ):
 
             self.expandByPoint( points[ i ] )
 
@@ -185,7 +185,7 @@ class Box3( object ):
 
                     vertices = geometry.vertices
 
-                    for i in range( len( vertices ) ):
+                    for i in xrange( len( vertices ) ):
 
                         v1.copy( vertices[ i ] )
                         v1.applyMatrix4( node.matrixWorld )
@@ -198,7 +198,7 @@ class Box3( object ):
 
                     if attribute is not None:
 
-                        for i in range( attribute.count ):
+                        for i in xrange( attribute.count ):
 
                             v1.fromBufferAttribute( attribute, i ).applyMatrix4( node.matrixWorld )
 

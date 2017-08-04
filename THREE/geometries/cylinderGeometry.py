@@ -102,7 +102,7 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # generate vertices, normals and uvs
 
-            for y in range( heightSegments + 1 ):
+            for y in xrange( heightSegments + 1 ):
 
                 indexRow = []
 
@@ -112,7 +112,7 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
 
                 radius = v * ( radiusBottom - radiusTop ) + radiusTop
 
-                for x in range( radialSegments + 1 ):
+                for x in xrange( radialSegments + 1 ):
 
                     u = x / radialSegments
 
@@ -148,9 +148,9 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # generate indices
 
-            for x in range( radialSegments ):
+            for x in xrange( radialSegments ):
 
-                for y in range( heightSegments ):
+                for y in xrange( heightSegments ):
 
                     # we use the index array to access the correct indices
 
@@ -200,7 +200,7 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
             # because the geometry needs one set of uvs per face,
             # we must generate a center vertex per face/segment
 
-            for x in range( 1, radialSegments + 1 ):
+            for x in xrange( 1, radialSegments + 1 ):
 
                 # vertex
 
@@ -224,7 +224,7 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # now we generate the surrounding vertices, normals and uvs
 
-            for x in range( radialSegments + 1 ):
+            for x in xrange( radialSegments + 1 ):
 
                 u = x / radialSegments
                 theta = u * thetaLength + thetaStart
@@ -255,7 +255,7 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # generate indices
 
-            for x in range( radialSegments ):
+            for x in xrange( radialSegments ):
 
                 c = centerIndexStart + x
                 i = centerIndexEnd + x

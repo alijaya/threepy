@@ -12,7 +12,7 @@ def generateUUID():
     rnd = 0
     r = None
 
-    for i in range( 36 ):
+    for i in xrange( 36 ):
 
         if i == 8 or i == 13 or i == 18 or i == 23:
 

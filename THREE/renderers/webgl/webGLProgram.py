@@ -97,7 +97,7 @@ def fetchAttributeLocations( self, program, identifiers ):
     attributes = {}
     n = GL.glGetProgramParameter( program, GL.GL_ACTIVE_ATTRIBUTES )
 
-    for i in range( n ):
+    for i in xrange( n ):
 
         info = GL.glGetActiveAttrib( program, i )
         name = info.name
@@ -152,7 +152,7 @@ def unrollLoops( string ):
 
         unroll = ""
 
-        for i in range( int( start ), int( end ) ) :
+        for i in xrange( int( start ), int( end ) ) :
 
             unroll += re.sub( "\[ i \]", "[ %s ]" % i, snippet )
 

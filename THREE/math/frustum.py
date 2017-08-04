@@ -46,7 +46,7 @@ class Frustum( object ):
 
         planes = self.planes
 
-        for i in range( 6 ):
+        for i in xrange( 6 ):
 
             planes[ i ].copy( frustum.planes[ i ] )
 
@@ -115,7 +115,7 @@ class Frustum( object ):
         center = sphere.center
         negRadius = - sphere.radius
 
-        for i in range( 6 ):
+        for i in xrange( 6 ):
 
             distance = planes[ i ].distanceToPoint( center )
 
@@ -156,7 +156,7 @@ class Frustum( object ):
 
         planes = self.planes
 
-        for i in range( 6 ):
+        for i in xrange( 6 ):
 
             if planes[ i ].distanceToPoint( point ) < 0:
 

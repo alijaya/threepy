@@ -100,7 +100,7 @@ class WebGLState( object ):
         GL.glTexParameteri( type, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST )
         GL.glTexParameteri( type, GL.GL_TEXTURE_MAG_FILTER, GL.GL_NEAREST )
 
-        for i in range( count ):
+        for i in xrange( count ):
 
             GL.glTexImage2D( target + i, 0, GL.GL_RGBA, 1, 1, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data )
 
@@ -108,7 +108,7 @@ class WebGLState( object ):
 
     def initAttributes( self ):
 
-        for i in range( len( self.newAttributes ) ) :
+        for i in xrange( len( self.newAttributes ) ) :
 
             self.newAttributes[ i ] = 0
 
@@ -146,7 +146,7 @@ class WebGLState( object ):
 
     def disableUnusedAttributes( self ):
 
-        for i in range( len( self.enabledAttributes ) ) :
+        for i in xrange( len( self.enabledAttributes ) ) :
 
             if self.enabledAttributes[ i ] != self.newAttributes[ i ] :
 
@@ -472,7 +472,7 @@ class WebGLState( object ):
 
     def reset( self ):
 
-        for i in range( len( self.enabledAttributes ) ) :
+        for i in xrange( len( self.enabledAttributes ) ) :
 
             if self.enabledAttributes[ i ] == 1 :
 

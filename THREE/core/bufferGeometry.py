@@ -458,7 +458,7 @@ class BufferGeometry( object ):
 
             maxRadiusSq = 0
 
-            for i in range( position.count ):
+            for i in xrange( position.count ):
 
                 vector.x = position.getX( i )
                 vector.y = position.getY( i )
@@ -497,7 +497,7 @@ class BufferGeometry( object ):
 
                 arr = attributes[ "normal" ].array
 
-                for i in range( len( arr ) ):
+                for i in xrange( len( arr ) ):
 
                     arr[ i ] = 0
 
@@ -524,7 +524,7 @@ class BufferGeometry( object ):
                     start = group.start
                     count = group.count
 
-                    for i in range( start, start + count, 3 ):
+                    for i in xrange( start, start + count, 3 ):
 
                         vA = indices[ i + 0 ] * 3
                         vB = indices[ i + 1 ] * 3
@@ -554,7 +554,7 @@ class BufferGeometry( object ):
 
                 # non-indexed elements (unconnected triangle soup)
 
-                for i in range( 0, len( positions ), 9 ):
+                for i in xrange( 0, len( positions ), 9 ):
 
                     pA.fromArray( positions, i )
                     pB.fromArray( positions, i + 3 )
@@ -618,7 +618,7 @@ class BufferGeometry( object ):
 
         normals = self.attributes[ "normal" ]
 
-        for i in range( normals.count ):
+        for i in xrange( normals.count ):
 
             vector.x = normals.getX( i )
             vector.y = normals.getY( i )
@@ -652,11 +652,11 @@ class BufferGeometry( object ):
             index = 0
             index2 = 0
 
-            for i in range( len( indices ) ):
+            for i in xrange( len( indices ) ):
 
                 index = indices[ i ] * itemSize
 
-                for j in range( itemSize ):
+                for j in xrange( itemSize ):
 
                     array2[ index2 ] = array[ index ]
                     index += 1

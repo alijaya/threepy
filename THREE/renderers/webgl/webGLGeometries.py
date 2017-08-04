@@ -125,7 +125,7 @@ class WebGLGeometries( object ):
 
             array = geometryIndex.array
 
-            for i in range( 0, len( array ), 3 ) :
+            for i in xrange( 0, len( array ), 3 ) :
 
                 a = array[ i + 0 ]
                 b = array[ i + 1 ]
@@ -137,7 +137,7 @@ class WebGLGeometries( object ):
 
             array = geometryAttributes.position.array
 
-            for i in range( 0, ( len( array ) // 3 ) - 1, 3 ) :
+            for i in xrange( 0, ( len( array ) // 3 ) - 1, 3 ) :
 
                 a = i + 0
                 b = i + 1

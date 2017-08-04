@@ -16,7 +16,7 @@ class TestMatrix4( unittest.TestCase ):
 
         self.assertEqual( len( first.elements ), len( second.elements ) )
 
-        for i in range( len( first.elements ) ):
+        for i in xrange( len( first.elements ) ):
 
             self.assertAlmostEqual( first.elements[ i ], second.elements[ i ] )
 
@@ -260,16 +260,16 @@ class TestMatrix4( unittest.TestCase ):
             outBasis = [ THREE.Vector3(), THREE.Vector3(), THREE.Vector3() ]
             b.extractBasis( outBasis[0], outBasis[1], outBasis[2] )
             # check what goes in, is what comes out.
-            for j in range( len( outBasis ) ):
+            for j in xrange( len( outBasis ) ):
                 self.assertTrue( outBasis[j].equals( testBasis[j] ) )
 
             # get the basis out the hard war
-            for j in range( len( identityBasis ) ):
+            for j in xrange( len( identityBasis ) ):
                 outBasis[j].copy( identityBasis[j] )
                 outBasis[j].applyMatrix4( b )
 
             # did the multiply method of basis extraction work?
-            for j in range( len( outBasis ) ):
+            for j in xrange( len( outBasis ) ):
                 self.assertTrue( outBasis[j].equals( testBasis[j] ) )
 
     def test_transpose( self ):

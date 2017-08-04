@@ -90,7 +90,7 @@ def fetchAttributeLocations( program ):
     type = GLenum()
     name = (GLchar * bufSize)()
 
-    for i in range( n ):
+    for i in xrange( n ):
 
         glGetActiveAttrib( program, i, bufSize, length, size, type, name )
         info = Expando( name = name.value, size = size.value, type = type.value )
@@ -130,7 +130,7 @@ def unrollLoops( string ):
 
         unroll = ""
 
-        for i in range( int( start ), int( end ) ) :
+        for i in xrange( int( start ), int( end ) ) :
 
             unroll += re.sub( "\[ i \]", "[ %s ]" % i, snippet )
 

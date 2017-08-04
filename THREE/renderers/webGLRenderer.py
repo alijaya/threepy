@@ -512,7 +512,7 @@ class WebGLRenderer( object ):
                 not hasattr( material, "isMeshNormalMaterial" ) and \
                 material.flatShading == True :
 
-                for i in range( 0, object.count * 3, 9 ) :
+                for i in xrange( 0, object.count * 3, 9 ) :
 
                     array = object.normalArray
 
@@ -1206,7 +1206,7 @@ class WebGLRenderer( object ):
 
             material.numSupportedMorphTargets = 0
 
-            for i in range( self.maxMorphTargets ) :
+            for i in xrange( self.maxMorphTargets ) :
 
                 if programAttributes[ "morphTarget%s" % i ] >= 0 :
 
@@ -1216,7 +1216,7 @@ class WebGLRenderer( object ):
 
             material.numSupportedMorphNormals = 0
 
-            for i in range( self.maxMorphNormals ) :
+            for i in xrange( self.maxMorphNormals ) :
 
                 if programAttributes[ "morphNormal%s" % i ] >= 0 :
 

@@ -7,7 +7,7 @@ def addLineNumbers( string ):
 
     lines = string.split( "\n" )
 
-    for i in range( len( lines ) ):
+    for i in xrange( len( lines ) ):
 
         lines[ i ] = "%4s| %s" % ( ( i + 1 ), lines[ i ] )
 

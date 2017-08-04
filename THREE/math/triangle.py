@@ -174,7 +174,7 @@ class Triangle( object ):
             edgeList[ 1 ].set( self.b, self.c )
             edgeList[ 2 ].set( self.c, self.a )
 
-            for i in range( len( edgeList ) ):
+            for i in xrange( len( edgeList ) ):
 
                 edgeList[ i ].closestPointToPoint( projectedPoint, True, closestPoint )
 

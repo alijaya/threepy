@@ -119,5 +119,5 @@ class TestBufferAttribute( unittest.TestCase ):
         attrCopy = attr.clone()
 
         self.assertEqual( attr.array.size, attrCopy.array.size ) # attribute was cloned
-        for i in range( attr.array.size ):
+        for i in xrange( attr.array.size ):
             self.assertEqual( attr.array[i], attrCopy.array[i] ) # array item is equal

@@ -24,7 +24,7 @@ class Box2( object ):
 
         self.makeEmpty()
 
-        for i in range( len( points ) ):
+        for i in xrange( len( points ) ):
 
             self.expandByPoint( points[ i ] )
 

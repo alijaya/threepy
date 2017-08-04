@@ -221,7 +221,7 @@ class WebGLPrograms( object ):
                 array.append( name )
                 array.append( material.defines[ name ] )
 
-        for i in range( len( self.parameterNames ) ) :
+        for i in xrange( len( self.parameterNames ) ) :
 
             array.append( parameters[ self.parameterNames[ i ] ] )
 

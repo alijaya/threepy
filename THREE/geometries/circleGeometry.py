@@ -104,7 +104,7 @@ class CircleBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # indices
 
-        for i in range( segments + 1 ):
+        for i in xrange( segments + 1 ):
 
             indices.extend( [ i, i + 1, 0 ] )
 

@@ -39,7 +39,7 @@ class Sphere( object ):
 
         maxRadiusSq = 0
 
-        for i in range( len( points ) ):
+        for i in xrange( len( points ) ):
 
             maxRadiusSq = max( maxRadiusSq, center.distanceToSquared( points[ i ] ) )
 

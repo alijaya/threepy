@@ -104,7 +104,7 @@ def flatten( array, nBlocks, blockSize ):
         firstElem.toArray( r, 0 )
 
         offset = 0
-        for i in range( nBlocks ):
+        for i in xrange( nBlocks ):
 
             offset += blockSize
             array[ i ].toArray( r, offset )
@@ -122,7 +122,7 @@ def allocTexUnits( self, renderer, n ):
         r = Int32Array( n )
         arrayCacheI32[ n ] = r
 
-    for i in range( n ):
+    for i in xrange( n ):
         r[ i ] = renderer.allocTextureUnit()
 
     return r
@@ -421,7 +421,7 @@ class WebGLUniforms( UniformContainer ):
 
         n = GL.glGetProgramParameter( self.program, GL.GL_ACTIVE_UNIFORMS )
 
-        for i in range( n )
+        for i in xrange( n )
 
             info = GL.glGetActiveUniform( self.program, i )
             path = info.name

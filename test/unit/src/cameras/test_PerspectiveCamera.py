@@ -18,7 +18,7 @@ class TestPerspectiveCamera( unittest.TestCase ):
 
         self.assertEqual( len( first.elements ), len( second.elements ) )
 
-        for i in range( len( first.elements ) ):
+        for i in xrange( len( first.elements ) ):
 
             self.assertAlmostEqual( first.elements[ i ], second.elements[ i ] )
 

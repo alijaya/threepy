@@ -95,11 +95,11 @@ class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
 
             # generate vertices, normals and uvs
 
-            for iy in range( gridY1 ):
+            for iy in xrange( gridY1 ):
 
                 y = iy * segmentHeight - heightHalf
 
-                for ix in range( gridX1 ):
+                for ix in xrange( gridX1 ):
 
                     x = ix * segmentWidth - widthHalf
 
@@ -138,9 +138,9 @@ class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
             # 2. a single segment consists of two faces
             # 3. so we need to generate six (2*3) indices per segment
 
-            for iy in range( gridY ):
+            for iy in xrange( gridY ):
 
-                for ix in range( gridX ):
+                for ix in xrange( gridX ):
 
                     a = numberOfVertices + ix + gridX1 * iy
                     b = numberOfVertices + ix + gridX1 * ( iy + 1 )

@@ -89,7 +89,7 @@ def init():
 
     points = []
 
-    for i in range( 50 ):
+    for i in xrange( 50 ):
 
         points.append( THREE.Vector2( math.sin( i * 0.2 ) * math.sin( i * 0.1 ) * 15 + 50, ( i - 5 ) * 2 ) )
     

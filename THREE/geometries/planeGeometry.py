@@ -69,11 +69,11 @@ class PlaneBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate vertices, normals and uvs
 
-        for iy in range( gridY1 ):
+        for iy in xrange( gridY1 ):
 
             y = iy * segment_height - height_half
 
-            for ix in range( gridX1 ):
+            for ix in xrange( gridX1 ):
 
                 x = ix * segment_width - width_half
 
@@ -86,9 +86,9 @@ class PlaneBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # indices
 
-        for iy in range( gridY ):
+        for iy in xrange( gridY ):
 
-            for ix in range( gridX ):
+            for ix in xrange( gridX ):
 
                 a = ix + gridX1 * iy
                 b = ix + gridX1 * ( iy + 1 )

@@ -89,7 +89,7 @@ class Matrix3( object ):
 
         v1 = Vector3()
 
-        for i in range( attribute.count() ):
+        for i in xrange( attribute.count() ):
 
             v1.x = attribute.getX( i )
             v1.y = attribute.getY( i )
@@ -287,7 +287,7 @@ class Matrix3( object ):
         te = self.elements
         me = matrix.elements
 
-        for i in range( 9 ):
+        for i in xrange( 9 ):
 
             if te[ i ] != me[ i ]: return False
 
@@ -295,7 +295,7 @@ class Matrix3( object ):
 
     def fromArray( self, array, offset = 0 ):
 
-        for i in range( 9 ):
+        for i in xrange( 9 ):
 
             self.elements[ i ] = array[ i + offset ]
 

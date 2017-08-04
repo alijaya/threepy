@@ -35,7 +35,7 @@ def flatten( array, nBlocks, blockSize ):
 
         offset = 0
 
-        for i in range( nBlocks ):
+        for i in xrange( nBlocks ):
 
             offset += blockSize
             array[ i ].toArray( r, offset )
@@ -205,7 +205,7 @@ class PureArrayUniform( object ):
 
         r = np.zeros( n, np.int32 )
 
-        for i in range( n ):
+        for i in xrange( n ):
 
             r[ i ] = renderer.allocTextureUnit()
 
@@ -218,7 +218,7 @@ class PureArrayUniform( object ):
 
         glUniform1iv( self.addr, units.size, units )
 
-        for i in range( n ):
+        for i in xrange( n ):
 
             renderer.setTexture2D( v[ i ] or emptyTexture, units[ i ] )
 
@@ -231,7 +231,7 @@ class PureArrayUniform( object ):
 
     #     glUniform1iv( self.addr. units.size, units )
 
-    #     for i in range( n ):
+    #     for i in xrange( n ):
 
     #         renderer.setTextureCube( v[ i ] or emptyCubeTexture, units[ i ] )
 
@@ -308,7 +308,7 @@ class OpenGLUniforms( UniformContainer ):
 
         n = glGetProgramiv( program, GL_ACTIVE_UNIFORMS )
 
-        for i in range( n ):
+        for i in xrange( n ):
 
             info = glGetActiveUniform( program, i )
             info = Expando( name = info[0], size = info[1], type = info[2] )

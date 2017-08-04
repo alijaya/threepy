@@ -75,14 +75,14 @@ class LatheBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate vertices and uvs
 
-        for i in range( segments + 1 ):
+        for i in xrange( segments + 1 ):
 
             phi = phiStart + i * inverseSegments * phiLength
 
             sin = math.sin( phi )
             cos = math.cos( phi )
 
-            for j in range( len( points ) ):
+            for j in xrange( len( points ) ):
 
                 # vertex
 
@@ -101,9 +101,9 @@ class LatheBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # indices
 
-        for i in range( segments ):
+        for i in xrange( segments ):
 
-            for j in range( len( points ) - 1 ):
+            for j in xrange( len( points ) - 1 ):
 
                 base = j + i * len( points )
 

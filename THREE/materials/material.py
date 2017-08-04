@@ -303,7 +303,7 @@ class Material( Expando ):
             n = len( srcPlanes )
             dstPlanes = Array( n )
 
-            for i in range( n ):
+            for i in xrange( n ):
                 dstPlanes[ i ] = srcPlanes[ i ].clone()
 
         self.clippingPlanes = dstPlanes

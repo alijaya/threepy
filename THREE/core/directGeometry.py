@@ -44,7 +44,7 @@ class DirectGeometry( object ):
 
         faces = geometry.faces
 
-        for i in range( len( faces ) ) :
+        for i in xrange( len( faces ) ) :
 
             face = faces[ i ]
 
@@ -91,7 +91,7 @@ class DirectGeometry( object ):
 
             morphTargetsPosition = []
 
-            for i in range( morphTargetsLength ):
+            for i in xrange( morphTargetsLength ):
 
                 morphTargetsPosition[ i ] = []
 
@@ -106,7 +106,7 @@ class DirectGeometry( object ):
 
             morphTargetsNormal = []
 
-            for i in range( morphNormalsLength ):
+            for i in xrange( morphNormalsLength ):
 
                 morphTargetsNormal[ i ] = []
 
@@ -122,7 +122,7 @@ class DirectGeometry( object ):
 
         #
 
-        for i in range( len( faces ) ):
+        for i in xrange( len( faces ) ):
 
             face = faces[ i ]
 
@@ -182,13 +182,13 @@ class DirectGeometry( object ):
 
             # morphs
 
-            for j in range( morphTargetsLength ):
+            for j in xrange( morphTargetsLength ):
 
                 morphTarget = morphTargets[ j ].vertices
 
                 morphTargetsPosition[ j ].extend( [ morphTarget[ face.a ], morphTarget[ face.b ], morphTarget[ face.c ] ] )
 
-            for j in range( morphNormalsLength ):
+            for j in xrange( morphNormalsLength ):
 
                 morphNormal = morphNormals[ j ].vertexNormals[ i ]
 

@@ -10,7 +10,7 @@ def matrixEquals3( a, b, tolerance = 0.0001 ):
 
         return False
 
-    for i in range( len( a.elements ) ):
+    for i in xrange( len( a.elements ) ):
 
         delta = a.elements[i] - b.elements[i]
 

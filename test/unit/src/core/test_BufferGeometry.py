@@ -257,7 +257,7 @@ class TestBufferGeometry( unittest.TestCase ):
 
         # get normals for a line should be NAN because you need min a triangle to calculate normals
         # normals = self.getNormalsForVertices( [1, 0, 0, -1, 0, 0] )
-        # for i in range( len( normals ) ):
+        # for i in xrange( len( normals ) ):
         #     self.assertTrue( math.isnan( normals[i] ) ) # normals can"t be calculated which is good
 
     def getNormalsForVertices( self, vertices ):
@@ -285,7 +285,7 @@ class TestBufferGeometry( unittest.TestCase ):
         geometry1.merge(geometry2, 1)
 
         # merged array should be 1, 2, 3, 4, 5, 6
-        for i in range( len( attr ) ):
+        for i in xrange( len( attr ) ):
             self.assertEqual( attr[i], i + 1 )
 
         geometry1.merge(geometry2)
@@ -305,5 +305,5 @@ class TestBufferGeometry( unittest.TestCase ):
             attribute = geometry.attributes[key]
             self.assertIsNotNone( attribute ) # all attributes where copied
 
-            for i in range( len( attribute.array ) ):
+            for i in xrange( len( attribute.array ) ):
                 self.assertEqual( attribute.array[i], copy.attributes[key].array[i] ) # values of the attribute are equal

@@ -65,7 +65,7 @@ class Mesh( object3D.Object3D ):
 
                     self.morphTargetInfluences = []
                     self.morphTargetDictionary = {}
-                    for m in range( len( morphAttribute ) ) :
+                    for m in xrange( len( morphAttribute ) ) :
 
                         name = morphAttribute[ m ].name or str( m )
 
@@ -80,7 +80,7 @@ class Mesh( object3D.Object3D ):
 
                 self.morphTargetInfluences = []
                 self.morphTargetDictionary = {}
-                for m in range( len( morphTargets ) ) :
+                for m in xrange( len( morphTargets ) ) :
 
                     name = morphTargets[ m ].name or str( m )
 
@@ -211,7 +211,7 @@ class Mesh( object3D.Object3D ):
 
                 # indexed buffer geometry
 
-                for i in range( 0, index.count, 3 ) :
+                for i in xrange( 0, index.count, 3 ) :
 
                     a = index.getX( i )
                     b = index.getX( i + 1 )
@@ -228,7 +228,7 @@ class Mesh( object3D.Object3D ):
 
                 # non-indexed buffer geometry
 
-                for i in range( 0, position.count, 3 ) :
+                for i in xrange( 0, position.count, 3 ) :
 
                     a = i
                     b = i + 1
@@ -253,7 +253,7 @@ class Mesh( object3D.Object3D ):
             faceVertexUvs = geometry.faceVertexUvs[ 0 ]
             if len( faceVertexUvs ) > 0 : uvs = faceVertexUvs
 
-            for f in range( len( faces ) ) :
+            for f in xrange( len( faces ) ) :
 
                 face = faces[ f ]
                 faceMaterial = material[ face.materialIndex ] if isMultiMaterial else material
@@ -273,7 +273,7 @@ class Mesh( object3D.Object3D ):
                     vB.set( 0, 0, 0 )
                     vC.set( 0, 0, 0 )
 
-                    for t in range( len( morphTargets ) ) :
+                    for t in xrange( len( morphTargets ) ) :
 
                         influence = morphInfluences[ t ]
 

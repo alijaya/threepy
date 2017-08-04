@@ -79,7 +79,7 @@ class BufferAttribute( object ):
         index1 *= self.itemSize
         index2 *= attribute.itemSize
 
-        for i in range( self.itemSize ):
+        for i in xrange( self.itemSize ):
 
             self.array[ index1 + i ] = attribute.array[ index2 + i ]
 

@@ -79,9 +79,9 @@ class RingBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate vertices, normals and uvs
 
-        for j in range( phiSegments + 1 ):
+        for j in xrange( phiSegments + 1 ):
 
-            for i in range( thetaSegments + 1 ):
+            for i in xrange( thetaSegments + 1 ):
 
                 # values are generate from the inside of the ring to the outside
 
@@ -111,11 +111,11 @@ class RingBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # indices
 
-        for j in range( phiSegments ):
+        for j in xrange( phiSegments ):
 
             thetaSegmentLevel = j * ( thetaSegments + 1 )
 
-            for i in range( thetaSegments ):
+            for i in xrange( thetaSegments ):
 
                 segment = i + thetaSegmentLevel
 

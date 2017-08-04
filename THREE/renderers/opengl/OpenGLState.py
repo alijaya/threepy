@@ -128,7 +128,7 @@ def enableAttribute( attribute ):
 
 def disableUnusedAttributes():
 
-    for i in range( enabledAttributes.size ):
+    for i in xrange( enabledAttributes.size ):
 
         if enabledAttributes[ i ] != newAttributes[ i ]:
 
@@ -188,7 +188,7 @@ def createTexture( type, target, count ):
     # glTexParameteri( type, GL_TEXTURE_MIN_FILTER, GL_NEAREST )
     # glTexParamateri( type, GL_TEXTURE_MAX_FILTER, GL_NEAREST )
 
-    for i in range( count ):
+    for i in xrange( count ):
 
         glTexImage2D( target + i, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data )
     
@@ -473,7 +473,7 @@ def reset():
     global capabilities, currentTextureSlot, currentBoundTextures, \
         currentProgram, currentBlending, currentFlipSided, currentCullFace
 
-    for i in range( len( enabledAttributes ) ):
+    for i in xrange( len( enabledAttributes ) ):
 
         if enabledAttributes[ i ] == 1:
 

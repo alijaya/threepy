@@ -84,13 +84,13 @@ class SphereBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # generate vertices, normals and uvs
 
-        for iy in range( heightSegments + 1 ):
+        for iy in xrange( heightSegments + 1 ):
 
             verticesRow = []
 
             v = iy / heightSegments
 
-            for ix in range( widthSegments + 1 ):
+            for ix in xrange( widthSegments + 1 ):
 
                 u = ix / widthSegments
 
@@ -118,9 +118,9 @@ class SphereBufferGeometry( bufferGeometry.BufferGeometry ):
 
         # indices
 
-        for iy in range( heightSegments ):
+        for iy in xrange( heightSegments ):
 
-            for ix in range( widthSegments ):
+            for ix in xrange( widthSegments ):
 
                 a = grid[ iy ][ ix + 1 ]
                 b = grid[ iy ][ ix ]
