@@ -203,7 +203,7 @@ class OpenGLProgram( object ):
                 
                 # customDefines
 
-                # opt( "#define VERTEX_TEXTURES", parameters.supportsVertexTextures ),
+                opt( "#define VERTEX_TEXTURES", parameters.supportsVertexTextures ),
 
                 "#define GAMMA_FACTOR %s" % gammaFactorDefine,
 
@@ -212,12 +212,41 @@ class OpenGLProgram( object ):
                 opt( "#define FOG_EXP2", parameters.useFog and parameters.fogExp ),
 
                 opt( "#define USE_MAP", parameters.map ),
+                # opt( "#define USE_ENVMAP", parameters.envMap ),
+                # opt( "#define %s" % envMapTypeDefine, parameters.envMap ),
+                # opt( "#define %s" % envMapModeDefine, parameters.envMap ),
+                # opt( "#define %s" % envMapBlendingDefine, parameters.envMap ),
+                # opt( "#define USE_LIGHTMAP", parameters.lightMap ),
+                # opt( "#define USE_AOMAP", parameters.aoMap ),
+                # opt( "#define USE_EMISSIVEMAP", parameters.emissiveMap ),
+                # opt( "#define USE_BUMPMAP", parameters.bumpMap ),
+                # opt( "#define USE_NORMALMAP", parameters.normalMap ),
+                # opt( "#define USE_DISPLACEMENTMAP", parameters.displacementMap and parameters.supportsVertexTextures ),
+                # opt( "#define USE_SPECULARMAP", parameters.specularMap ),
+                # opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
+                # opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
+                # opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
+                # opt( "#define USE_COLOR", parameters.vertexColors ),
 
                 opt( "#define FLAT_SHADED", parameters.flatShading ),
 
+                # opt( "#define USE_SKINNING", parameters.skinning ),
+                # opt( "#define BONE_TEXTURE", parameters.useVertexTexture ),
+
+                # opt( "#define USE_MORPHTARGETS", parameters.morphTargets ),
+                # opt( "#define USE_MORPHNORMALS", parameters.morphNormals and parameters.flatShading == False ),
+                opt( "#define DOUBLE_SIDED", parameters.doubleSided ),
+                opt( "#define FLIP_SIDED", parameters.flipSided ),
+
                 "#define NUM_CLIPPING_PLANES %s" % parameters.numClippingPlanes,
 
-                # etc
+                # opt( "#define USE_SHADOWMAP", parameters.shadowMapEnabled ),
+                # opt( "#define %s" % shadowMapTypeDefine, parameters.shadowMapEnabled ),
+
+                opt( "#define USE_SIZEATTENUATION", parameters.sizeAttenuation ),
+
+                opt( "#define USE_LOGDEPTHBUF", parameters.logarithmicDepthBuffer ),
+                # opt( "#define USE_LOGDEPTHBUF_EXT", parameters.logarithmicDepthBuffer and extensions.get( "EXT_frag_depth" ) ),
 
                 "uniform mat4 modelMatrix;",
                 "uniform mat4 modelViewMatrix;",
@@ -292,13 +321,46 @@ class OpenGLProgram( object ):
 
                 "#define GAMMA_FACTOR %s" % gammaFactorDefine,
 
+                opt( "#define USE_FOG", parameters.useFog and parameters.fog ),
+                opt( "#define FOG_EXP2", parameters.useFog and parameters.fogExp ),
+
                 opt( "#define USE_MAP", parameters.map ),
+                # opt( "#define USE_ENVMAP", parameters.envMap ),
+                # opt( "#define %s" % envMapTypeDefine, parameters.envMap ),
+                # opt( "#define %s" % envMapModeDefine, parameters.envMap ),
+                # opt( "#define %s" % envMapBlendingDefine, parameters.envMap ),
+                # opt( "#define USE_LIGHTMAP", parameters.lightMap ),
+                # opt( "#define USE_AOMAP", parameters.aoMap ),
+                # opt( "#define USE_EMISSIVEMAP", parameters.emissiveMap ),
+                # opt( "#define USE_BUMPMAP", parameters.bumpMap ),
+                # opt( "#define USE_NORMALMAP", parameters.normalMap ),
+                # opt( "#define USE_SPECULARMAP", parameters.specularMap ),
+                # opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
+                # opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
+                # opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
+                # opt( "#define USE_COLOR", parameters.vertexColors ),
+
+                # opt( "#define USE_GRADIENTMAP", parameters.gradientMap ),
 
                 opt( "#define FLAT_SHADED", parameters.flatShading ),
 
-                "#define NUM_CLIPPING_PLANES %s" % parameters.numClippingPlanes,
+                opt( "#define DOUBLE_SIDED", parameters.doubleSided ),
+                opt( "#define FLIP_SIDED", parameters.flipSided ),
 
-                # etc
+                "#define NUM_CLIPPING_PLANES %s" % parameters.numClippingPlanes,
+                # "#define UNION_CLIPPING_PLANES %s" % ( parameters.numClippingPlanes - parameters.numClipIntersection ),
+
+                # opt( "#define USE_SHADOWMAP", parameters.shadowMapEnabled ),
+                # opt( "#define %s" % shadowMapTypeDefine, parameters.shadowMapEnabled ),
+
+                opt( "#define PREMULTIPLIED_ALPHA", parameters.premultipliedAlpha ),
+
+                # opt( "#define PHYSICALLY_CORRECT_LIGHTS", parameters.physicallyCorrectLights ),
+
+                opt( "#define USE_LOGDEPTHBUF", parameters.logarithmicDepthBuffer ),
+                # opt( "#define USE_LOGDEPTHBUF_EXT", parameters.logarithmicDepthBuffer and extensions.get( "EXT_frag_depth" ) ),
+
+                # opt( "#define TEXTURE_LOD_EXT", parameters.envMap and extensions.get( "EXT_shader_texture_lod" ) ),
 
                 "uniform mat4 viewMatrix;",
                 "uniform vec3 cameraPosition;",

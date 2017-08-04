@@ -86,25 +86,25 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
         outputEncoding = getTextureEncodingFromMap( None if not currentRenderTarget else currentRenderTarget.texture, renderer.gammaOutput ),
         map = bool( material.map ),
         mapEncoding = getTextureEncodingFromMap( material.map, renderer.gammaInput ),
-        # envMap = bool( material.envMap ),
-        # envMapMode = material.envMap and material.envMap.mapping,
+        envMap = bool( material.envMap ),
+        envMapMode = material.envMap and material.envMap.mapping,
         envMapEncoding = getTextureEncodingFromMap( material.envMap, renderer.gammaInput ),
-        # envMapCubeUV = bool( material.envMap ) and ( material.envMap.mapping == CubeUVReflectionMapping or material.envMap.mapping == CubeUVRefractionMapping ),
-        # lightMap = bool( material.lightMap ),
-        # aoMap = bool( material.aoMap ),
-        # emissiveMap = bool( material.emissiveMap ),
+        envMapCubeUV = bool( material.envMap ) and ( material.envMap.mapping == CubeUVReflectionMapping or material.envMap.mapping == CubeUVRefractionMapping ),
+        lightMap = bool( material.lightMap ),
+        aoMap = bool( material.aoMap ),
+        emissiveMap = bool( material.emissiveMap ),
         emissiveMapEncoding = getTextureEncodingFromMap( material.emissiveMap, renderer.gammaInput ),
-        # bumpMap = bool( material.bumpMap ),
-        # normalMap = bool( material.normalMap ),
-        # displacementMap = bool( material.displacementMap ),
-        # roughnessMap = bool( material.roughnessMap ),
-        # metalnessMap = bool( material.metalnessMap ),
-        # specularMap = bool( material.specularMap ),
-        # alphaMap = bool( material.alphaMap ),
+        bumpMap = bool( material.bumpMap ),
+        normalMap = bool( material.normalMap ),
+        displacementMap = bool( material.displacementMap ),
+        roughnessMap = bool( material.roughnessMap ),
+        metalnessMap = bool( material.metalnessMap ),
+        specularMap = bool( material.specularMap ),
+        alphaMap = bool( material.alphaMap ),
 
-        # gradientMap = bool( material.gradientMap ),
+        gradientMap = bool( material.gradientMap ),
 
-        # combine = material.combine,
+        combine = material.combine,
 
         vertexColors = material.vertexColors,
 
@@ -114,9 +114,36 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
 
         flatShading = material.flatShading,
 
+        sizeAttenuation = material.sizeAttenuation,
+        # logarithmicDepthBuffer = capabilities.logarithmicDepthBuffer,
+
+        # skinning = material.skinning and maxBones > 0,
+        # maxBones = maxBones,
+        # useVertexTexture = capabilities.floatVertexTextures,
+
+        # morphTargets = material.morphTargets,
+        # morphNormals = material.morphNormals,
+        # maxMorphTargets = renderer.maxMorphTargets,
+        # maxMorphNormals = renderer.maxMorphNormals,
+
+        # numDirLights = len( lights.directional ),
+        # numPointLights = len( lights.point ),
+        # numSpotLights = len( lights.spot ),
+        # numRectAreaLIghts = len( lights.rectArea ),
+        # numHemiLights = len( lights.hemi ),
+
         numClippingPlanes = nClipPlanes, # TODO
+        numClipIntersection = nClipIntersection,
+
+        # dithering = material.dithering,
+
+        # shadowMapEnabled = renderer.shadowMap.enabled and object.receiveShadow and len( shadows ) > 0,
+        # shadowMapType = renderer.shadowMap.type,
 
         toneMapping = renderer.toneMapping,
+        # physicallyCorrectLights = renderer.physicallyCorrectLights,
+
+        # premultipliedAlpha = material.premultipliedAlpha,
 
         alphaTest = material.alphaTest,
         doubleSided = material.side == DoubleSide,

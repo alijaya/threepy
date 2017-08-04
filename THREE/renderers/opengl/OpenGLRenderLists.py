@@ -2,39 +2,47 @@ from ...utils import Expando
 
 def painterSortStable( a, b ):
 
+    ret = 0
+
     if a.renderOrder != b.renderOrder:
 
-        return a.renderOrder - b.renderOrder
+        ret = a.renderOrder - b.renderOrder
 
     elif a.program and b.program and a.program != b.program:
 
-        return a.program.id - b.program.id
+        ret = a.program.id - b.program.id
 
     elif a.material.id != b.material.id:
 
-        return a.material.id - b.material.id
+        ret = a.material.id - b.material.id
 
     elif a.z != b.z:
 
-        return a.z - b.z
+        ret = a.z - b.z
 
     else:
 
-        return a.id - b.id
+        ret = a.id - b.id
+
+    return 1 if ret > 0 else -1 if ret < 0 else 0
 
 def reversePainterSortStable( a, b ):
 
+    ret = 0
+
     if a.renderOrder != b.renderOrder:
 
-        return a.renderOrder - b.renderOrder
+        ret = a.renderOrder - b.renderOrder
 
     elif a.z != b.z:
 
-        return b.z - a.z
+        ret = b.z - a.z
 
     else:
 
-        return a.id - b.id
+        ret = a.id - b.id
+        
+    return 1 if ret > 0 else -1 if ret < 0 else 0
 
 class OpenGLRenderList( object ):
 
