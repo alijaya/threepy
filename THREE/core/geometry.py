@@ -679,7 +679,9 @@ class Geometry( eventDispatcher.EventDispatcher ):
         # have to remove them from the geometry.
         faceIndicesToRemove = []
 
-        for face in self.faces:
+        for i in range( len( self.faces ) ):
+
+            face = self.faces[ i ]
 
             face.a = changes[ face.a ]
             face.b = changes[ face.b ]
@@ -693,16 +695,18 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
                 if indices[ n ] == indices[ ( n + 1 ) % 3 ]:
 
-                    faceIndicesToRemove.push( i )
+                    faceIndicesToRemove.append( i )
                     break
 
-        for idx in faceIndicesToRemove:
+        for i in range( len( faceIndicesToRemove ) - 1, -1, -1 ):
 
-            self.faces.splice( idx, 1 )
+            idx = faceIndicesToRemove[ i ]
+
+            del self.faces[ idx ]
 
             for faceVertexUv in self.faceVertexUvs:
 
-                faceVertexUv.splice( idx, 1 )
+                del faceVertexUv[ idx ]
 
         # Use unique set of vertices
 

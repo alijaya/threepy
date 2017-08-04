@@ -495,9 +495,9 @@ class BufferGeometry( object ):
 
                 # reset existing normals to zero
 
-                arr = attributes.normal.array
+                arr = attributes[ "normal" ].array
 
-                for i in range( len( array ) ):
+                for i in range( len( arr ) ):
 
                     arr[ i ] = 0
 

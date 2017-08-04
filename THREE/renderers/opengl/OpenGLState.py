@@ -139,16 +139,12 @@ def enable( id ):
 
     if not capabilities.get( id, False ):
 
-        print("enable",id)
-
         glEnable( id )
         capabilities[ id ] = True
 
 def disable( id ):
 
     if capabilities.get( id, True ):
-
-        print("diable",id)
 
         glDisable( id )
         capabilities[ id ] = False

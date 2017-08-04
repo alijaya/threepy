@@ -81,6 +81,19 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
         T = vector3.Vector3()
         N = vector3.Vector3()
 
+        # this function calculates the current position on the torus curve
+
+        def calculatePositionOnCurve( u, p, q, radius, position ):
+
+            cu = math.cos( u )
+            su = math.sin( u )
+            quOverP = q / p * u
+            cs = math.cos( quOverP )
+
+            position.x = radius * ( 2 + cs ) * 0.5 * cu
+            position.y = radius * ( 2 + cs ) * su * 0.5
+            position.z = radius * math.sin( quOverP ) * 0.5
+
         # generate vertices, normals and uvs
 
         for i in range( tubularSegments + 1 ):
@@ -92,8 +105,8 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
             # now we calculate two points. P1 is our current position on the curve, P2 is a little farther ahead.
             # these points are used to create a special "coordinate space", which is necessary to calculate the correct vertex positions
 
-            self.calculatePositionOnCurve( u, p, q, radius, P1 )
-            self.calculatePositionOnCurve( u + 0.01, p, q, radius, P2 )
+            calculatePositionOnCurve( u, p, q, radius, P1 )
+            calculatePositionOnCurve( u + 0.01, p, q, radius, P2 )
 
             # calculate orthonormal basis
 
@@ -159,16 +172,3 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
         self.addAttribute( "position", bufferAttribute.Float32BufferAttribute( vertices, 3 ) )
         self.addAttribute( "normal", bufferAttribute.Float32BufferAttribute( normals, 3 ) )
         self.addAttribute( "uv", bufferAttribute.Float32BufferAttribute( uvs, 2 ) )
-
-    # self function calculates the current position on the torus curve
-
-    def calculatePositionOnCurve( self, u, p, q, radius, position ):
-
-        cu = math.cos( u )
-        su = math.sin( u )
-        quOverP = q / p * u
-        cs = math.cos( quOverP )
-
-        position.x = radius * ( 2 + cs ) * 0.5 * cu
-        position.y = radius * ( 2 + cs ) * su * 0.5
-        position.z = radius * math.sin( quOverP ) * 0.5

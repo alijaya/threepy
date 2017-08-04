@@ -1,2 +1,13 @@
 from boxGeometry import BoxGeometry, BoxBufferGeometry
+from circleGeometry import CircleGeometry, CircleBufferGeometry
+from cylinderGeometry import CylinderGeometry, CylinderBufferGeometry
+from icosahedronGeometry import IcosahedronGeometry, IcosahedronBufferGeometry
+from latheGeometry import LatheGeometry, LatheBufferGeometry
+from octahedronGeometry import OctahedronGeometry, OctahedronBufferGeometry
+from planeGeometry import PlaneGeometry, PlaneBufferGeometry
+from polyhedronGeometry import PolyhedronGeometry, PolyhedronBufferGeometry
+from ringGeometry import RingGeometry, RingBufferGeometry
+from sphereGeometry import SphereGeometry, SphereBufferGeometry
+from tetrahedronGeometry import TetrahedronGeometry, TetrahedronBufferGeometry
+from torusGeometry import TorusGeometry, TorusBufferGeometry
 from torusKnotGeometry import TorusKnotGeometry, TorusKnotBufferGeometry
