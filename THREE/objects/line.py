@@ -69,7 +69,7 @@ class Line( object3D.Object3D ):
 
                 indices = index.array
 
-                for i in range( len( indices ) - 1 ):
+                for i in xrange( len( indices ) - 1 ):
 
                     a = indices[ i ]
                     b = indices[ i + 1 ]
@@ -102,7 +102,7 @@ class Line( object3D.Object3D ):
 
             else:
 
-                for i in range( len( positions ) // 3 - 1 ):
+                for i in xrange( len( positions ) // 3 - 1 ):
 
                     vStart.fromArray( positions, 3 * i )
                     vEnd.fromArray( positions, 3 * i + 3 )
@@ -135,7 +135,7 @@ class Line( object3D.Object3D ):
             vertices = geometry.vertices
             nbVertices = len( vertices )
 
-            for i in range( nbVertices - 1):
+            for i in xrange( nbVertices - 1):
 
                 distSq = ray.distanceSqToSegment( vertices[ i ], vertices[ i + 1 ], interRay, interSegment )
 
