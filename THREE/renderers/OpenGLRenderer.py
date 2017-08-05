@@ -574,7 +574,21 @@ def refreshUniformsDash( uniforms, material ):
     uniforms.totalSize.value = material.dashSize + material.gapSize
     uniforms.scale.value = material.scale
 
-# TODO refreshUniformsPoints
+def refreshUniformsPoints( uniforms, material ):
+
+    uniforms.diffuse.value = material.color
+    uniforms.opacity.value = material.opacity
+    uniforms.size.value = material.size * _pixelRatio
+    uniforms.scale.value = _height * 0.5
+
+    uniforms.map.value = material.map
+
+    if material.map:
+
+        offset = material.map.offset
+        repeat = material.map.repeat
+
+        uniforms.offsetRepeat.value.set( offset.x, offset.y, repeat.x, repeat.y )
 
 def refreshUniformsFog( uniforms, fog ):
 
@@ -800,11 +814,20 @@ def setProgram( camera, fog, material, object ):
 
                 refreshUniformsDash( m_uniforms, material )
         
-        # TODO isPointsMaterial
-        # TODO isShadowMaterial
+        elif material.isPointsMaterial:
 
+            refreshUniformsPoints( m_uniforms, material )
+        
+        elif material.isShadowMaterial:
 
-        # TODO RectAreaLight Texture
+            m_uniforms.color.value = material.color
+            m_uniforms.opacity.value = material.opacity
+
+        # RectAreaLight Texture
+        # TODO (mrdoob): Find a nicer implementation
+        
+        # if m_uniforms.ltcMat: m_uniforms.ltcMat.value = UniformsLib.LTC_MAT_TEXTURE
+        # if m_uniforms.ltcMag: m_uniforms.ltcMag.value = UniformsLib.LTC_MAG_TEXTURE
 
         OpenGLUniforms.upload( materialProperties.uniformsList, m_uniforms )
 
@@ -985,6 +1008,9 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
 
     elif hasattr( object, "isPoints" ):
 
+        state.enable( GL_POINT_SMOOTH )
+        state.enable( GL_POINT_SPRITE )
+        state.enable( GL_VERTEX_PROGRAM_POINT_SIZE )
         renderer.setMode( GL_POINTS )
 
     # TODO instance

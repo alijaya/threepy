@@ -50,6 +50,7 @@ from THREE.math.vector4 import Vector4
 from THREE.objects.line import Line
 from THREE.objects.lineSegments import LineSegments
 from THREE.objects.mesh import Mesh
+from THREE.objects.points import Points
 
 from THREE.renderers import OpenGLRenderer
 

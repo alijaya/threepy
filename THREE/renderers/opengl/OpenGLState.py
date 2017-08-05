@@ -360,7 +360,7 @@ def setMaterial( material ):
     if material.transparent == True:
         
         setBlending( material.blending, material.blendEquation, material.blendSrc, material.blendDst, 
-            material.blendEquationAlpha, material.blendSrcAlpha, materialblendDstAlpha, material.premultipliedAlpha )
+            material.blendEquationAlpha, material.blendSrcAlpha, material.blendDstAlpha, material.premultipliedAlpha )
     
     else:
 

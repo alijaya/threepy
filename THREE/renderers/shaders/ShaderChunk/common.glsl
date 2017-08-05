@@ -15,9 +15,9 @@ float pow4( const in float x ) { float x2 = x*x; return x2*x2; }
 float average( const in vec3 color ) { return dot( color, vec3( 0.3333 ) ); }
 // expects values in the range of [0,1]x[0,1], returns values in the [0,1] range.
 // do not collapse into a single function per: http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
-highp float rand( const in vec2 uv ) {
-	const highp float a = 12.9898, b = 78.233, c = 43758.5453;
-	highp float dt = dot( uv.xy, vec2( a,b ) ), sn = mod( dt, PI );
+float rand( const in vec2 uv ) {
+	const float a = 12.9898, b = 78.233, c = 43758.5453;
+	float dt = dot( uv.xy, vec2( a,b ) ), sn = mod( dt, PI );
 	return fract(sin(sn) * c);
 }
 
@@ -70,16 +70,5 @@ float sideOfPlane( in vec3 point, in vec3 pointOnPlane, in vec3 planeNormal ) {
 vec3 linePlaneIntersect( in vec3 pointOnLine, in vec3 lineDirection, in vec3 pointOnPlane, in vec3 planeNormal ) {
 
 	return lineDirection * ( dot( planeNormal, pointOnPlane - pointOnLine ) / dot( planeNormal, lineDirection ) ) + pointOnLine;
-
-}
-
-mat3 transpose( const in mat3 v ) {
-
-	mat3 tmp;
-	tmp[0] = vec3(v[0].x, v[1].x, v[2].x);
-	tmp[1] = vec3(v[0].y, v[1].y, v[2].y);
-	tmp[2] = vec3(v[0].z, v[1].z, v[2].z);
-
-	return tmp;
 
 }

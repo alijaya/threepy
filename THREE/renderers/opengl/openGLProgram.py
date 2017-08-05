@@ -201,14 +201,8 @@ class OpenGLProgram( object ):
 
             prefixVertex = text( [
 
-                # "precision %s float;" % parameters.precision,
-                # "precision %s int;" % parameters.precision,
+                "#version 120",
                 
-                # no need precision? hack all the way
-                "#define highp",
-                "#define mediump",
-                "#define lowp",
-
                 "#define SHADER_NAME %s" % shader.name,
                 
                 # customDefines
@@ -222,20 +216,20 @@ class OpenGLProgram( object ):
                 opt( "#define FOG_EXP2", parameters.useFog and parameters.fogExp ),
 
                 opt( "#define USE_MAP", parameters.map ),
-                # opt( "#define USE_ENVMAP", parameters.envMap ),
+                opt( "#define USE_ENVMAP", parameters.envMap ),
                 # opt( "#define %s" % envMapTypeDefine, parameters.envMap ),
                 # opt( "#define %s" % envMapModeDefine, parameters.envMap ),
                 # opt( "#define %s" % envMapBlendingDefine, parameters.envMap ),
-                # opt( "#define USE_LIGHTMAP", parameters.lightMap ),
-                # opt( "#define USE_AOMAP", parameters.aoMap ),
-                # opt( "#define USE_EMISSIVEMAP", parameters.emissiveMap ),
-                # opt( "#define USE_BUMPMAP", parameters.bumpMap ),
-                # opt( "#define USE_NORMALMAP", parameters.normalMap ),
-                # opt( "#define USE_DISPLACEMENTMAP", parameters.displacementMap and parameters.supportsVertexTextures ),
-                # opt( "#define USE_SPECULARMAP", parameters.specularMap ),
-                # opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
-                # opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
-                # opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
+                opt( "#define USE_LIGHTMAP", parameters.lightMap ),
+                opt( "#define USE_AOMAP", parameters.aoMap ),
+                opt( "#define USE_EMISSIVEMAP", parameters.emissiveMap ),
+                opt( "#define USE_BUMPMAP", parameters.bumpMap ),
+                opt( "#define USE_NORMALMAP", parameters.normalMap ),
+                opt( "#define USE_DISPLACEMENTMAP", parameters.displacementMap and parameters.supportsVertexTextures ),
+                opt( "#define USE_SPECULARMAP", parameters.specularMap ),
+                opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
+                opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
+                opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
                 opt( "#define USE_COLOR", parameters.vertexColors ),
 
                 opt( "#define FLAT_SHADED", parameters.flatShading ),
@@ -315,14 +309,8 @@ class OpenGLProgram( object ):
 
                 # customExtensions,
 
-                # "precision %s float;" % parameters.precision,
-                # "precision %s int;" % parameters.precision,
+                "#version 120",
                 
-                # no need precision? hack all the way
-                "#define highp",
-                "#define mediump",
-                "#define lowp",
-
                 "#define SHADER_NAME %s" % shader.name,
 
                 # customDefines
@@ -335,22 +323,22 @@ class OpenGLProgram( object ):
                 opt( "#define FOG_EXP2", parameters.useFog and parameters.fogExp ),
 
                 opt( "#define USE_MAP", parameters.map ),
-                # opt( "#define USE_ENVMAP", parameters.envMap ),
+                opt( "#define USE_ENVMAP", parameters.envMap ),
                 # opt( "#define %s" % envMapTypeDefine, parameters.envMap ),
                 # opt( "#define %s" % envMapModeDefine, parameters.envMap ),
                 # opt( "#define %s" % envMapBlendingDefine, parameters.envMap ),
-                # opt( "#define USE_LIGHTMAP", parameters.lightMap ),
-                # opt( "#define USE_AOMAP", parameters.aoMap ),
-                # opt( "#define USE_EMISSIVEMAP", parameters.emissiveMap ),
-                # opt( "#define USE_BUMPMAP", parameters.bumpMap ),
-                # opt( "#define USE_NORMALMAP", parameters.normalMap ),
-                # opt( "#define USE_SPECULARMAP", parameters.specularMap ),
-                # opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
-                # opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
-                # opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
+                opt( "#define USE_LIGHTMAP", parameters.lightMap ),
+                opt( "#define USE_AOMAP", parameters.aoMap ),
+                opt( "#define USE_EMISSIVEMAP", parameters.emissiveMap ),
+                opt( "#define USE_BUMPMAP", parameters.bumpMap ),
+                opt( "#define USE_NORMALMAP", parameters.normalMap ),
+                opt( "#define USE_SPECULARMAP", parameters.specularMap ),
+                opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
+                opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
+                opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
                 opt( "#define USE_COLOR", parameters.vertexColors ),
 
-                # opt( "#define USE_GRADIENTMAP", parameters.gradientMap ),
+                opt( "#define USE_GRADIENTMAP", parameters.gradientMap ),
 
                 opt( "#define FLAT_SHADED", parameters.flatShading ),
 
