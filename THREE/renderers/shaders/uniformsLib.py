@@ -101,7 +101,7 @@ UniformsLib = {
 		fogDensity = Expando( value = 0.00025 ),
 		fogNear = Expando( value = 1 ),
 		fogFar = Expando( value = 2000 ),
-		fogcolor = Expando( value = color.Color( 0xffffff ) )
+		fogColor = Expando( value = color.Color( 0xffffff ) )
 
 	),
 

@@ -55,3 +55,5 @@ from THREE.objects.points import Points
 from THREE.renderers import OpenGLRenderer
 
 from THREE.scenes.scene import Scene
+from THREE.scenes.fog import Fog
+from THREE.scenes.fogExp2 import FogExp2

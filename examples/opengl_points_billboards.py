@@ -38,7 +38,7 @@ def init():
     camera.position.z = 1000
 
     scene = THREE.Scene()
-    # scene.fog = THREE.FogExp2( 0x000000, 0.001 )
+    scene.fog = THREE.FogExp2( 0x000000, 0.001 )
 
     geometry = THREE.Geometry()
 
