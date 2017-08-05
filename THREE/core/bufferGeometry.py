@@ -246,7 +246,7 @@ class BufferGeometry( object ):
 
         if hasattr( object, "isMesh" ):
 
-            direct = getattr( geometry, "__directGeometry", None )
+            direct = getattr( geometry, "_directGeometry", None )
 
             if geometry.elementsNeedUpdate == True:
 
@@ -337,9 +337,9 @@ class BufferGeometry( object ):
 
     def fromGeometry( self, geometry ):
 
-        geometry.__directGeometry = directGeometry.DirectGeometry().fromGeometry( geometry )
+        geometry._directGeometry = directGeometry.DirectGeometry().fromGeometry( geometry )
 
-        return self.fromDirectGeometry( geometry.__directGeometry )
+        return self.fromDirectGeometry( geometry._directGeometry )
 
     def fromDirectGeometry( self, geometry ):
 
@@ -714,7 +714,7 @@ class BufferGeometry( object ):
 
             data.data.attributes[ key ] = Expando(
                 itemSize = attribute.itemSize,
-                type = type( attribute.array ).__name__,
+                type = attribute.array.dtype,
                 array = array,
                 normalized = attribute.normalized
             )

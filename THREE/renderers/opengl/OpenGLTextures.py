@@ -61,7 +61,7 @@ def setTexture2D( texture, slot ):
 
     textureProperties = properties.get( texture )
 
-    if texture.version > 0 and textureProperties.__version != texture.version:
+    if texture.version > 0 and textureProperties._version != texture.version:
 
         image = texture.image
 
@@ -75,7 +75,7 @@ def setTexture2D( texture, slot ):
             return
 
     state.activeTexture( GL_TEXTURE0 + slot )
-    state.bindTexture( GL_TEXTURE_2D, textureProperties.__openglTexture )
+    state.bindTexture( GL_TEXTURE_2D, textureProperties._openglTexture )
 
 # TODO setTextureCube
 
@@ -112,18 +112,18 @@ def uploadTexture( textureProperties, texture, slot ):
 
     from ..OpenGLRenderer import _infoMemory as infoMemory
 
-    if not textureProperties.__openglInit:
+    if not textureProperties._openglInit:
 
-        textureProperties.__openglInit = True
+        textureProperties._openglInit = True
 
         # texture.addEventListener( "dispose", onTextureDispose )
 
-        textureProperties.__openglTexture = glGenTextures( 1 )
+        textureProperties._openglTexture = glGenTextures( 1 )
 
         infoMemory.textures += 1
     
     state.activeTexture( GL_TEXTURE0 + slot )
-    state.bindTexture( GL_TEXTURE_2D, textureProperties.__openglTexture )
+    state.bindTexture( GL_TEXTURE_2D, textureProperties._openglTexture )
 
     # glPixelStorei( GL_UNPACK_FLIP_Y_WEBGL, texture.flipY )
     # glPixelStorei( GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultiplyAlpha )
@@ -182,6 +182,6 @@ def uploadTexture( textureProperties, texture, slot ):
 
     if ( textureNeedsGenerateMipmaps( texture, isPowerOfTwoImage ) ): glGenerateMipmap( GL_TEXTURE_2D )
 
-    textureProperties.__version = texture.version
+    textureProperties._version = texture.version
 
     if texture.onUpdate: texture.onUpdate( texture )

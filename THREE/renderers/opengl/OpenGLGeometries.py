@@ -1,17 +1,45 @@
 import OpenGLAttributes as attributes
 
 from ...core import bufferGeometry
+import OpenGLAttributes as attributes
 
 from OpenGL.GL import *
 
 geometries = {}
 
+def onGeometryDispose( event ):
+
+    from ..OpenGLRenderer import _infoMemory as infoMemory
+
+    geometry = event.target
+    buffergeometry = geometries[ geometry.id ]
+
+    if buffergeometry.index:
+
+        attributes.remove( buffergeometry.index )
+
+    for name in buffergeometry.attributes:
+
+        attributes.remove( buffergeometry.attributes[ name ] )
+
+    geometry.removeEventListener( "dispose", onGeometryDispose )
+
+    del geometries[ geometry.id ]
+
+    # TODO Remove duplicate code
+
+    # TODO wireframeAttribute
+
+    infoMemory.geometries -= 1
+
 def get( object, geometry ):
+
+    from ..OpenGLRenderer import _infoMemory as infoMemory
 
     # if has been cached
     if geometry.id in geometries: return geometries[ geometry.id ]
 
-    # TODO handle geometry on dispose
+    geometry.addEventListener( "dispose", onGeometryDispose )
 
     buffergeometry = None
 
@@ -30,6 +58,8 @@ def get( object, geometry ):
 
     # set cache
     geometries[ geometry.id ] = buffergeometry
+
+    infoMemory.geometries += 1
 
     return buffergeometry
 

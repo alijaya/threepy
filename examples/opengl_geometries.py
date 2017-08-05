@@ -12,6 +12,7 @@ from THREE.utils import Expando
 renderer = None
 camera = None
 scene = None
+clock = pygame.time.Clock()
 
 width, height = 800, 600
 
@@ -123,6 +124,9 @@ def animate():
 
                 pygame.quit()
                 quit()
+
+        clock.tick()
+        print( clock.get_fps() )
 
         timer = pygame.time.get_ticks() * 0.0001
 

@@ -23,7 +23,7 @@ class DirectGeometry( object ):
         self.skinWeights = []
         self.skinIndices = []
 
-        # self.lineDistances = []
+        self.lineDistances = []
 
         self.boundingBox = None
         self.boundingSphere = None
@@ -34,6 +34,7 @@ class DirectGeometry( object ):
         self.normalsNeedUpdate = False
         self.colorsNeedUpdate = False
         self.uvsNeedUpdate = False
+        self.lineDistancesNeedUpdate = False
         self.groupsNeedUpdate = False
 
     def computeGroups( self, geometry ):
@@ -210,6 +211,7 @@ class DirectGeometry( object ):
         self.normalsNeedUpdate = geometry.normalsNeedUpdate
         self.colorsNeedUpdate = geometry.colorsNeedUpdate
         self.uvsNeedUpdate = geometry.uvsNeedUpdate
+        self.lineDistancesNeedUpdate = geometry.lineDistancesNeedUpdate
         self.groupsNeedUpdate = geometry.groupsNeedUpdate
 
         return self
