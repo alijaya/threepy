@@ -15,7 +15,7 @@ class UniformsCache( object ):
 
     def get( self, light ):
 
-        if self.lights[ light.id ]: return self.lights[ light.id ] # cached
+        if light.id in self.lights: return self.lights[ light.id ] # cached
 
         uniforms = None
 
@@ -115,6 +115,18 @@ def setup( lights, shadows, camera ):
 
     viewMatrix = camera.matrixWorldInverse
 
+    state.directional = []
+    state.directionalShadowMap = []
+    state.directionalShadowMatrix = []
+    state.spot = []
+    state.spotShadowMap = []
+    state.spotShadowMatrix = []
+    state.rectArea = []
+    state.point = []
+    state.pointShadowMap = []
+    state.pointShadowMatrix = []
+    state.hemi = []
+
     # helper var
 
     vec3 = vector3.Vector3()
@@ -125,9 +137,8 @@ def setup( lights, shadows, camera ):
 
         color = light.color
         intensity = light.intensity
-        distance = light.distance
 
-        shadowMap = light.shadow.map.texture if light.shadow and light.shadow.map else None
+        # shadowMap = light.shadow.map.texture if light.shadow and light.shadow.map else None
 
         if hasattr( light, "isAmbientLight" ):
 
@@ -155,8 +166,8 @@ def setup( lights, shadows, camera ):
                 uniforms.shadowRadius = shadow.radius
                 uniforms.shadowMapSize = shadow.mapSize
 
-            state.directionalShadowMap.append( shadowMap )
-            state.directionalShadowMatrix.append( light.shadow.matrix )
+            # state.directionalShadowMap.append( shadowMap )
+            # state.directionalShadowMatrix.append( light.shadow.matrix )
             state.directional.append( uniforms )
 
         elif hasattr( light, "isSpotLight" ):
@@ -275,7 +286,7 @@ def setup( lights, shadows, camera ):
     pointLength = len( state.point )
     spotLength = len( state.spot )
     rectAreaLength = len( state.rectArea )
-    hemiLength = len( state.hemiLength )
+    hemiLength = len( state.hemi )
     shadowsLength = len( shadows )
 
-    state.hash = ",".join( [ directionalLength, pointLength, spotLength, rectAreaLength, hemiLength, shadowsLength ] )
+    state.hash = ",".join( map( lambda v: str( v ), [ directionalLength, pointLength, spotLength, rectAreaLength, hemiLength, shadowsLength ] ) )

@@ -95,6 +95,9 @@ info = Expando(
 
 #
 
+lightsArray = []
+shadowsArray = []
+
 currentRenderList = None
 
 # clearing
@@ -344,8 +347,17 @@ def projectObject( object, camera, sortObjects ):
 
     if visible:
 
+        # if object is Light type
+        if hasattr( object, "isLight" ):
+
+            lightsArray.append( object )
+
+            if object.castShadow:
+
+                shadowsArray.append( object )
+
         # if object is Mesh type
-        if hasattr( object, "isMesh" ):
+        elif hasattr( object, "isMesh" ):
 
             # whether it in Frustum
             if not object.frustumCulled or _frustum.intersectsObject( object ):
@@ -920,6 +932,7 @@ def render( scene, camera, renderTarget = None, forceClear = True ):
 
     global _currentGeometryProgram, _currentMaterialId, _currentCamera
     global _projScreenMatrix, _frustum, currentRenderList
+    global lightsArray, shadowsArray
 
     _currentGeometryProgram = ""
     _currentMaterialId = - 1
@@ -940,7 +953,9 @@ def render( scene, camera, renderTarget = None, forceClear = True ):
     _projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse )
     _frustum.setFromMatrix( _projScreenMatrix )
 
-    # TODO lightsArray, shadowsArray
+    lightsArray = []
+    shadowsArray = []
+
     # TODO spritesArray, flaresArray
     # TODO clipping
     
@@ -954,7 +969,11 @@ def render( scene, camera, renderTarget = None, forceClear = True ):
 
     # TODO clipping
 
-    # TODO lights
+    # TODO shadowMap
+
+    lights.setup( lightsArray, shadowsArray, camera )
+
+    # TODO clipping
 
     _infoRender.frame += 1
     _infoRender.calls = 0

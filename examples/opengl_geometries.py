@@ -37,9 +37,9 @@ def init():
 
     # scene.add( THREE.AmbientLight( 0x404040 ) )
 
-    # light = THREE.DirectionLight( 0xffffff )
-    # light.position.set( 0, 1, 0 )
-    # scene.add( light )
+    light = THREE.DirectionalLight( 0xffffff )
+    light.position.set( 0, 1, 0 )
+    scene.add( light )
 
     map = THREE.TextureLoader().load( toAbs( "textures/UV_Grid_Sm.jpg" ) )
     map.wrapS = map.wrapT = THREE.RepeatWrapping

@@ -256,6 +256,23 @@ class PureArrayUniform( object ):
         elif type == 0x8b54 or type == 0x8b58: return self.setValue3iv # _VEC3
         elif type == 0x8b55 or type == 0x8b59: return self.setValue4iv # _VEC4
 
+class StructuredUniform( UniformContainer ):
+
+    def __init__( self, id ):
+
+        self.id = id
+
+        super( StructuredUniform, self ).__init__()
+
+    def setValue( self, value ):
+
+        # Note: Don't need an extra 'renderer' parameter, since samplers
+        # are not allowed in structured uniforms.
+
+        for u in self.seq:
+
+            u.setValue( value[ u.id ] )
+
 # --- Top-level ---
 
 def addUniform( container, uniformObject ):
@@ -291,7 +308,7 @@ def parseUniform( activeInfo, addr, container ):
             # step into inner node / create it in case it doesn't exist
 
             map = container.map
-            next = map[ id ]
+            next = map.get( id )
 
             if not next:
 

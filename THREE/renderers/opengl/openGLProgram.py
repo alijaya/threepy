@@ -439,8 +439,6 @@ class OpenGLProgram( object ):
         glDeleteShader( self.vertexShader )
         glDeleteShader( self.fragmentShader )
 
-        # TODO caching action
-
         self.cachedUniforms = None
         self.cachedAttributes = None
     

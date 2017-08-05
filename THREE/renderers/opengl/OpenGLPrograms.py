@@ -180,13 +180,13 @@ def getProgramCode( material, parameters ):
     
     for param in parameterNames:
 
-        array.append( parameters[ param ] )
+        array.append( parameters[ param ] if parameters[ param ] is not None else "" )
     
     array.append( str( material.onBeforeCompile ) )
 
     array.append( renderer.gammaOutput )
 
-    return "".join( map( str, array ) )
+    return ",".join( map( str, array ) )
 
 def acquireProgram( material, shader, parameters, code ):
 
