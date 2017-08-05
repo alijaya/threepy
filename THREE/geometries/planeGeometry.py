@@ -15,7 +15,7 @@ from ..utils import Expando
 
 class PlaneGeometry( geometry.Geometry ):
 
-    def __init__( self, width, height, widthSegments = None, heightSegments = None ):
+    def __init__( self, width, height, widthSegments = 1, heightSegments = 1 ):
 
         super( PlaneGeometry, self ).__init__()
 
@@ -35,7 +35,7 @@ class PlaneGeometry( geometry.Geometry ):
 
 class PlaneBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, width, height, widthSegments = None, heightSegments = None ):
+    def __init__( self, width, height, widthSegments = 1, heightSegments = 1 ):
 
         super( PlaneBufferGeometry, self ).__init__()
 
@@ -51,8 +51,8 @@ class PlaneBufferGeometry( bufferGeometry.BufferGeometry ):
         width_half = width / 2
         height_half = height / 2
 
-        gridX = widthSegments or 1
-        gridY = heightSegments or 1
+        gridX = widthSegments
+        gridY = heightSegments
 
         gridX1 = gridX + 1
         gridY1 = gridY + 1

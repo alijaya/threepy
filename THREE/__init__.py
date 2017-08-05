@@ -14,6 +14,7 @@ from THREE.core.object3D import Object3D
 
 from THREE.geometries.Geometries import *
 
+from THREE.helpers.arrowHelper import ArrowHelper
 from THREE.helpers.axisHelper import AxisHelper
 
 from THREE.lights.ambientLight import AmbientLight

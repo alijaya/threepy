@@ -14,7 +14,7 @@ from ..utils import Expando
 
 class IcosahedronGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, detail = None ):
+    def __init__( self, radius = 1, detail = 0 ):
 
         super( IcosahedronGeometry, self ).__init__()
 
@@ -32,7 +32,7 @@ class IcosahedronGeometry( geometry.Geometry ):
 
 class IcosahedronBufferGeometry( polyhedronGeometry.PolyhedronBufferGeometry ):
 
-    def __init__( self, radius = None, detail = None ):
+    def __init__( self, radius = 1, detail = 0 ):
 
         t = ( 1 + math.sqrt( 5 ) ) / 2
 

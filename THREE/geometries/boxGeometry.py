@@ -14,7 +14,7 @@ from ..utils import Expando
 
 class BoxGeometry( geometry.Geometry ):
 
-    def __init__( self, width, height, depth, widthSegments = None, heightSegments = None, depthSegments = None ):
+    def __init__( self, width, height, depth, widthSegments = 1, heightSegments = 1, depthSegments = 1 ):
 
         super( BoxGeometry, self ).__init__()
 
@@ -36,7 +36,7 @@ class BoxGeometry( geometry.Geometry ):
 
 class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, width, height, depth, widthSegments = None, heightSegments = None, depthSegments = None ):
+    def __init__( self, width, height, depth, widthSegments = 1, heightSegments = 1, depthSegments = 1 ):
 
         super( BoxBufferGeometry, self ).__init__()
 
@@ -52,10 +52,6 @@ class BoxBufferGeometry( bufferGeometry.BufferGeometry ):
         )
 
         # segments
-
-        widthSegments = widthSegments or 1
-        heightSegments = heightSegments or 1
-        depthSegments = depthSegments or 1
 
         # buffers
 

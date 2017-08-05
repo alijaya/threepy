@@ -18,7 +18,7 @@ from ..utils import Expando
 
 class CircleGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, segments = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, radius = 50, segments = 8, thetaStart = 0, thetaLength = 2 * math.pi ):
 
         super( CircleGeometry, self ).__init__()
 
@@ -38,7 +38,7 @@ class CircleGeometry( geometry.Geometry ):
 
 class CircleBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, radius = None, segments = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, radius = 50, segments = 8, thetaStart = 0, thetaLength = 2 * math.pi ):
 
         super( CircleBufferGeometry, self ).__init__()
 
@@ -51,11 +51,7 @@ class CircleBufferGeometry( bufferGeometry.BufferGeometry ):
             thetaLength = thetaLength
         )
 
-        radius = radius or 50
-        segments = max( 3, segments or 8 )
-
-        thetaStart = thetaStart or 0
-        thetaLength = thetaLength or ( math.pi * 2 )
+        segments = max( 3, segments )
 
         # buffers
 

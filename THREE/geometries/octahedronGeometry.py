@@ -14,7 +14,7 @@ from ..utils import Expando
 
 class OctahedronGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, detail = None ):
+    def __init__( self, radius = 1, detail = 0 ):
 
         super( OctahedronGeometry, self ).__init__()
 
@@ -32,7 +32,7 @@ class OctahedronGeometry( geometry.Geometry ):
 
 class OctahedronBufferGeometry( polyhedronGeometry.PolyhedronBufferGeometry ):
 
-    def __init__( self, radius = None, detail = None ):
+    def __init__( self, radius = 1, detail = 0 ):
 
         vertices = [
             1, 0, 0,   - 1, 0, 0,    0, 1, 0,    0, - 1, 0,    0, 0, 1,    0, 0, - 1

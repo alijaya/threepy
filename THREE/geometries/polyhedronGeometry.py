@@ -19,7 +19,7 @@ from ..utils import Expando
 
 class PolyhedronGeometry( geometry.Geometry ):
 
-    def __init__( self, vertices, indices, radius, detail ):
+    def __init__( self, vertices, indices, radius = 1, detail = 0 ):
 
         super( PolyhedronGeometry, self ).__init__()
 
@@ -39,7 +39,7 @@ class PolyhedronGeometry( geometry.Geometry ):
 
 class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, vertices, indices, radius = None, detail = None ):
+    def __init__( self, vertices, indices, radius = 1, detail = 0 ):
 
         super( PolyhedronBufferGeometry, self ).__init__()
 
@@ -51,9 +51,6 @@ class PolyhedronBufferGeometry( bufferGeometry.BufferGeometry ):
             radius = radius,
             detail = detail
         )
-
-        radius = radius or 1
-        detail = detail or 0
 
         # default buffer data
 

@@ -110,7 +110,7 @@ class BufferGeometry( eventDispatcher.EventDispatcher ):
         if normal is not None:
 
             normalMatrix = matrix3.Matrix3().getNormalMatrix( matrix )
-
+            
             normalMatrix.applyToBufferAttribute( normal )
             normal.needsUpdate = True
 

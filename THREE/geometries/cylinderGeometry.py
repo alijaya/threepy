@@ -17,7 +17,7 @@ from ..utils import Expando
 
 class CylinderGeometry( geometry.Geometry ):
 
-    def __init__( self, radiusTop = None, radiusBottom = None, height = None, radialSegments = None, heightSegments = None, openEnded = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, radiusTop = 20, radiusBottom = 20, height = 100, radialSegments = 8, heightSegments = 1, openEnded = False, thetaStart = 0.0, thetaLength = 2.0 * math.pi ):
 
         super( CylinderGeometry, self ).__init__()
 
@@ -41,7 +41,7 @@ class CylinderGeometry( geometry.Geometry ):
 
 class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, radiusTop = None, radiusBottom = None, height = None, radialSegments = None, heightSegments = None, openEnded = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, radiusTop = 20, radiusBottom = 20, height = 100, radialSegments = 8, heightSegments = 1, openEnded = False, thetaStart = 0.0, thetaLength = 2.0 * math.pi ):
 
         super( CylinderBufferGeometry, self ).__init__()
 
@@ -57,17 +57,6 @@ class CylinderBufferGeometry( bufferGeometry.BufferGeometry ):
             thetaStart = thetaStart,
             thetaLength = thetaLength
         )
-
-        radiusTop = radiusTop or 20
-        radiusBottom = radiusBottom or 20
-        height = height or 100
-
-        radialSegments = radialSegments or 8
-        heightSegments = heightSegments or 1
-
-        openEnded = openEnded or False
-        thetaStart = thetaStart or 0.0
-        thetaLength = thetaLength or ( 2.0 * math.pi )
 
         # buffers
 

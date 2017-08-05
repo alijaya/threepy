@@ -86,10 +86,10 @@ class Matrix3( object ):
         return self
 
     def applyToBufferAttribute( self, attribute ):
+        
+        v1 = vector3.Vector3()
 
-        v1 = Vector3()
-
-        for i in xrange( attribute.count() ):
+        for i in xrange( attribute.count ):
 
             v1.x = attribute.getX( i )
             v1.y = attribute.getY( i )

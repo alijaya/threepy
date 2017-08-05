@@ -17,7 +17,7 @@ from ..utils import Expando
 
 class RingGeometry( geometry.Geometry ):
 
-    def __init__( self, innerRadius = None, outerRadius = None, thetaSegments = None, phiSegments = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, innerRadius = 20, outerRadius = 50, thetaSegments = 8, phiSegments = 1, thetaStart = 0, thetaLength = 2 * math.pi ):
 
         super( RingGeometry, self ).__init__()
 
@@ -39,7 +39,7 @@ class RingGeometry( geometry.Geometry ):
 
 class RingBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, innerRadius = None, outerRadius = None, thetaSegments = None, phiSegments = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, innerRadius = 20, outerRadius = 50, thetaSegments = 8, phiSegments = 1, thetaStart = 0, thetaLength = 2 * math.pi ):
 
         super( RingBufferGeometry, self ).__init__()
 
@@ -54,14 +54,8 @@ class RingBufferGeometry( bufferGeometry.BufferGeometry ):
             thetaLength = thetaLength
         )
 
-        innerRadius = innerRadius or 20
-        outerRadius = outerRadius or 50
-
-        thetaStart = thetaStart or 0
-        thetaLength = thetaLength or ( math.pi * 2 )
-
-        thetaSegments = max( 3, thetaSegments or 8 )
-        phiSegments = max( 1, phiSegments or 1 )
+        thetaSegments = max( 3, thetaSegments )
+        phiSegments = max( 1, phiSegments )
 
         # buffers
 

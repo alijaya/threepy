@@ -17,7 +17,7 @@ from ..utils import Expando
 
 class TorusGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, tube = None, radialSegments = None, tubularSegments = None, arc = None ):
+    def __init__( self, radius = 100, tube = 40, radialSegments = 8, tubularSegments = 6, arc = 2 * math.pi ):
 
         super( TorusGeometry, self ).__init__()
 
@@ -38,7 +38,7 @@ class TorusGeometry( geometry.Geometry ):
 
 class TorusBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, radius = None, tube = None, radialSegments = None, tubularSegments = None, arc = None ):
+    def __init__( self, radius = 100, tube = 40, radialSegments = 8, tubularSegments = 6, arc = 2 * math.pi ):
 
         super( TorusBufferGeometry, self ).__init__()
 
@@ -51,12 +51,6 @@ class TorusBufferGeometry( bufferGeometry.BufferGeometry ):
             tubularSegments = tubularSegments,
             arc = arc
         )
-
-        radius = radius or 100
-        tube = tube or 40
-        radialSegments = radialSegments or 8
-        tubularSegments = tubularSegments or 6
-        arc = arc or ( math.pi * 2 )
 
         # buffers
 

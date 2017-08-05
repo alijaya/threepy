@@ -109,9 +109,9 @@ def init():
     object.position.set( 200, 0, -200 )
     scene.add( object )
 
-    # object = THREE.ArrowHelper( THREE.Vector3( 0, 1, 0 ), THREE.Vector3( 0, 0, 0 ), 50 )
-    # object.position.set( 400, 0, -200 )
-    # scene.add( object )
+    object = THREE.ArrowHelper( THREE.Vector3( 0, 1, 0 ), THREE.Vector3( 0, 0, 0 ), 50 )
+    object.position.set( 400, 0, -200 )
+    scene.add( object )
 
 def animate():
 

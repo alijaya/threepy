@@ -17,7 +17,7 @@ from ..utils import Expando
 
 class SphereGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, widthSegments = None, heightSegments = None, phiStart = None, phiLength = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, radius = 50, widthSegments = 8, heightSegments = 6, phiStart = 0, phiLength = 2 * math.pi, thetaStart = 0, thetaLength = math.pi ):
 
         super( SphereGeometry, self ).__init__()
 
@@ -40,7 +40,7 @@ class SphereGeometry( geometry.Geometry ):
 
 class SphereBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, radius = None, widthSegments = None, heightSegments = None, phiStart = None, phiLength = None, thetaStart = None, thetaLength = None ):
+    def __init__( self, radius = 50, widthSegments = 8, heightSegments = 6, phiStart = 0, phiLength = 2 * math.pi, thetaStart = 0, thetaLength = math.pi ):
 
         super( SphereBufferGeometry, self ).__init__()
 
@@ -56,16 +56,8 @@ class SphereBufferGeometry( bufferGeometry.BufferGeometry ):
             thetaLength = thetaLength
         )
 
-        radius = radius or 50
-
-        widthSegments = max( 3, widthSegments or 8 )
-        heightSegments = max( 2, heightSegments or 6 )
-
-        phiStart = phiStart or 0
-        phiLength = phiLength or ( math.pi * 2 )
-
-        thetaStart = thetaStart or 0
-        thetaLength = thetaLength or math.pi
+        widthSegments = max( 3, widthSegments )
+        heightSegments = max( 2, heightSegments )
 
         thetaEnd = thetaStart + thetaLength
 

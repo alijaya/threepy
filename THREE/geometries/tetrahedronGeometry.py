@@ -14,7 +14,7 @@ from ..utils import Expando
 
 class TetrahedronGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, detail = None ):
+    def __init__( self, radius = 1, detail = 0 ):
 
         super( TetrahedronGeometry, self ).__init__()
 
@@ -32,7 +32,7 @@ class TetrahedronGeometry( geometry.Geometry ):
 
 class TetrahedronBufferGeometry( polyhedronGeometry.PolyhedronBufferGeometry ):
 
-    def __init__( self, radius = None, detail = None ):
+    def __init__( self, radius = 1, detail = 0 ):
 
         vertices = [
             1,  1,  1,   - 1, - 1,  1,   - 1,  1, - 1,    1, - 1, - 1

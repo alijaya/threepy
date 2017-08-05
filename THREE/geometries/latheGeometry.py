@@ -20,7 +20,7 @@ from ..utils import Expando
 
 class LatheGeometry( geometry.Geometry ):
 
-    def __init__( self, points, segments = None, phiStart = None, phiLength = None ):
+    def __init__( self, points, segments = 12, phiStart = 0, phiLength = 2 * math.pi ):
 
         super( LatheGeometry, self ).__init__()
 
@@ -40,7 +40,7 @@ class LatheGeometry( geometry.Geometry ):
 
 class LatheBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, points, segments = None, phiStart = None, phiLength = None ):
+    def __init__( self, points, segments = 12, phiStart = 0, phiLength = 2 * math.pi ):
 
         super( LatheBufferGeometry, self ).__init__()
 
@@ -52,10 +52,6 @@ class LatheBufferGeometry( bufferGeometry.BufferGeometry ):
             phiStart = phiStart,
             phiLength = phiLength
         )
-
-        segments = segments or 12
-        phiStart = phiStart or 0
-        phiLength = phiLength or math.pi * 2
 
         # clamp phiLength so it"s in range of [ 0, 2PI ]
 

@@ -18,7 +18,7 @@ from ..utils import Expando
 
 class TorusKnotGeometry( geometry.Geometry ):
 
-    def __init__( self, radius = None, tube = None, tubularSegments = None, radialSegments = None, p = None, q = None ):
+    def __init__( self, radius = 100, tube = 40, tubularSegments = 64, radialSegments = 8, p = 2, q = 3 ):
 
         super( TorusKnotGeometry, self ).__init__()
 
@@ -40,7 +40,7 @@ class TorusKnotGeometry( geometry.Geometry ):
 
 class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
 
-    def __init__( self, radius = None, tube = None, tubularSegments = None, radialSegments = None, p = None, q = None ):
+    def __init__( self, radius = 100, tube = 40, tubularSegments = 64, radialSegments = 8, p = 2, q = 3 ):
 
         super( TorusKnotBufferGeometry, self ).__init__()
 
@@ -54,13 +54,6 @@ class TorusKnotBufferGeometry( bufferGeometry.BufferGeometry ):
             p = p,
             q = q
         )
-
-        radius = radius or 100
-        tube = tube or 40
-        tubularSegments = tubularSegments or 64
-        radialSegments = radialSegments or 8
-        p = p or 2
-        q = q or 3
 
         # buffers
 
