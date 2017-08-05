@@ -1,6 +1,26 @@
 from OpenGL.GL import *
 
+import OpenGLExtensions as extensions
+
 import logging
+
+def getMaxAnisotropy():
+
+    global maxAnisotropy
+
+    if maxAnisotropy is not None: return maxAnisotropy
+
+    extension = extensions.get( "EXT_texture_filter_anisotropic" )
+
+    if extension:
+
+        maxAnisotropy = glGetFloatv( extension.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT )
+
+    else:
+
+        maxAnisotropy = 0
+
+    return maxAnisotropy
 
 def getMaxPrecision( precision ):
 
@@ -25,6 +45,7 @@ def getMaxPrecision( precision ):
 
     # return "lowp"
 
+maxAnisotropy = None
 precision = "highp"
 maxPrecision = getMaxPrecision( precision )
 

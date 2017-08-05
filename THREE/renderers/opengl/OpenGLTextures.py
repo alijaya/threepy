@@ -13,6 +13,7 @@ import OpenGLState as state
 import OpenGLProperties as properties
 import OpenGLCapabilities as capabilities
 import OpenGLUtils as utils
+import OpenGLExtensions as extensions
 
 # TODO _isWebGL2
 
@@ -106,7 +107,17 @@ def setTextureParameters( textureType, texture, isPowerOfTwoImage ):
 
             logging.warning( "THREE.WebGLRenderer: Texture is not power of two. Texture.minFilter should be set to THREE.NearestFilter or THREE.LinearFilter. %s" % texture )
     
-    # TODO extension
+    extension = extensions.get( "EXT_texture_filter_anisotropic" )
+
+    if extension:
+
+        if texture.type == FloatType and extensions.get( "OES_texture_float_linear" ) is None: return
+        if texture.type == HalfFloatType and extensions.get( "OES_texture_half_float_linear" ) is None: return
+
+        if texture.anisotropy > 1 or properties.get( texture ).__currentAnisotropy:
+
+            glTexParameterf( textureType, extension.GL_TEXTURE_MAX_ANISOTROPY_EXT, min( texture.anisotropy, capabilities.getMaxAnisotropy() ) )
+            properties.get( texture ).__currentAnisotropy = texture.anisotropy
 
 def uploadTexture( textureProperties, texture, slot ):
 
