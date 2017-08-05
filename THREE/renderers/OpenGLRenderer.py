@@ -156,6 +156,10 @@ def setPixelRatio( value ):
 
     setSize( _width, _height, False )
 
+def getTargetPixelRatio():
+
+    return _pixelRatio if _currentRenderTarget is None else 1
+
 def getSize():
 
     return Expando(
@@ -357,7 +361,7 @@ def projectObject( object, camera, sortObjects ):
                 shadowsArray.append( object )
 
         # if object is Mesh type
-        elif hasattr( object, "isMesh" ):
+        elif hasattr( object, "isMesh" ) or hasattr( object, "isLine" ) or hasattr( object, "isPoints" ):
 
             # whether it in Frustum
             if not object.frustumCulled or _frustum.intersectsObject( object ):
@@ -559,6 +563,19 @@ def refreshUniformsCommon( uniforms, material ):
 
         uniforms.offsetRepeat.value.set( offset.x, offset.y, repeat.x, repeat.y )
 
+def refreshUniformsLine( uniforms, material ):
+
+    uniforms.diffuse.value = material.color
+    uniforms.opacity.value = material.opacity
+
+def refreshUniformsDash( uniforms, material ):
+
+    uniforms.dashSize.value = material.dashSize
+    uniforms.totalSize.value = material.dashSize + material.gapSize
+    uniforms.scale.value = material.scale
+
+# TODO refreshUniformsPoints
+
 def refreshUniformsFog( uniforms, fog ):
 
     uniforms.fogColor.value = fog.color
@@ -575,6 +592,36 @@ def refreshUniformsFog( uniforms, fog ):
 def refreshUniformsLambert( uniforms, material ):
 
     if material.emissiveMap: uniforms.emissiveMap.value = material.emissiveMap
+
+# TODO refreshUniformsPhong
+
+# TODO refreshUniformsToon
+
+# TODO refreshUniformsStandard
+
+# TODO refreshUniformsPhysical
+
+# TODO refreshUniformsDepth
+
+# TODO refreshUniformsDistance
+
+def refreshUniformsNormal( uniforms, material ):
+
+    if material.bumpMap:
+
+        uniforms.bumpMap.value = material.bumpMap
+        uniforms.bumpScale.value = material.bumpScale
+
+    if material.normalMap:
+
+        uniforms.normalMap.value = material.normalMap
+        uniforms.normalScale.value.copy( material.normalScale )
+
+    if material.displacementMap:
+
+        uniforms.displacementMap.value = material.displacementMap
+        uniforms.displacementScale.value = material.displacementScale
+        uniforms.displacementBias.value = material.displacementBias
 
 # If uniforms are marked as clean, they don't need to be loaded to the GPU.
 
@@ -686,7 +733,7 @@ def setProgram( camera, fog, material, object ):
     # TODO material.skinning
 
     if refreshMaterial:
-
+        
         p_uniforms.setValue( "toneMappingExposure", toneMappingExposure )
         p_uniforms.setValue( "toneMappingWhitePoint", toneMappingWhitePoint )
 
@@ -702,7 +749,7 @@ def setProgram( camera, fog, material, object ):
             # the GL state when required
 
             markUniformsLightsNeedsUpdate( m_uniforms, refreshLights )
-
+        
         if fog and material.fog:
 
             refreshUniformsFog( m_uniforms, fog )
@@ -727,6 +774,35 @@ def setProgram( camera, fog, material, object ):
         #     else:
 
         #         refreshUniformsPhong( m_uniforms, material )
+
+        # TODO isMeshStandardMaterial
+
+        elif material.isMeshNormalMaterial:
+
+            refreshUniformsCommon( m_uniforms, material )
+            refreshUniformsNormal( m_uniforms, material )
+        
+        # elif material.isMeshDepthMaterial:
+
+        #     refreshUniformsCommon( m_uniforms, material )
+        #     refreshUniformsDepth( m_uniforms, material )
+
+        # elif material.isMeshDistanceMaterial:
+
+        #     refreshUniformsCommon( m_uniforms, material )
+        #     refreshUniformsDistance( m_uniforms, material )
+
+        elif material.isLineBasicMaterial:
+
+            refreshUniformsLine( m_uniforms, material )
+
+            if material.isLineDashedMaterial:
+
+                refreshUniformsDash( m_uniforms, material )
+        
+        # TODO isPointsMaterial
+        # TODO isShadowMaterial
+
 
         # TODO RectAreaLight Texture
 
@@ -889,7 +965,27 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
         elif dm == TriangleStripDrawMode: renderer.setMode( GL_TRIANGLE_STRIP )
         elif dm == TriangleFanDrawMode: renderer.setMode( GL_TRIANGLE_FAN )
 
-    # TODO isLine
+    elif hasattr( object, "isLine" ):
+
+        lineWidth = material.lineWidth or 1 # Not using Line*Material
+
+        state.setLineWidth( lineWidth * getTargetPixelRatio() )
+
+        if hasattr( object, "isLineSegments" ):
+
+            renderer.setMode( GL_LINES )
+
+        elif hasattr( object, "isLineLoop" ):
+
+            renderer.setMode( GL_LINE_LOOP )
+
+        else:
+
+            renderer.setMode( GL_LINE_STRIP )
+
+    elif hasattr( object, "isPoints" ):
+
+        renderer.setMode( GL_POINTS )
 
     # TODO instance
 

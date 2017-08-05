@@ -1,12 +1,8 @@
 class EventDispatcher( object ):
 
-    def __init__( self ):
-        
-        self._listeners = None
-
     def addEventListener( self, type, listener ):
 
-        if self._listeners is None: self._listeners = {}
+        if not getattr( self, "_listeners", None ): self._listeners = {}
 
         listeners = self._listeners
 
@@ -20,7 +16,7 @@ class EventDispatcher( object ):
     
     def hasEventListener( self, type, listener ):
 
-        if self._listeners is None: return False
+        if not getattr( self, "_listeners", None ): return False
 
         listeners = self._listeners
 
@@ -28,7 +24,7 @@ class EventDispatcher( object ):
 
     def removeEventListener( self, type, listener ):
 
-        if self._listeners is None: return
+        if not getattr( self, "_listeners", None ): return
 
         listeners = self._listeners
         
@@ -38,7 +34,7 @@ class EventDispatcher( object ):
     
     def dispatchEvent( self, event ):
 
-        if self._listeners is None: return
+        if not getattr( self, "_listeners", None ): return
 
         listeners = self._listeners
 

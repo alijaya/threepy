@@ -321,6 +321,16 @@ def setBlending( blending, blendEquation = None, blendSrc = None, blendDst = Non
             currentBlending = blending
             currentPremultipliedAlpha = premultipliedAlpha
 
+def setLineWidth( width ):
+
+    global currentLineWidth
+
+    if width != currentLineWidth:
+
+        if lineWidthAvailable: glLineWidth( width )
+
+        currentLineWidth = width
+
 def setPolygonOffset( polygonOffset, factor = None, units = None ):
 
     global currentPolygonOffsetFactor, currentPolygonOffsetUnits

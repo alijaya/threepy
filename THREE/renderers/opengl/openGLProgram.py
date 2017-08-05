@@ -236,7 +236,7 @@ class OpenGLProgram( object ):
                 # opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
                 # opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
                 # opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
-                # opt( "#define USE_COLOR", parameters.vertexColors ),
+                opt( "#define USE_COLOR", parameters.vertexColors ),
 
                 opt( "#define FLAT_SHADED", parameters.flatShading ),
 
@@ -348,7 +348,7 @@ class OpenGLProgram( object ):
                 # opt( "#define USE_ROUGHNESSMAP", parameters.roughnessMap ),
                 # opt( "#define USE_METALNESSMAP", parameters.metalnessMap ),
                 # opt( "#define USE_ALPHAMAP", parameters.alphaMap ),
-                # opt( "#define USE_COLOR", parameters.vertexColors ),
+                opt( "#define USE_COLOR", parameters.vertexColors ),
 
                 # opt( "#define USE_GRADIENTMAP", parameters.gradientMap ),
 

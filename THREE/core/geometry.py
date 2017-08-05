@@ -36,8 +36,6 @@ class Geometry( eventDispatcher.EventDispatcher ):
 
     def __init__( self ):
 
-        super( Geometry, self ).__init__()
-
         self.isGeometry = True
 
         self.id = Geometry.getGeometryId()

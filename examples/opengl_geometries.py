@@ -46,7 +46,6 @@ def init():
     map.anisotropy = 16
 
     material = THREE.MeshLambertMaterial( map = map, side = THREE.DoubleSide )
-    # material = THREE.MeshBasicMaterial( map = map, side = THREE.DoubleSide )
 
     object = THREE.Mesh( THREE.SphereGeometry( 75, 20, 10 ), material )
     object.position.set( -400, 0, 200 )
@@ -106,9 +105,9 @@ def init():
     object.position.set( 0, 0, -200 )
     scene.add( object )
 
-    # object = THREE.AxisHelper( 50 )
-    # object.position.set( 200, 0, -200 )
-    # scene.add( object )
+    object = THREE.AxisHelper( 50 )
+    object.position.set( 200, 0, -200 )
+    scene.add( object )
 
     # object = THREE.ArrowHelper( THREE.Vector3( 0, 1, 0 ), THREE.Vector3( 0, 0, 0 ), 50 )
     # object.position.set( 400, 0, -200 )

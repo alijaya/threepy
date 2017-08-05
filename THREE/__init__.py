@@ -14,6 +14,8 @@ from THREE.core.object3D import Object3D
 
 from THREE.geometries.Geometries import *
 
+from THREE.helpers.axisHelper import AxisHelper
+
 from THREE.lights.ambientLight import AmbientLight
 from THREE.lights.directionalLight import DirectionalLight
 from THREE.lights.light import Light
@@ -44,6 +46,8 @@ from THREE.math.vector2 import Vector2
 from THREE.math.vector3 import Vector3
 from THREE.math.vector4 import Vector4
 
+from THREE.objects.line import Line
+from THREE.objects.lineSegments import LineSegments
 from THREE.objects.mesh import Mesh
 
 from THREE.renderers import OpenGLRenderer

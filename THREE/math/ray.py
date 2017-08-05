@@ -4,7 +4,7 @@ import math
 import vector3
 
 """
- * @author bhouston / http:#clara.io
+ * @author bhouston / http://clara.io
  """
 
 class Ray( object ):

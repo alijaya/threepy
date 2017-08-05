@@ -23,7 +23,7 @@ import geometry
  * @author mrdoob / http:#mrdoob.com/
  """
 
-class BufferGeometry( object ):
+class BufferGeometry( eventDispatcher.EventDispatcher ):
 
     MaxIndex = 65535
 
