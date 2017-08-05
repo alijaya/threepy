@@ -14,6 +14,7 @@ from THREE.core.object3D import Object3D
 
 from THREE.geometries.Geometries import *
 
+from THREE.lights.ambientLight import AmbientLight
 from THREE.lights.directionalLight import DirectionalLight
 from THREE.lights.light import Light
 

@@ -35,7 +35,7 @@ def init():
 
     scene = THREE.Scene()
 
-    # scene.add( THREE.AmbientLight( 0x404040 ) )
+    scene.add( THREE.AmbientLight( 0x404040 ) )
 
     light = THREE.DirectionalLight( 0xffffff )
     light.position.set( 0, 1, 0 )

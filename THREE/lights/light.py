@@ -8,7 +8,7 @@ from ..math import color
 
 class Light( object3D.Object3D ):
 
-    def __init__( self, col, intensity = 1 ):
+    def __init__( self, col = 0xffffff, intensity = 1 ):
 
         super( Light, self ).__init__()
 

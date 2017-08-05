@@ -9,7 +9,7 @@ from ..core import object3D
 
 class DirectionalLight( light.Light ):
 
-    def __init__( self, color, intensity = 1 ):
+    def __init__( self, color = 0xffffff, intensity = 1 ):
 
         super( DirectionalLight, self ).__init__( color, intensity )
 
