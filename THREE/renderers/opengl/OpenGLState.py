@@ -321,6 +321,25 @@ def setBlending( blending, blendEquation = None, blendSrc = None, blendDst = Non
             currentBlending = blending
             currentPremultipliedAlpha = premultipliedAlpha
 
+def setPolygonOffset( polygonOffset, factor = None, units = None ):
+
+    global currentPolygonOffsetFactor, currentPolygonOffsetUnits
+
+    if polygonOffset:
+
+        enable( GL_POLYGON_OFFSET_FILL )
+
+        if currentPolygonOffsetFactor != factor or currentPolygonOffsetUnits != units:
+
+            glPolygonOffset( factor, units )
+
+            currentPolygonOffsetFactor = factor
+            currentPolygonOffsetUnits = units
+    
+    else:
+
+        disable( GL_POLYGON_OFFSET_FILL )
+
 def setMaterial( material ):
 
     if material.side == DoubleSide: disable( GL_CULL_FACE )
@@ -342,7 +361,7 @@ def setMaterial( material ):
     depthBuffer.setMask( material.depthWrite )
     colorBuffer.setMask( material.colorWrite )
 
-    # TODO setPolygonOffset( material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits )
+    setPolygonOffset( material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits )
 
 def setFlipSided( flipSided ):
 

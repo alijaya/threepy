@@ -22,7 +22,7 @@ camera = THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 )
 renderer = THREE.OpenGLRenderer
 
 geometry = THREE.BoxGeometry( 1, 1, 1 )
-material = THREE.MeshBasicMaterial( Expando( color = 0x00ff00 ) )
+material = THREE.MeshBasicMaterial(color = 0x00ff00 )
 cube = THREE.Mesh( geometry, material )
 scene.add( cube )
 

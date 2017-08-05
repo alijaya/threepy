@@ -901,6 +901,6 @@ def render( scene, camera, renderTarget = None, forceClear = True ):
     state.buffers.depth.setMask( True )
     state.buffers.color.setMask( True )
 
-    # TODO state.setPolygonOffset( False )
+    state.setPolygonOffset( False )
 
     # TODO vr

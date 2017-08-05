@@ -30,7 +30,7 @@ def init():
     renderer.init()
     renderer.setSize( width, height )
 
-    camera = THREE.PerspectiveCamera( 45, width / height, 1, 2000 )
+    camera = THREE.PerspectiveCamera( 45, width / height, 10, 2000 ) # change near from 1 to 10, to avoid z fighting :(
     camera.position.z = 400
 
     scene = THREE.Scene()
@@ -46,7 +46,7 @@ def init():
     map.anisotropy = 16
 
     # material = THREE.MeshLambertMaterial( map = map, side = THREE.DoubleSide )
-    material = THREE.MeshBasicMaterial( map = map )
+    material = THREE.MeshBasicMaterial( map = map, side = THREE.DoubleSide )
 
     object = THREE.Mesh( THREE.SphereGeometry( 75, 20, 10 ), material )
     object.position.set( -400, 0, 200 )
@@ -126,7 +126,7 @@ def animate():
                 quit()
 
         clock.tick()
-        print( clock.get_fps() )
+        # print( clock.get_fps() )
 
         timer = pygame.time.get_ticks() * 0.0001
 
