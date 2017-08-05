@@ -10,7 +10,7 @@ from ..utils import Expando
  * @author alteredq / http:#alteredqualia.com/
  """
 
-class Material( Expando ):
+class Material( Expando, eventDispatcher.EventDispatcher ): # multiple inheritance? ugh
 
     MaterialId = 0
 
@@ -78,7 +78,7 @@ class Material( Expando ):
 
         self.needsUpdate = True
 
-        self.onBeforeCompile = lambda: None
+        self.onBeforeCompile = lambda *args: None
 
     def setValues( self, **values ):
 

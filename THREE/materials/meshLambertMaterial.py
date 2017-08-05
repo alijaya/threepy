@@ -9,6 +9,7 @@ from ..math import color
  * parameters = {
  *  "color": <hex>,
  *  "opacity": <float>,
+ *
  *  "map": THREE.Texture( <Image> ),
  *
  *  "lightMap": THREE.Texture( <Image> ),
@@ -16,6 +17,10 @@ from ..math import color
  *
  *  "aoMap": THREE.Texture( <Image> ),
  *  "aoMapIntensity": <float>
+ *
+ *  "emissive": <hex>,
+ *  "emissiveIntensity": <float>
+ *  "emissiveMap": THREE.Texture( <Image> ),
  *
  *  "specularMap": THREE.Texture( <Image> ),
  *
@@ -26,27 +31,25 @@ from ..math import color
  *  "reflectivity": <float>,
  *  "refractionRatio": <float>,
  *
- *  "depthTest": <bool>,
- *  "depthWrite": <bool>,
- *
  *  "wireframe": <boolean>,
  *  "wireframeLinewidth": <float>,
  *
  *  "skinning": <bool>,
- *  "morphTargets": <bool>
+ *  "morphTargets": <bool>,
+ *  "morphNormals": <bool>
  * """
 
-class MeshBasicMaterial( material.Material ):
+class MeshLambertMaterial( material.Material ):
 
     def __init__( self, **parameters ):
 
-        super( MeshBasicMaterial, self ).__init__()
-        
-        self.isMeshBasicMaterial = True
+        super( MeshLambertMaterial, self ).__init__()
 
-        self.type = "MeshBasicMaterial"
+        self.isMeshLambertMaterial = True
 
-        self.color = color.Color( 0xffffff ) # emissive
+        self.type = "MeshLambertMaterial"
+
+        self.color = color.Color( 0xffffff ) # diffuse
 
         self.map = None
 
@@ -55,6 +58,10 @@ class MeshBasicMaterial( material.Material ):
 
         self.aoMap = None
         self.aoMapIntensity = 1.0
+
+        self.emissive = color.Color( 0x000000 )
+        self.emissiveIntensity = 1.0
+        self.emissiveMap = None
 
         self.specularMap = None
 
@@ -72,14 +79,13 @@ class MeshBasicMaterial( material.Material ):
 
         self.skinning = False
         self.morphTargets = False
-
-        self.lights = False
+        self.morphNormals = False
 
         self.setValues( **parameters )
 
-    def copy ( self, source ):
+    def copy( self, source ):
 
-        super( MeshBasicMaterial, self ).copy( source )
+        super( MeshLambertMaterial, self ).copy( source )
 
         self.color.copy( source.color )
 
@@ -90,6 +96,10 @@ class MeshBasicMaterial( material.Material ):
 
         self.aoMap = source.aoMap
         self.aoMapIntensity = source.aoMapIntensity
+
+        self.emissive.copy( source.emissive )
+        self.emissiveMap = source.emissiveMap
+        self.emissiveIntensity = source.emissiveIntensity
 
         self.specularMap = source.specularMap
 
@@ -107,5 +117,6 @@ class MeshBasicMaterial( material.Material ):
 
         self.skinning = source.skinning
         self.morphTargets = source.morphTargets
+        self.morphNormals = source.morphNormals
 
         return self

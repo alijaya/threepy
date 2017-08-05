@@ -27,6 +27,7 @@ from opengl import OpenGLIndexedBufferRenderer as indexedBufferRenderer
 from opengl import OpenGLBufferRenderer as bufferRenderer
 from opengl import OpenGLAttributes as attributes
 from opengl import OpenGLTextures as textures
+from opengl import OpenGLLights as lights
 
 from opengl.openGLUniforms import OpenGLUniforms
 
@@ -247,6 +248,34 @@ def dispose():
 
     # TODO vr
 
+# Events
+
+def onMaterialDispose( event ):
+
+    material = event.target
+
+    material.removeEventListener( "dispose", onMaterialDispose )
+
+    deallocateMaterial( material )
+
+# Buffer deallocation
+
+def deallocateMaterial( material ):
+
+    releaseMaterialProgramReference( material )
+
+    properties.remove( material )
+
+def releaseMaterialProgramReference( material ):
+
+    programInfo = properties.get( material ).program
+
+    del material.program
+
+    if programInfo:
+
+        programCache.releaseProgram( programInfo )
+
 #
 
 def getRenderTarget():
@@ -352,22 +381,12 @@ def projectObject( object, camera, sortObjects ):
 
         projectObject( child, camera, sortObjects )
 
-def releaseMaterialProgramReference( material ):
-
-    programInfo = properties.get( material ).program
-
-    del material.program
-
-    if programInfo:
-
-        programCache.releaseProgram( programInfo )
-
 def initMaterial( material, fog, object ):
 
     materialProperties = properties.get( material )
 
     # parameters = programCache.getParameters( material, lights.state, shadowsArray, fog, _clipping.numPlanes, _clipping.numIntersection, object )
-    parameters = programCache.getParameters( material, None, None, fog, 0, None, object ) # TODO
+    parameters = programCache.getParameters( material, lights.state, None, fog, 0, None, object ) # TODO
 
     code = programCache.getProgramCode( material, parameters )
 
@@ -377,15 +396,14 @@ def initMaterial( material, fog, object ):
     if not program:
 
         # new material
-        # material.addEventListener( "dispose", onMaterialDispose )
-        pass
+        material.addEventListener( "dispose", onMaterialDispose )
 
     elif program.code != code:
 
         # changed glsl or parameters
         releaseMaterialProgramReference( material )
 
-    elif "shaderID" not in parameters:
+    elif parameters.shaderID:
 
         # same glsl and uniform list
         return
@@ -397,7 +415,7 @@ def initMaterial( material, fog, object ):
 
     if programChange:
 
-        if "shaderID" in parameters:
+        if parameters.shaderID:
 
             shader = ShaderLib[ parameters.shaderID ]
 
@@ -417,7 +435,7 @@ def initMaterial( material, fog, object ):
                 fragmentShader = material.fragmentShader
             )
         
-        # material.onBeforeCompile( materialProperties.shader )
+        material.onBeforeCompile( materialProperties.shader )
 
         program = programCache.acquireProgram( material, materialProperties.shader, parameters, code )
 
@@ -436,7 +454,24 @@ def initMaterial( material, fog, object ):
 
     # store the light setup it was created for
 
-    # TODO lights
+    if material.lights:
+
+        # wire up the material to this renderer's lighting state
+
+        uniforms.ambientLightColor.value = lights.state.ambient
+        uniforms.directionalLights.value = lights.state.directional
+        uniforms.spotLights.value = lights.state.spot
+        uniforms.rectAreaLights.value = lights.state.rectArea
+        uniforms.pointLights.value = lights.state.point
+        uniforms.hemisphereLights.value = lights.state.hemi
+
+        uniforms.directionalShadowMap.value = lights.state.directionalShadowMap
+        uniforms.directionalShadowMatrix.value = lights.state.directionalShadowMatrix
+        uniforms.spotShadowMap.value = lights.state.spotShadowMap
+        uniforms.spotShadowMatrix.value = lights.state.spotShadowMatrix
+        uniforms.pointShadowMap.value = lights.state.pointShadowMap
+        uniforms.pointShadowMatrix.value = lights.state.pointShadowMatrix
+        # TODO (abelnation): add area lights shadow info to uniforms
 
     progUniforms = materialProperties.program.getUniforms()
     uniformsList = OpenGLUniforms.seqWithValue( progUniforms.seq, uniforms )
@@ -512,6 +547,36 @@ def refreshUniformsCommon( uniforms, material ):
 
         uniforms.offsetRepeat.value.set( offset.x, offset.y, repeat.x, repeat.y )
 
+def refreshUniformsFog( uniforms, fog ):
+
+    uniforms.fogColor.value = fog.color
+
+    if hasattr( fog, "isFog" ):
+
+        uniforms.fogNear.value = fog.near
+        uniforms.fogFar.value = fog.far
+    
+    elif hasattr( fog, "isFogExp2" ):
+
+        uniforms.fogDensity.value = fog.density
+
+def refreshUniformsLambert( uniforms, material ):
+
+    if material.emissiveMap: uniforms.emissiveMap.value = material.emissiveMap
+
+# If uniforms are marked as clean, they don't need to be loaded to the GPU.
+
+def markUniformsLightsNeedsUpdate( uniforms, value ):
+
+    uniforms.ambientLightColor.needsUpdate = value
+    
+    uniforms.directionalLights.needsUpdate = value
+    uniforms.pointLights.needsUpdate = value
+    uniforms.spotLights.needsUpdate = value
+    uniforms.rectAreaLights.needsUpdate = value
+    uniforms.rectAreaLights.needsUpdate = value
+    uniforms.hemisphereLights.needsUpdate = value
+
 def setProgram( camera, fog, material, object ):
 
     global _usedTextureUnits
@@ -522,11 +587,29 @@ def setProgram( camera, fog, material, object ):
 
     # TODO clipping
 
-    # TODO if material.needsUpdate
+    if material.needsUpdate == False:
 
-    # for now, force update
-    initMaterial( material, fog, object )
-    material.needsUpdate = False
+        if not materialProperties.program:
+
+            material.needsUpdate = True
+        
+        elif material.fog and materialProperties.fog != fog:
+
+            material.needsUpdate = True
+
+        elif material.lights and materialProperties.lightsHash != lights.state.hash:
+
+            material.needsUpdate = True
+
+        # elif materialProperties.numClippingPlanes and \
+        #     ( materialProperties.numClippingPlanes != _clipping.numPlanes or materialProperties.numIntersection != _clipping.numIntersection ):
+
+        #     material.needsUpdate = True
+
+    if material.needsUpdate:
+
+        initMaterial( material, fog, object )
+        material.needsUpdate = False
 
     refreshProgram = False
     refreshMaterial = False
@@ -595,26 +678,37 @@ def setProgram( camera, fog, material, object ):
         p_uniforms.setValue( "toneMappingExposure", toneMappingExposure )
         p_uniforms.setValue( "toneMappingWhitePoint", toneMappingWhitePoint )
 
-        # TODO light
+        if material.lights:
 
-        # if fog and material.fog:
+            # the current material requires lighting info
 
-        #     refreshUniformsFog( m_uniforms, fog )
+            # note: all lighting uniforms are always set correctly
+            # they simply reference the renderer's state for their
+            # values
+            #
+            # use the current material's .needsUpdate flags to set
+            # the GL state when required
+
+            markUniformsLightsNeedsUpdate( m_uniforms, refreshLights )
+
+        if fog and material.fog:
+
+            refreshUniformsFog( m_uniforms, fog )
 
         if material.isMeshBasicMaterial:
 
             refreshUniformsCommon( m_uniforms, material )
 
-        # elif hasattr( material, "isMeshLambertMaterial" ):
+        elif material.isMeshLambertMaterial:
 
-        #     refreshUniformsCommon( m_uniforms, material )
-        #     refreshUniformsLamber( m_uniforms, material )
+            refreshUniformsCommon( m_uniforms, material )
+            refreshUniformsLambert( m_uniforms, material )
         
-        # elif hasattr( material, "isMeshPhongMaterial" ):
+        # elif material.isMeshPhongMaterial:
 
         #     refreshUniformsCommon( m_uniforms, material )
 
-        #     if hasattr( material, "isMeshToonMaterial" ):
+        #     if material.isMeshToonMaterial:
 
         #         refreshUniformsToon( m_uniforms, material )
             

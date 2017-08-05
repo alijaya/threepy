@@ -138,6 +138,16 @@ def unrollLoops( string ):
 
     return re.sub( pattern, replace, string )
 
+def replaceLightNums( string, parameters ):
+
+    replace = [ ( "NUM_DIR_LIGHTS", parameters.numDirLights ),
+                ( "NUM_SPOT_LIGHTS", parameters.numSpotLights ),
+                ( "NUM_RECT_AREA_LIGHTS", parameters.numRectAreaLights ),
+                ( "NUM_POINT_LIGHTS", parameters.numPointLights ),
+                ( "NUM_HEMI_LIGHTS", parameters.numHemiLights ) ]
+    
+    return reduce( lambda v, opt: re.sub( opt[ 0 ], str( opt[ 1 ] ), v ), replace, string )
+
 class OpenGLProgram( object ):
 
     OpenGLProgramId = 0
@@ -383,10 +393,10 @@ class OpenGLProgram( object ):
             ] )
 
         vertexShader = parseIncludes( vertexShader )
-        # vertexShader = replaceLightNums( vertexShader, parameters )
+        vertexShader = replaceLightNums( vertexShader, parameters )
 
         fragmentShader = parseIncludes( fragmentShader )
-        # fragmentShader = replaceLightNums( fragmentShader, parameters )
+        fragmentShader = replaceLightNums( fragmentShader, parameters )
 
         if hasattr( material, "isShaderMaterial" ):
 

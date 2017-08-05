@@ -1,4 +1,5 @@
 from meshBasicMaterial import MeshBasicMaterial
+from meshLambertMaterial import MeshLambertMaterial
 from meshNormalMaterial import MeshNormalMaterial
 
 from material import Material

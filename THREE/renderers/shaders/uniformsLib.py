@@ -107,7 +107,7 @@ UniformsLib = {
 
 	"lights": Expando(
 
-		ambientLightcolor = Expando( value = [] ),
+		ambientLightColor = Expando( value = [] ),
 
 		directionalLights = Expando( value = [], properties = Expando(
 			direction = Expando(),

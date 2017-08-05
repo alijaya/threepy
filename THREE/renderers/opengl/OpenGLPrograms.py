@@ -126,11 +126,11 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
         # maxMorphTargets = renderer.maxMorphTargets,
         # maxMorphNormals = renderer.maxMorphNormals,
 
-        # numDirLights = len( lights.directional ),
-        # numPointLights = len( lights.point ),
-        # numSpotLights = len( lights.spot ),
-        # numRectAreaLIghts = len( lights.rectArea ),
-        # numHemiLights = len( lights.hemi ),
+        numDirLights = len( lights.directional ),
+        numPointLights = len( lights.point ),
+        numSpotLights = len( lights.spot ),
+        numRectAreaLights = len( lights.rectArea ),
+        numHemiLights = len( lights.hemi ),
 
         numClippingPlanes = nClipPlanes, # TODO
         numClipIntersection = nClipIntersection,

@@ -45,8 +45,8 @@ def init():
     map.wrapS = map.wrapT = THREE.RepeatWrapping
     map.anisotropy = 16
 
-    # material = THREE.MeshLambertMaterial( map = map, side = THREE.DoubleSide )
-    material = THREE.MeshBasicMaterial( map = map, side = THREE.DoubleSide )
+    material = THREE.MeshLambertMaterial( map = map, side = THREE.DoubleSide )
+    # material = THREE.MeshBasicMaterial( map = map, side = THREE.DoubleSide )
 
     object = THREE.Mesh( THREE.SphereGeometry( 75, 20, 10 ), material )
     object.position.set( -400, 0, 200 )

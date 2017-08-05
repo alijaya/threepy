@@ -35,7 +35,7 @@ class BufferAttribute( object ):
 
         self.dynamic = False
         self.updateRange = Expando( offset = 0, count = - 1 )
-        self.onUploadCallback = lambda: None
+        self.onUploadCallback = lambda *args: None
         self.version = 0
 
     @property

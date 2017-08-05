@@ -21,7 +21,7 @@ class Euler( object ):
 
         self.isEuler = True
 
-        self.onChangeCallback = lambda: None
+        self.onChangeCallback = lambda *args: None
     
     @property
     def x( self ):
