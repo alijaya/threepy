@@ -198,7 +198,7 @@ class OpenGLProgram( object ):
             ] )
         
         else:
-
+            
             prefixVertex = text( [
 
                 "#version 120",

@@ -77,7 +77,7 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
             logging.warning( "THREE.WebGLProgram.getParameters: %s not supported, using %s instead.", material.precision, precision )
 
     currentRenderTarget = renderer.getRenderTarget()
-
+    
     parameters = Expando(
         shaderID = shaderId,
 
@@ -110,7 +110,7 @@ def getParameters( material, lights, shadows, fog, nClipPlanes, nClipIntersectio
 
         fog = bool( fog ),
         useFog = material.fog,
-        fogExp = fog and fog.isFogExp2,
+        fogExp = fog and hasattr( fog, "isFogExp2" ),
 
         flatShading = material.flatShading,
 
