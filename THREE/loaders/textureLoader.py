@@ -53,7 +53,7 @@ class TextureLoader( object ):
 
         loader.load( url, onLoadInternal, onProgress, onError )
 
-        TextureLoader.cache = tex
+        TextureLoader.cache[ url ] = tex
 
         return tex
 
