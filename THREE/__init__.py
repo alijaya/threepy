@@ -53,6 +53,7 @@ from THREE.objects.mesh import Mesh
 from THREE.objects.points import Points
 
 from THREE.renderers import OpenGLRenderer
+from THREE.renderers.openGLRenderTarget import OpenGLRenderTarget
 
 from THREE.scenes.scene import Scene
 from THREE.scenes.fog import Fog

@@ -36,27 +36,80 @@ def filterFallback( f ):
 
     return GL_LINEAR
 
-# def onTextureDispose( event ):
+def onTextureDispose( event ):
 
-#     texture = event.target
+    from ..OpenGLRenderer import _infoMemory as infoMemory
 
-#     texture.removeEventListener( "dispose", onTextureDispose )
+    texture = event.target
 
-#     deallocateTexture( texture )
+    texture.removeEventListener( "dispose", onTextureDispose )
 
-#     infoMemory.textures -= 1
+    deallocateTexture( texture )
 
-# def onRenderTargetDispose( event ):
+    infoMemory.textures -= 1
 
-#     texture = event.target
+def onRenderTargetDispose( event ):
 
-#     texture.removeEventListener( "dispose", onRenderTarget )
+    from ..OpenGLRenderer import _infoMemory as infoMemory
 
-#     deallocateRenderTarget( renderTarget )
+    texture = event.target
 
-#     infoMemory.textures -= 1
+    texture.removeEventListener( "dispose", onRenderTarget )
 
-# TODO deallocate
+    deallocateRenderTarget( renderTarget )
+
+    infoMemory.textures -= 1
+
+def deallocateTexture( texture ):
+
+    textureProperties = properties.get( texture )
+
+    if texture.image and textureProperties._image_openglTextureCube:
+
+        # cube texture
+
+        glDeleteTexture( textureProperties._image_openglTextureCube )
+
+    else:
+
+        # 2D texture
+
+        if not textureProperties._openglInit: return
+
+        glDeleteTexture( textureProperties._openglTexture )
+
+    # remove all opengl properties
+    properties.remove( texture )
+
+def deallocateRenderTarget( renderTarget ):
+
+    renderTargetProperties = properties.get( renderTarget )
+    textureProperties = properties.get( renderTarget.texture )
+
+    if not renderTarget: return
+
+    if textureProperties._openglTexture:
+
+        glDeleteTexture( textureProperties._openglTexture )
+
+    if renderTarget.depthTexture:
+
+        renderTarget.depthTexture.dispose()
+
+    if hasattr( renderTarget, "isOpenGLRenderTargetCube" ):
+
+        for i in xrange( 6 ):
+
+            glDeleteFramebuffer( renderTargetProperties._openglFramebuffer[ i ] )
+            if renderTargetProperties._openglDepthbuffer: glDeleteRenderbuffer( renderTargetProperties._openglDepthbuffer[ i ] )
+
+    else:
+
+        glDeleteFramebuffer( renderTargetProperties._openglFramebuffer )
+        if renderTargetProperties._openglDepthbuffer: glDeleteRenderbuffer( renderTargetProperties._openglDepthbuffer )
+
+    properties.remove( renderTarget.texture )
+    properties.remove( renderTarget )
 
 def setTexture2D( texture, slot ):
 
@@ -127,7 +180,7 @@ def uploadTexture( textureProperties, texture, slot ):
 
         textureProperties._openglInit = True
 
-        # texture.addEventListener( "dispose", onTextureDispose )
+        texture.addEventListener( "dispose", onTextureDispose )
 
         textureProperties._openglTexture = glGenTextures( 1 )
 
@@ -138,7 +191,7 @@ def uploadTexture( textureProperties, texture, slot ):
 
     # glPixelStorei( GL_UNPACK_FLIP_Y_WEBGL, texture.flipY )
     # glPixelStorei( GL_UNPACK_PREMULTIPLY_ALPHA_WEBGL, texture.premultiplyAlpha )
-    # glPixelStorei( GL_UNPACK_ALIGNMENT, texture.unpackAlignment )
+    glPixelStorei( GL_UNPACK_ALIGNMENT, texture.unpackAlignment )
 
     # image = clampToMaxSize( texture.image, capabilities.maxTextureSize )
     image = texture.image
@@ -196,3 +249,89 @@ def uploadTexture( textureProperties, texture, slot ):
     textureProperties._version = texture.version
 
     if texture.onUpdate: texture.onUpdate( texture )
+
+# Render targets
+
+def setupFrameBufferTexture( framebuffer, renderTarget, attachment, textureTarget ):
+
+    glFormat = utils.convert( renderTarget.texture.format )
+    glType = utils.convert( renderTarget.texture.type )
+    state.texImage2D( textureTarget, 0, glFormat, renderTarget.width, renderTarget.height, 0, glFormat, glType, None )
+    glBindFramebuffer( GL_FRAMEBUFFER, framebuffer )
+    glFramebufferTexture2D( GL_FRAMEBUFFER, attachment, textureTarget, properties.get( renderTarget.texture )._openglTexture, 0 )
+    glBindFramebuffer( GL_FRAMEBUFFER, 0 )
+
+# Set up GL resources for the render target
+def setupRenderTarget( renderTarget ):
+
+    from ..OpenGLRenderer import _infoMemory as infoMemory
+
+    renderTargetProperties = properties.get( renderTarget )
+    textureProperties = properties.get( renderTarget.texture )
+
+    renderTarget.addEventListener( "dispose", onRenderTargetDispose )
+
+    textureProperties._openglTexture = glGenTextures( 1 )
+
+    infoMemory.textures += 1
+
+    isCube = hasattr( renderTarget, "isOpenGLRenderTargetCube" )
+    # TODO isTargetPowerOfTwo = isPowerOfTwo( renderTarget )
+    isTargetPowerOfTwo = False
+
+    # Setup framebuffer
+
+    if isCube:
+
+        renderTargetProperties._openglFramebuffer = []
+
+        for i in xrange( 6 ):
+
+            renderTargetProperties._openglFramebuffer.append( glGenFramebuffers( 1 ) )
+
+    else:
+
+        renderTargetProperties._openglFramebuffer = glGenFramebuffers( 1 )
+
+    # Setup color buffer
+
+    if isCube:
+
+        state.bindTexture( GL_TEXTUE_CUBE_MAP, textureProperties._openglTexture )
+        setTextureParameters( GL_TEXTURE_CUBE_MAP, renderTarget.texture, isTargetPowerOfTwo )
+
+        for i in xrange( 6 ):
+
+            setupFrameBufferTexture( renderTargetProperties._openglFramebuffer[ i ], renderTarget, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i )
+        
+        if textureNeedsGenerateMipmaps( renderTarget.texture, isTargetPowerOfTwo ): glGenerateMipmap( GL_TEXTURE_CUBE_MAP )
+        state.bindTexture( GL_TEXTURE_CUBE_MAP, 0 )
+    
+    else:
+
+        state.bindTexture( GL_TEXTURE_2D, textureProperties._openglTexture )
+        setTextureParameters( GL_TEXTURE_2D, renderTarget.texture, isTargetPowerOfTwo )
+        setupFrameBufferTexture( renderTargetProperties._openglFramebuffer, renderTarget, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D )
+
+        if textureNeedsGenerateMipmaps( renderTarget.texture, isTargetPowerOfTwo ): glGenerateMipmap( GL_TEXTURE_2D )
+        state.bindTexture( GL_TEXTURE_2D, 0 )
+
+    # TODO
+    # if renderTarget.depthBuffer:
+
+    #     setupDepthRenderbuffer( renderTarget )
+
+def updateRenderTargetMipmap( renderTarget ):
+
+    texture = renderTarget.texture
+    # TODO isTargetPowerOfTwo = isPowerOfTwo( renderTarget )
+    isTargetPowerOfTwo = False
+
+    if textureNeedsGenerateMipmaps( texture, isTargetPowerOfTwo ):
+
+        target = GL_TEXTURE_CUBE_MAP if hasattr( renderTarget, "isOpenGLRenderTargetCube" ) else GL_TEXTURE_2D
+        openglTexture = properties.get( texture )._openglTexture
+
+        state.bindTexture( target, openglTexture )
+        glGenerateMipmap( target )
+        state.bindTexture( target, 0 )

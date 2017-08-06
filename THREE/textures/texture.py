@@ -13,7 +13,7 @@ import math
  * @author szimek / https://github.com/szimek/
  """
 
-class Texture( object ):
+class Texture( eventDispatcher.EventDispatcher ):
 
     DEFAULT_IMAGE = None
     DEFAULT_MAPPING = UVMapping

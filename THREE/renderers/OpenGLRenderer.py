@@ -293,27 +293,53 @@ def setRenderTarget( renderTarget ):
 
     global _currentRenderTarget
     global _currentScissorTest
+    global _currentFramebuffer
 
     _currentRenderTarget = renderTarget
 
-    # TODO textures setupRenderTarget
+    if renderTarget and not properties.get( renderTarget )._openglFramebuffer:
+
+        textures.setupRenderTarget( renderTarget )
 
     framebuffer = None
     isCube = False
 
-    # TODO if renderTarget exists
+    if renderTarget:
 
-    _currentViewport.copy( _viewport ).multiplyScalar( _pixelRatio )
-    _currentScissor.copy( _scissor ).multiplyScalar( _pixelRatio )
-    _currentScissorTest = _scissorTest
+        _openglFramebuffer = properties.get( renderTarget )._openglFramebuffer
 
-    # bind framebuffer
+        if hasattr( renderTarget, "isOpenGLRenderTargetCube" ):
+
+            framebuffer = _openglFramebuffer[ renderTarget.activeCubeFace ]
+            isCube = True
+
+        else:
+
+            framebuffer = _openglFramebuffer
+
+        _currentViewport.copy( renderTarget.viewport )
+        _currentScissor.copy( renderTarget.scissor )
+        _currentScissorTest = renderTarget.scissorTest
+
+    else:
+
+        _currentViewport.copy( _viewport ).multiplyScalar( _pixelRatio )
+        _currentScissor.copy( _scissor ).multiplyScalar( _pixelRatio )
+        _currentScissorTest = _scissorTest
+
+    if _currentFramebuffer != framebuffer:
+
+        glBindFramebuffer( GL_FRAMEBUFFER, framebuffer or 0 )
+        _currentFramebuffer = framebuffer
 
     state.viewport( _currentViewport )
     state.scissor( _currentScissor )
     state.setScissorTest( _currentScissorTest )
 
-    # TODO isCube
+    if isCube:
+
+        textureProperties = properties.get( renderTarget.texture )
+        glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + renderTarget.activeCubeFace, textureProperties._openglTexture, renderTarget.activeMipMapLevel )
 
 # Textures
 
@@ -333,12 +359,6 @@ def allocTextureUnit():
 
 def setTexture2D( texture, slot ):
 
-    if texture and hasattr( texture, "isOpenGLRenderTarget" ):
-
-        logging.warning( "THREE.WebGLRenderer.setTexture2D: don't use render targets as textures. Use their .texture property instead." )
-        
-        texture = texture.texture
-    
     textures.setTexture2D( texture, slot )
 
 def projectObject( object, camera, sortObjects ):
@@ -554,9 +574,6 @@ def refreshUniformsCommon( uniforms, material ):
     elif material.emissiveMap: uvScaleMap = material.emissiveMap
 
     if uvScaleMap:
-
-        # backwards compatibility
-        if hasattr( uvScaleMap, "isOpenGLRenderTarget" ): uvScaleMap = uvScaleMap.texture
 
         offset = uvScaleMap.offset
         repeat = uvScaleMap.repeat
@@ -1128,7 +1145,9 @@ def render( scene, camera, renderTarget = None, forceClear = True ):
 
     # TODO custom renderers
 
-    # TODO renderTarget
+    if renderTarget:
+
+        textures.updateRenderTargetMipmap( renderTarget )
 
     # Ensure depth buffer writing is enabled so it can be cleared on next render
 
