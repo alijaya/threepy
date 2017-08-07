@@ -2,8 +2,6 @@ from __future__ import division
 
 from OpenGL.GL import *
 
-import numpy as np
-
 from ctypes import c_void_p
 
 import logging
@@ -386,6 +384,8 @@ def projectObject( object, camera, sortObjects ):
             # whether it in Frustum
             if not object.frustumCulled or _frustum.intersectsObject( object ):
 
+                z = 0
+                
                 if sortObjects:
 
                     # get z position in screen space
@@ -988,9 +988,6 @@ def renderBufferDirect( camera, fog, geometry, material, object, group ):
     drawEnd = min( dataCount, rangeStart + rangeCount, groupStart + groupCount ) - 1
 
     drawCount = max( 0, drawEnd - drawStart + 1 )
-
-    # print( geometry.drawRange.start, geometry.drawRange.count )
-    # print( rangeStart, rangeCount, groupStart, groupCount, drawStart, drawEnd, drawCount )
 
     if drawCount == 0: return
 

@@ -8,7 +8,7 @@ from THREE.utils import Expando
 
 from OpenGL.GL import *
 
-import numpy as np
+from ctypes import *
 
 width = 800
 height = 600
@@ -43,14 +43,16 @@ def flatten( vs ):
     for v in vs: ret.extend( [ v.x, v.y, v.z ] )
     return ret
 
-positions = np.array( flatten( cube.geometry.vertices ), np.float32 )
+positions = flatten( cube.geometry.vertices )
+positions = ( c_float * len( positions ) )( *positions )
 
 def flatten2( idxs ):
     ret = []
     for idx in idxs: ret.extend( [ idx.a, idx.b, idx.c ] )
     return ret
 
-indices = np.array( flatten2( cube.geometry.faces ), np.uint32 )
+indices = flatten2( cube.geometry.faces )
+indices = ( c_uint * len( indices ) )( *indices )
 
 
 glPositionBuffer = glGenBuffers( 1 )
@@ -111,7 +113,7 @@ glClearColor( 0.0, 0.0, 0.0, 1.0 )
 glClear( GL_COLOR_BUFFER_BIT )
 
 # glDrawArrays( GL_TRIANGLES, 0, positions.size )
-glDrawElements( GL_TRIANGLES, indices.size, GL_UNSIGNED_INT, None )
+glDrawElements( GL_TRIANGLES, len( indices ), GL_UNSIGNED_INT, None )
 
 pygame.display.flip()
 

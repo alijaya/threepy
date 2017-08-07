@@ -14,7 +14,6 @@ def update( object ):
 
     # update once per frame
 
-
     if updateList.get( buffergeometry.id ) != frame:
 
         if hasattr( geometry, "isGeometry" ):

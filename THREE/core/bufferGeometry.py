@@ -1,8 +1,6 @@
 from __future__ import division
 import math
 
-import numpy as np
-
 import logging
 
 from ..math import vector3
@@ -16,6 +14,7 @@ from ..math import matrix4
 from ..math import matrix3
 from ..math import _Math
 from ..utils import Expando
+from ..utils import ctypesArray
 import geometry
 
 """
@@ -343,33 +342,33 @@ class BufferGeometry( eventDispatcher.EventDispatcher ):
 
     def fromDirectGeometry( self, geometry ):
 
-        positions = np.zeros( len( geometry.vertices ) * 3, np.float32 )
+        positions = ctypesArray( "f", len( geometry.vertices ) * 3 )
         self.addAttribute( "position", BufferAttribute( positions, 3 ).copyVector3sArray( geometry.vertices ) )
 
         if len( geometry.normals ) > 0:
 
-            normals = np.zeros( len( geometry.normals ) * 3, np.float32 )
+            normals = ctypesArray( "f", len( geometry.normals ) * 3 )
             self.addAttribute( "normal", BufferAttribute( normals, 3 ).copyVector3sArray( geometry.normals ) )
 
         if len( geometry.colors ) > 0:
 
-            colors = np.zeros( len( geometry.colors ) * 3, np.float32 )
+            colors = ctypesArray( "f", len( geometry.colors ) * 3 )
             self.addAttribute( "color", BufferAttribute( colors, 3 ).copyColorsArray( geometry.colors ) )
 
         if len( geometry.uvs ) > 0:
 
-            uvs = np.zeros( len( geometry.uvs ) * 2, np.float32 )
+            uvs = ctypesArray( "f", len( geometry.uvs ) * 2 )
             self.addAttribute( "uv", BufferAttribute( uvs, 2 ).copyVector2sArray( geometry.uvs ) )
 
         if len( geometry.uvs2 ) > 0:
 
-            uvs2 = np.zeros( len( geometry.uvs2 ) * 2, np.float32 )
+            uvs2 = ctypesArray( "f", len( geometry.uvs2 ) * 2 )
             self.addAttribute( "uv2", BufferAttribute( uvs2, 2 ).copyVector2sArray( geometry.uvs2 ) )
 
         if len( geometry.indices ) > 0:
 
-            TypeArray = np.uint32 if max( geometry.indices ) > 65535 else np.uint16
-            indices = np.zeros( len( geometry.indices ) * 3, TypeArray )
+            TypeArray = "L" if max( geometry.indices ) > 65535 else "H"
+            indices = ctypesArray( TypeArray, len( geometry.indices ) * 3 )
             self.setIndex( BufferAttribute( indices, 1 ).copyIndicesArray( geometry.indices ) )
 
         # groups
@@ -489,7 +488,7 @@ class BufferGeometry( eventDispatcher.EventDispatcher ):
 
             if "normal" not in attributes:
 
-                self.addAttribute( "normal", BufferAttribute( np.zeros( len( positions ), np.float32 ), 3 ) )
+                self.addAttribute( "normal", BufferAttribute( ctypesArray( "f", len( positions ) ), 3 ) )
 
             else:
 

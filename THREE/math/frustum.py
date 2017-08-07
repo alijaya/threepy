@@ -92,22 +92,22 @@ class Frustum( object ):
 
         geometry = object.geometry
 
-        if geometry.boundingSphere == None:
+        if geometry.boundingSphere is None:
             geometry.computeBoundingSphere()
 
         sph.copy( geometry.boundingSphere ).applyMatrix4( object.matrixWorld )
-
+        
         return self.intersectsSphere( sph )
 
     def intersectsSprite( self, sprite ):
 
-        sphere = sphere.Sphere()
+        sph = sphere.Sphere()
 
-        sphere.center.set( 0, 0, 0 )
-        sphere.radius = 0.7071067811865476
-        sphere.applyMatrix4( sprite.matrixWorld )
+        sph.center.set( 0, 0, 0 )
+        sph.radius = 0.7071067811865476
+        sph.applyMatrix4( sprite.matrixWorld )
 
-        return self.intersectsSphere( sphere )
+        return self.intersectsSphere( sph )
 
     def intersectsSphere( self, sphere ):
 

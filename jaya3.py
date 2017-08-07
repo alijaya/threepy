@@ -1,13 +1,11 @@
 from __future__ import division
 
-import numpy as np
-
 from OpenGL.GL import *
 
 import pygame
 from pygame.locals import *
 
-from ctypes import c_void_p
+from ctypes import *
 
 width = 800
 height = 600
@@ -19,12 +17,13 @@ diffuse = ( 1.0, 1.0, 1.0 )
 
 image = pygame.transform.flip( pygame.image.load( "crate.gif" ), False, True ).convert( (0xff, 0xff00, 0xff0000, 0xff000000) )
 
-vertices = np.array( [
+vertices = [
     -0.5, -0.5,
     -0.5, 0.5,
     0.5, 0.5,
     0.5, -0.5
-], np.float32 )
+]
+vertices = ( c_float * len( vertices ) )( *vertices )
 
 vbo = glGenBuffers( 1 )
 glBindBuffer( GL_ARRAY_BUFFER, vbo )
@@ -98,7 +97,7 @@ glEnableVertexAttribArray( posAttrib )
 glClearColor( 0.0, 0.0, 0.0, 1.0 )
 glClear( GL_COLOR_BUFFER_BIT )
 
-glDrawArrays( GL_POINTS, 0, vertices.size // 2 )
+glDrawArrays( GL_POINTS, 0, len( vertices ) // 2 )
 
 pygame.display.flip()
 

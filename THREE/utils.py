@@ -1,3 +1,5 @@
+import ctypes
+
 class Expando( object ):
 
     def __init__( self, *args, **kwargs ):
@@ -39,3 +41,25 @@ class Expando( object ):
     def __str__( self ):
 
         return self.__dict__.__str__()
+
+ctypesType = {
+    "c": ctypes.c_char,
+    "b": ctypes.c_int8,
+    "B": ctypes.c_uint8,
+    "u": ctypes.c_wchar,
+    "h": ctypes.c_int16,
+    "H": ctypes.c_uint16,
+    "i": ctypes.c_int,
+    "I": ctypes.c_uint,
+    "l": ctypes.c_int32,
+    "L": ctypes.c_uint32,
+    "f": ctypes.c_float,
+    "d": ctypes.c_double
+}
+
+def ctypesArray( typecode, initializer ):
+
+    if typecode not in ctypesType: raise ValueError( "%s type doesn't exist" % typecode )
+
+    if isinstance( initializer, list ): return ( ctypesType[ typecode ] * len( initializer ) )( *initializer )
+    else: return ( ctypesType[ typecode ] * initializer )()

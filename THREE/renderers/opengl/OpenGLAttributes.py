@@ -1,8 +1,8 @@
 from OpenGL.GL import *
 
-import numpy as np
-
 import logging
+
+from ctypes import *
 
 from ...utils import Expando
 
@@ -22,19 +22,19 @@ def createBuffer( attribute, bufferType ):
 
     type = GL_FLOAT
 
-    if array.dtype == np.int8: type = GL_BYTE
-    elif array.dtype == np.uint8: type = GL_UNSIGNED_BYTE
-    elif array.dtype == np.int16: type = GL_SHORT
-    elif array.dtype == np.uint16: type = GL_UNSIGNED_SHORT
-    elif array.dtype == np.int32: type = GL_INT
-    elif array.dtype == np.uint32: type = GL_UNSIGNED_INT
-    elif array.dtype == np.float32: type = GL_FLOAT
-    elif array.dtype == np.float64: logging.warning( "THREE.OpenGLAttributes: Unsupported data buffer format: float64." )
+    if array._type_ == c_int8: type = GL_BYTE
+    elif array._type_ == c_uint8: type = GL_UNSIGNED_BYTE
+    elif array._type_ == c_int16: type = GL_SHORT
+    elif array._type_ == c_uint16: type = GL_UNSIGNED_SHORT
+    elif array._type_ == c_int32: type = GL_INT
+    elif array._type_ == c_uint32: type = GL_UNSIGNED_INT
+    elif array._type_ == c_float: type = GL_FLOAT
+    elif array._type_ == c_double: logging.warning( "THREE.OpenGLAttributes: Unsupported data buffer format: float64." )
 
     return Expando(
         buffer = buffer,
         type = type,
-        bytesPerElement = array.itemsize,
+        bytesPerElement = sizeof( array._type_ ),
         version = attribute.version
     )
 

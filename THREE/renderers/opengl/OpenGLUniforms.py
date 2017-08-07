@@ -3,12 +3,11 @@ from OpenGL.GL import *
 import re
 import numbers
 
-import numpy as np
-
 import logging
 
 from ...textures import texture
 from ...utils import Expando
+from ...utils import ctypesArray
 
 emptyTexture = texture.Texture()
 # emptyCubeTexture = CubeTexture()
@@ -29,7 +28,7 @@ def flatten( array, nBlocks, blockSize ):
     if isinstance( firstElem, numbers.Number ): return array
 
     n = nBlocks * blockSize
-    r = np.zeros( n, np.float32 )
+    r = ctypesArray( "f", n )
 
     if nBlocks != 0:
 
@@ -203,7 +202,7 @@ class PureArrayUniform( object ):
 
         from .. import OpenGLRenderer as renderer
 
-        r = np.zeros( n, np.int32 )
+        r = ctypesArray( "L", n )
 
         for i in xrange( n ):
 

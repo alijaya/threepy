@@ -11,10 +11,19 @@ import THREE
 from THREE.utils import Expando
 
 renderer = None
+
 camera = None
 scene = None
 
 object = None
+
+realamera = None
+realScene = None
+renderTarget = None
+
+cube = None
+
+clock = pygame.time.Clock()
 
 width, height = 800, 600
 
@@ -24,7 +33,7 @@ def toAbs( rel ):
 
 def init():
 
-    global renderer, camera, scene, object
+    global renderer, camera, scene, object, realCamera, realScene, cube, renderTarget
 
     pygame.init()
     pygame.display.set_mode( (width, height), DOUBLEBUF|OPENGL )
@@ -32,7 +41,7 @@ def init():
     renderer.init()
     renderer.setSize( width, height )
 
-    camera = THREE.PerspectiveCamera( 70, width / height, 10, 1000 )
+    camera = THREE.PerspectiveCamera( 70, 1, 10, 1000 )
     camera.position.z = 400
 
     scene = THREE.Scene()
@@ -42,7 +51,7 @@ def init():
     scene.add( object )
 
     geometry = THREE.SphereGeometry( 1, 4, 4 )
-    material = THREE.MeshLambertMaterial( color = 0xffffff, flatShading = True )
+    material = THREE.MeshLambertMaterial( color = 0xffffff )
 
     for i in xrange( 100 ):
 
@@ -58,6 +67,18 @@ def init():
     light = THREE.DirectionalLight( 0xffffff )
     light.position.set( 1, 1, 1 )
     scene.add( light )
+
+    realCamera = THREE.PerspectiveCamera( 70, width / height, 10, 1000 )
+    realCamera.position.z = 200
+
+    renderTarget = THREE.OpenGLRenderTarget( 256, 256 )
+
+    realScene = THREE.Scene()
+    realScene.background = THREE.Color().setHSL( 0, 1, 0.5 )
+    cubeGeom = THREE.BoxGeometry( 100, 100, 100 )
+    cubeMat = THREE.MeshBasicMaterial( map = renderTarget.texture )
+    cube = THREE.Mesh( cubeGeom, cubeMat )
+    realScene.add( cube )
 
     # composer = THREE.EffectComposer()
     # composer.addPass( THREE.RenderPass( scene, camera ) )
@@ -81,10 +102,17 @@ def animate():
                 pygame.quit()
                 quit()
 
+        clock.tick()
+        # print( clock.get_fps() )
+
         object.rotation.x += 0.005
         object.rotation.y += 0.01
 
-        renderer.render( scene, camera )
+        cube.rotation.x += 0.005
+        cube.rotation.y += 0.01
+
+        renderer.render( scene, camera, renderTarget )
+        renderer.render( realScene, realCamera )
         # composer.render()
 
         pygame.display.flip()

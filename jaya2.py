@@ -1,13 +1,11 @@
 from __future__ import division
 
-import numpy as np
-
 from OpenGL.GL import *
 
 import pygame
 from pygame.locals import *
 
-from ctypes import c_void_p
+from ctypes import *
 
 width = 800
 height = 600
@@ -20,31 +18,35 @@ diffuse = ( 1.0, 1.0, 1.0 )
 image = pygame.image.load( "crate.gif" ).convert( (0xff, 0xff00, 0xff0000, 0xff000000) )
 print(image.get_masks())
 
-vertices = np.array( [
+vertices = [
     -0.5, -0.5,
     -0.5, 0.5,
     0.5, 0.5,
     0.5, -0.5
-], np.float32 )
+]
+vertices = ( c_float * len( vertices ) )( *vertices )
 
-colors = np.array( [
+colors = [
     1.0, 1.0, 1.0,
     1.0, 1.0, 1.0,
     1.0, 1.0, 1.0,
     1.0, 1.0, 1.0
-], np.float32 )
+]
+colors = ( c_float * len( colors ) )( *colors )
 
-uvs = np.array( [
+uvs = [
     0.0, 0.0,
     0.0, 1.0,
     1.0, 1.0,
     1.0, 0.0
-], np.float32 )
+]
+uvs = ( c_float * len( uvs ) )( *uvs )
 
-indices = np.array( [
+indices = [
     0, 1, 2,
     2, 3, 0
-], np.uint32 )
+]
+indices = ( c_uint * len( indices ) )( *indices )
 
 vbo = glGenBuffers( 1 )
 glBindBuffer( GL_ARRAY_BUFFER, vbo )
@@ -141,7 +143,7 @@ glEnableVertexAttribArray( uvAttrib )
 glClearColor( 1.0, 1.0, 0.0, 1.0 )
 glClear( GL_COLOR_BUFFER_BIT )
 
-glDrawElements( GL_TRIANGLES, indices.size, GL_UNSIGNED_INT, None )
+glDrawElements( GL_TRIANGLES, len( indices ), GL_UNSIGNED_INT, None )
 
 
 pygame.display.flip()

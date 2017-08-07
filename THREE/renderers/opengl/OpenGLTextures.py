@@ -21,6 +21,10 @@ def isPowerOfTwo( image ):
 
     return _Math.isPowerOfTwo( image.get_width() ) and _Math.isPowerOfTwo( image.get_height() )
 
+def isRenderTargetPowerOfTwo( renderTarget ):
+
+    return _Math.isPowerOfTwo( renderTarget.width ) and _Math.isPowerOfTwo( renderTarget.height )
+
 def textureNeedsGenerateMipmaps( texture, isPowerOfTwo ):
 
     return texture.generateMipmaps and isPowerOfTwo and \
@@ -261,7 +265,99 @@ def setupFrameBufferTexture( framebuffer, renderTarget, attachment, textureTarge
     glFramebufferTexture2D( GL_FRAMEBUFFER, attachment, textureTarget, properties.get( renderTarget.texture )._openglTexture, 0 )
     glBindFramebuffer( GL_FRAMEBUFFER, 0 )
 
-# Set up GL resources for the render target
+# Setup storage for internal depth/stencil buffers and bind to correct framebuffer
+def setupRenderBufferStorage( renderbuffer, renderTarget ):
+
+    glBindRenderbuffer( GL_RENDERBUFFER, renderbuffer )
+
+    if renderTarget.depthBuffer and not renderTarget.stencilBuffer:
+
+        glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, renderTarget.width, renderTarget.height )
+        glFramebufferRenderbuffer( GL_FRAMEUBFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer )
+
+    elif renderTarget.depthBuffer and renderTarget.stencilBuffer:
+
+        glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH_STENCIL, renderTarget.width, renderTarget.height )
+        glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, renderbuffer )
+
+    else:
+
+        # FIXME: We don't support !depth !stencil
+        glRenderbufferStorage( GL_RENDERBUFFER, GL_RGBA4, renderTarget.width, renderTarget.height )
+
+    glBindRenderbuffer( GL_RENDERBUFFER, 0 )
+
+# Setup resources for a Depth Texture for a FBO (needs an extension)
+def setupDepthTexture( framebuffer, renderTarget ):
+
+    isCUbe = renderTarget and hasattr( renderTarget, "isWebGLRenderTargetCube" )
+    if isCube: raise ValueError( "Depth Texture with cube render targets is not supported" )
+
+    glBindFramebuffer( GL_FRAMEBUFFER, framebuffer )
+
+    if not ( renderTarget.depthTexture and hasattr( renderTarget.depthTexture, "isDepthTexture" ) ):
+
+        raise ValueError( "renderTarget.depthTexture must be an instance of THREE.DepthTexture" )
+
+    # upload an empty depth texture with framebuffer size
+    if not properties.get( renderTarget.depthTexture )._openglTexture or \
+        renderTarget.depthTexture.image.width != renderTarget.width or \
+        renderTarget.depthTexture.image.height != renderTarget.height:
+
+        renderTarget.depthTexture.image.width = renderTarget.width # TODO, pygame.Surface cannot do this
+        renderTarget.depthTexture.image.height = renderTarget.height
+        renderTarget.depthTexture.needsUpdate = True
+
+    setTexture2D( renderTarget.depthTexture, 0 )
+
+    openglDepthTexture = properties.get( renderTarget.depthTexture )._openglTexture
+
+    if renderTarget.depthTexture.format == DepthFormat:
+
+        glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, openglDepthTexture, 0 )
+
+    elif renderTarget.depthTexture.format == DepthStencilFormat:
+
+        glFramebufferTexture2D( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, openglDepthTexture, 0 )
+    
+    else:
+
+        raise ValueError( "Unknown depthTexture format" )
+
+# Setup GL resources for a non-texture depth buffer
+def setupDepthRenderbuffer( renderTarget ):
+
+    renderTargetProperties = properties.get( renderTarget )
+
+    isCube = hasattr( renderTarget, "isWebGLRenderTargetCube" )
+
+    if renderTarget.depthTexture:
+
+        if isCube: raise ValueError( "target.depthTexture not supported in Cube render targets" )
+
+        setupDepthTexture( renderTargetProperties._openglFramebuffer, renderTarget )
+
+    else:
+
+        if isCube:
+
+            renderTargetProperties._openglDepthbuffer = []
+
+            for i in xrange( 6 ):
+
+                glBindFramebuffer( GL_FRAMEBUFFER, renderTargetProperties._openglFramebuffer[ i ] )
+                renderTargetProperties._openglDepthbuffer[ i ] = glGenRenderbuffers( 1 )
+                setupRenderBufferStorage( renderTargetProperties._openglDepthbuffer[ i ], renderTarget )
+
+        else:
+
+            glBindFramebuffer( GL_FRAMEBUFFER, renderTargetProperties._openglFramebuffer )
+            renderTargetProperties._openglDepthbuffer = glGenRenderbuffers( 1 )
+            setupRenderBufferStorage( renderTargetProperties._openglDepthbuffer, renderTarget )
+
+    glBindFramebuffer( GL_FRAMEBUFFER, 0 )
+
+# Setup GL resources for the render target
 def setupRenderTarget( renderTarget ):
 
     from ..OpenGLRenderer import _infoMemory as infoMemory
@@ -276,7 +372,7 @@ def setupRenderTarget( renderTarget ):
     infoMemory.textures += 1
 
     isCube = hasattr( renderTarget, "isOpenGLRenderTargetCube" )
-    # TODO isTargetPowerOfTwo = isPowerOfTwo( renderTarget )
+    isTargetPowerOfTwo = isRenderTargetPowerOfTwo( renderTarget )
     isTargetPowerOfTwo = False
 
     # Setup framebuffer
@@ -316,10 +412,9 @@ def setupRenderTarget( renderTarget ):
         if textureNeedsGenerateMipmaps( renderTarget.texture, isTargetPowerOfTwo ): glGenerateMipmap( GL_TEXTURE_2D )
         state.bindTexture( GL_TEXTURE_2D, 0 )
 
-    # TODO
-    # if renderTarget.depthBuffer:
+    if renderTarget.depthBuffer:
 
-    #     setupDepthRenderbuffer( renderTarget )
+        setupDepthRenderbuffer( renderTarget )
 
 def updateRenderTargetMipmap( renderTarget ):
 

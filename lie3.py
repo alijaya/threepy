@@ -9,8 +9,6 @@ from THREE.utils import Expando
 
 from OpenGL.GL import *
 
-import numpy as np
-
 width = 800
 height = 600
 renderer = THREE.OpenGLRenderer

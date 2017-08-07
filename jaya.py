@@ -1,13 +1,11 @@
 from __future__ import division
 
-import numpy as np
-
 from OpenGL.GL import *
 
 import pygame
 from pygame.locals import *
 
-from ctypes import c_void_p
+from ctypes import *
 
 width = 800
 height = 600
@@ -15,20 +13,22 @@ height = 600
 pygame.init()
 pygame.display.set_mode( (width, height), DOUBLEBUF|OPENGL )
 
-vertices = np.array( [
+vertices = [
     0,0,
     -0.5, -0.5,
     -0.5, 0.5,
     0.5, 0.5,
     0.5, -0.5
-], np.float32 )
+]
+vertices = ( c_float * len( vertices ) )( *vertices )
 
-indices = np.array( [
+indices = [
     0, 1, 2,
     0, 2, 3,
     0, 3, 4,
     0, 4, 1
-], np.uint32 )
+]
+indices = ( c_uint * len( indices ) )( *indices )
 
 vbo = glGenBuffers( 1 )
 glBindBuffer( GL_ARRAY_BUFFER, vbo )
@@ -75,7 +75,7 @@ print( glGetProgramInfoLog( shaderProgram ) )
 glUseProgram( shaderProgram )
 
 difAttrib = glGetUniformLocation( shaderProgram, "diffuse" )
-glUniform3fv( difAttrib, 1, np.array([1.0, 0.0, 0.0], np.float32) )
+glUniform3f( difAttrib, 1.0, 0.0, 0.0 )
 
 posAttrib = glGetAttribLocation( shaderProgram, "position" )
 glVertexAttribPointer( posAttrib, 2, GL_FLOAT, GL_FALSE, 0, None )

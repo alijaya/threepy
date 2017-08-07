@@ -1,13 +1,13 @@
 
 from OpenGL.GL import *
 
-import numpy as np
-
 import re
 
 from ...constants import NotEqualDepth, GreaterDepth, GreaterEqualDepth, EqualDepth, LessEqualDepth, LessDepth, AlwaysDepth, NeverDepth, CullFaceFront, CullFaceBack, CullFaceNone, CustomBlending, MultiplyBlending, SubtractiveBlending, AdditiveBlending, NoBlending, NormalBlending, DoubleSide, BackSide
 from ...math.vector4 import Vector4
 from ...utils import Expando
+from ...utils import ctypesArray
+from ctypes import *
 
 class ColorBuffer( object ):
 
@@ -110,7 +110,7 @@ class DepthBuffer( object ):
 
 def initAttributes():
 
-    newAttributes.fill( 0 )
+    memset( newAttributes, 0, sizeof( newAttributes ) )
 
 def enableAttribute( attribute ):
 
@@ -128,7 +128,7 @@ def enableAttribute( attribute ):
 
 def disableUnusedAttributes():
 
-    for i in xrange( enabledAttributes.size ):
+    for i in xrange( len( enabledAttributes ) ):
 
         if enabledAttributes[ i ] != newAttributes[ i ]:
 
@@ -181,7 +181,7 @@ def scissor( scissor ):
 
 def createTexture( type, target, count ):
 
-    data = np.zeros( 4, np.uint8 )
+    data = ctypesArray( "B", 4 )
     texture = glGenTextures( 1 )
 
     glBindTexture( type, texture )
@@ -489,8 +489,8 @@ def init():
     emptyTextures[ GL_TEXTURE_CUBE_MAP ] = createTexture( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_CUBE_MAP_POSITIVE_X, 6 )
 
     maxVertexAttributes = glGetIntegerv( GL_MAX_VERTEX_ATTRIBS )
-    newAttributes = np.zeros( maxVertexAttributes )
-    enabledAttributes = np.zeros( maxVertexAttributes )
+    newAttributes = ctypesArray( "B", maxVertexAttributes )
+    enabledAttributes = ctypesArray( "B", maxVertexAttributes )
 
     maxTextures = glGetIntegerv( GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS )
 
