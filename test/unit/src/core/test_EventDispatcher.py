@@ -35,7 +35,7 @@ class TestEventDispatcher( unittest.TestCase ):
 
 		listener = {}
 
-		self.assertIsNone( eventDispatcher._listeners ) # there are no listeners by default
+		self.assertFalse( hasattr( eventDispatcher, "_listeners" ) ) # there are no listeners by default
 
 		eventDispatcher.addEventListener( "anyType", listener )
 		self.assertTrue( len( eventDispatcher._listeners ) == 1 and \
